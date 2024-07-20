@@ -1,9 +1,9 @@
 /**
  * @author xmo
- * @name chatgptv2
+ * @name aigptv2
  * @team xmo
  * @version 1.0
- * @description chatgptv2 触发命令aigptv2
+ * @description aigptv2 触发命令aigptv2
  * @rule ^aigptv2([\s\S]+)$
  * @rule ^([\s\S]+)aigptv2$
  * @rule ^aigptv2清空上下文$
