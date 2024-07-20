@@ -1,9 +1,9 @@
 /**
  * @author xmo
- * @name chatgpt_v2
+ * @name chatgptv2
  * @team xmo
  * @version 1.0
- * @description chatgpt_v2 触发命令aigptv2
+ * @description chatgptv2 触发命令aigptv2
  * @rule ^aigptv2([\s\S]+)$
  * @rule ^([\s\S]+)aigptv2$
  * @rule ^aigptv2清空上下文$
