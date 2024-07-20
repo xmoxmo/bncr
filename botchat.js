@@ -79,14 +79,14 @@ module.exports = async (s) => {
       }
     } else {
       if (!groupId || groupId === '0') {
-        s.inlineSugar(`aigv2 ${keyword}`);
+        s.inlineSugar(`aigptv2 ${keyword}`);
       } else {
         let newkeyword = '';
         if (keyword.includes(atbotmsg)) {
           newkeyword = keyword.replace(new RegExp(atbotmsg,'g'), "");
           newkeyword = newkeyword.replace(new RegExp(" ",'g'), "");
           if (newkeyword) {
-            s.inlineSugar(`aigv2 ${newkeyword}`);
+            s.inlineSugar(`aigptv2 ${newkeyword}`);
           }
         }
         if (!(newkeyword)) {
