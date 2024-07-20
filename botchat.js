@@ -1,24 +1,24 @@
 /**
  * @author Dswang
- * @name 自动回复
+ * @name botchat
  * @team Dswang & SmartAI
  * @version 1.0.2
  * @description 自动回复插件。参考傻妞自动回复功能。仅支持文本
- * @rule ^(reply)\s+(\S+)\s+([\s\S]+)$
- * @rule ^(reply)\s+(\S+)\s+(del)$
- * @rule ^(reply)\s+(list)$
- * @rule ^(reply)\s+(empty)$
+ * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
+ * @rule ^(botreply)\s+(\S+)\s+(del)$
+ * @rule ^(botreply)\s+(list)$
+ * @rule ^(botreply)\s+(empty)$
  * @rule ^(\S+)$
  * @rule ^(.*@.*)$
  * @admin false
  * @priority 9
- * @classification ["自动回复"]
+ * @classification ["botchat"]
  * @public false
  * @disable false
  */
 
 module.exports = async (s) => {
-  const sysDB = new BncrDB('Dswang_autoReplyDB');
+  const sysDB = new BncrDB('BotReplyDB');
 
   const commandType = s.param(1);
   const keyword = s.param(2);
@@ -26,7 +26,7 @@ module.exports = async (s) => {
 
   // console.log(`Received command: ${commandType}, Keyword: ${keyword}, ReplyContent: ${replyContent}`);
 
-  if (commandType === 'reply') {
+  if (commandType === 'botreply') {
     if (keyword === 'list') {
       await handleListKeywords(s);
     } else if (keyword === 'empty') {
