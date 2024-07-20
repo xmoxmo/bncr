@@ -1,7 +1,7 @@
 /**
- * @author YuanKK
+ * @author xmo
  * @name chatgpt_v2
- * @team 红灯区
+ * @team xmo
  * @version 1.0
  * @description ChatGPT v2 触发命令aigv2
  * @rule ^aigptv2([\s\S]+)$
