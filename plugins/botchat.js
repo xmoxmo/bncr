@@ -3,7 +3,7 @@
  * @name botchat
  * @team xmo
  * @version 2.0.0
- * @description 自动回复插件，仅支持文本。
+ * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
  * @rule ^(botreply)\s+(list)$
