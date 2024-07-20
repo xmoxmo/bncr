@@ -1,9 +1,9 @@
 /**
- * @author Dswang
+ * @author xmo
  * @name botchat
- * @team Dswang & SmartAI
- * @version 1.0.2
- * @description 自动回复插件。参考傻妞自动回复功能。仅支持文本
+ * @team xmo
+ * @version 2.0.0
+ * @description 自动回复插件，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
  * @rule ^(botreply)\s+(list)$
