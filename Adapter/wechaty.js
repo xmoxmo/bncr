@@ -4,7 +4,7 @@
  * @name wechaty
  * @origin xmo
  * @version 1.0.5
- * @description wx机器人内置适配器，微信需要实名
+ * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public false
  * @disable false
