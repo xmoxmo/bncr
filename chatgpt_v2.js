@@ -4,9 +4,9 @@
  * @team 红灯区
  * @version 1.0
  * @description ChatGPT v2 触发命令aigv2
- * @rule ^aigv2([\s\S]+)$
- * @rule ^([\s\S]+)aigv2$
- * @rule ^aigv2清空上下文$
+ * @rule ^aigptv2([\s\S]+)$
+ * @rule ^([\s\S]+)aigptv2$
+ * @rule ^aigptv2清空上下文$
  * @admin false
  * @priority 9999
  * @disable false
@@ -16,7 +16,7 @@
  */
 /**
  * 2024/04/29： gpti版本升级为2.1.3
- * 2024/07/04： 修改触发命令为aigv2，防止误触发
+ * 2024/07/04： 修改触发命令为aigptv2，防止误触发
  */
 
 /* 配置构造器 */
@@ -29,7 +29,7 @@ const jsonSchema = BncrCreateSchema.object({
 /* 初始化插件默认配置信息 */
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 
-const log = require('log4js').getLogger('YuanKK ChatGPT v2');
+const log = require('log4js').getLogger('XMOChatGPTV2');
 log.level = 'INFO';
 
 module.exports = async s => {
@@ -46,7 +46,7 @@ module.exports = async s => {
     let markdown = ConfigDB.userConfig.markdown;
     // 不使用Markdown的适配器
     let withoutMarkdown = ConfigDB.userConfig.withoutMarkdown;
-    const GPTV2Storage = new BncrDB('Yuan-GPTV2');
+    const GPTV2Storage = new BncrDB('ChatGPTV2');
     let platform = s.getFrom(),
         userId = s.getUserId(),
         content = s.param(1);
