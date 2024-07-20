@@ -3,7 +3,7 @@
  * @name chatgpt_v2
  * @team xmo
  * @version 1.0
- * @description ChatGPT v2 触发命令aigv2
+ * @description chatgpt_v2 触发命令aigptv2
  * @rule ^aigptv2([\s\S]+)$
  * @rule ^([\s\S]+)aigptv2$
  * @rule ^aigptv2清空上下文$
