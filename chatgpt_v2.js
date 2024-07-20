@@ -1,6 +1,6 @@
 /**
  * @author YuanKK
- * @name ChatGPT v2
+ * @name chatgpt_v2
  * @team 红灯区
  * @version 1.0
  * @description ChatGPT v2 触发命令aigv2
