@@ -1,8 +1,8 @@
 /**
  * This file is part of the App project.
- * @author 小寒寒
+ * @author xmo
  * @name wechaty
- * @origin Bncr团队
+ * @origin xmo
  * @version 1.0.5
  * @description wx机器人内置适配器，微信需要实名
  * @adapter true
