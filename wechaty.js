@@ -97,6 +97,10 @@ module.exports = async () => {
 
     bot.on('login', (user) => {
         sysMethod.startOutLogs(`wechaty：${user} 登录成功`);
+        wxname = user.payload.name;
+        if (wxDB.get("wxname")!== wxname) {
+          wxDB.set("wxname", wxname);
+        }
     });
 
     bot.on('logout', (user) => {
