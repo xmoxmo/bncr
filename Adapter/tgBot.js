@@ -1,9 +1,9 @@
 /**
  * This file is part of the App project.
- * @author Aming
+ * @author xmo
  * @name tgBot
- * @team Bncr团队
- * @version 1.0.3
+ * @team xmo
+ * @version 1.0.4
  * @description tgBot适配器
  * @adapter true
  * @public true
