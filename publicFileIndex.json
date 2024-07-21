@@ -21,5 +21,27 @@
     "isEncPlugin": false,
     "id": "xXwpd8SPCfZ06vcvqQCTKXAiHQ8=",
     "isChatPlugin": false
+  },
+  "ubnKHQJKEkfIl2I+H2w27sj9Bx0=": {
+    "type": "github",
+    "name": "wechaty",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "1.0.5",
+    "description": "wx机器人内置适配器，微信需要实名。",
+    "classification": [
+      "官方适配器"
+    ],
+    "filename": "wechaty.js",
+    "fileDir": "/Adapter/wechaty.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": true,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "ubnKHQJKEkfIl2I+H2w27sj9Bx0=",
+    "isChatPlugin": false
   }
 }
