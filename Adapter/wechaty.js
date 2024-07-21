@@ -98,8 +98,14 @@ module.exports = async () => {
     bot.on('login', (user) => {
         sysMethod.startOutLogs(`wechaty：${user} 登录成功`);
         wxname = user.payload.name;
-        if (wxDB.get("wxname") !== wxname) {
-          wxDB.set("wxname", wxname);
+        const wxDB = new BncrDB('wechaty');
+        dbwxname = wxDB.get("botname");
+        if (dbwxname) {
+          if (wxDB.get("botname") !== wxname) {
+            wxDB.set("botname", wxname);
+          }
+        } else {
+          wxDB.set("botname", wxname);
         }
     });
 
