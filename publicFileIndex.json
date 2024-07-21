@@ -43,5 +43,27 @@
     "isEncPlugin": false,
     "id": "ubnKHQJKEkfIl2I+H2w27sj9Bx0=",
     "isChatPlugin": false
+  },
+  "z1a1F3UPQ9uPXBiAIW7CNl2phUs=": {
+    "type": "github",
+    "name": "aigptv2",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "1.0",
+    "description": "aigptv2 触发命令aigptv2",
+    "classification": [
+      "GPTI"
+    ],
+    "filename": "aigptv2.js",
+    "fileDir": "/plugins/xmo/aigptv2.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "z1a1F3UPQ9uPXBiAIW7CNl2phUs=",
+    "isChatPlugin": true
   }
 }
