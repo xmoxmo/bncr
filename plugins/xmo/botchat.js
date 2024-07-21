@@ -63,9 +63,20 @@ module.exports = async (s) => {
   }
 
   async function handleGetReply(s, keyword) {
-    const wxDB = new BncrDB('wechaty');
-    wxname = await wxDB.get("wxname");
-    atbotmsg = `@${wxname}`;
+    const sfrom = s.getFrom();
+    const naDB = new BncrDB(sfrom);
+    botname = await naDB.get("botname");
+    let atbotmsg = '';
+    if (botname) {
+      atbotmsg = `@${botname}`;
+    } else {
+      botname = '';
+      if (await s.isAdmin()) {
+        if (sfrom !== 'web') {
+          await s.reply(`警告：未读取到bot名称！\n    管理员发送[set ${sfrom} botname 机器人名称]设置bot的名称，否则@机器人的信息无法识别。`);
+        }
+      }
+    }
     let reply = '';
     if (!(keyword.includes(atbotmsg))) {
       reply = await getReply(keyword);
@@ -93,7 +104,7 @@ module.exports = async (s) => {
           newkeyword = keyword;
         }
         if (await s.isAdmin()) {
-          await s.reply(`管理员调试消息：\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >信息:${keyword}\n  >名字:${wxname}\n  >内容:${newkeyword}`);
+          await s.reply(`管理员调试消息：\n  >来源:${s.getFrom()}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >信息:${keyword}\n  >名字:${botname}\n  >内容:${newkeyword}`);
         }
       }
     }
