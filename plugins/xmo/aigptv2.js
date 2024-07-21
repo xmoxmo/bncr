@@ -11,7 +11,7 @@
  * @priority 9999
  * @disable false
  * @service false
- * @public false
+ * @public true
  * @classification ["GPTI"]
  */
 /**
