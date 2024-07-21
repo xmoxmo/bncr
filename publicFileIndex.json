@@ -65,5 +65,27 @@
     "isEncPlugin": false,
     "id": "z1a1F3UPQ9uPXBiAIW7CNl2phUs=",
     "isChatPlugin": true
+  },
+  "nIHYWehpLEtXuJadKJRMKPyJMas=": {
+    "type": "github",
+    "name": "botchat",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "2.0.0",
+    "description": "自动回复插件，可调用gpti，仅支持文本。",
+    "classification": [
+      "botchat"
+    ],
+    "filename": "botchat.js",
+    "fileDir": "/plugins/xmo/botchat.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "nIHYWehpLEtXuJadKJRMKPyJMas=",
+    "isChatPlugin": true
   }
 }
