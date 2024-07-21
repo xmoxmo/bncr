@@ -6,7 +6,7 @@
  * @version 1.0.5
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
- * @public false
+ * @public true
  * @disable false
  * @priority 100
  * @classification ["官方适配器"]
