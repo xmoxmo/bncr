@@ -13,7 +13,7 @@
  * @admin false
  * @priority 9
  * @classification ["botchat"]
- * @public false
+ * @public true
  * @disable false
  */
 
