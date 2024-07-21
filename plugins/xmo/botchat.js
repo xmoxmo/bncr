@@ -154,11 +154,32 @@ module.exports = async (s) => {
         return "@noreply@";
       } else {
         groupId = s.getGroupId();
-        if (groupId && groupId !== '0') {
-          const keys = await sysDB.keys();
-          if (keys.length > 0) {
-            for (var i=0;i<keys.length;i++) {
-              if (keyword.includes(keys[i])) {
+        const keys = await sysDB.keys();
+        if (keys.length > 0) {
+          for (var i=0;i<keys.length;i++) {
+            let str = keys[i];
+            let keygjc = '';
+            let keydyy = '';
+            if (str.includes('|@|')) {
+              let strarr = str.split('|@|');
+              keygjc = strarr[0];
+              keydyy = strarr[1];
+            } else {
+              keygjc = str;
+              keydyy = '';
+            }
+            if (groupId && groupId !== '0') {
+              if (keyword.includes(keygjc)) {
+                if (!keydyy) {
+                  keydyy = groupId;
+                }
+                if (keydyy.includes(groupId)) {
+                  keyword = keys[i];
+                  break;
+                }
+              }
+            } else {
+              if (keyword === keygjc) {
                 keyword = keys[i];
                 break;
               }
