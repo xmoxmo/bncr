@@ -2,7 +2,7 @@
  * This file is part of the App project.
  * @author xmo
  * @name wechaty
- * @origin xmo
+ * @team xmo
  * @version 1.0.5
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
