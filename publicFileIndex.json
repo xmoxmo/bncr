@@ -1,11 +1,11 @@
 {
   "annotation": "该文件由系统自动生成. 用于插件市场索引,请勿编辑该文件中的任何内容",
-  "xXwpd8SPCfZ06vcvqQCTKXAiHQ8=": {
+  "7iw3GeT4AM/h3yrzdDHL4VKxb5A=": {
     "type": "github",
     "name": "tgBot",
-    "author": "Aming",
-    "team": "Bncr团队",
-    "version": "1.0.3",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "1.0.4",
     "description": "tgBot适配器",
     "classification": [
       "官方适配器"
@@ -19,7 +19,7 @@
     "isService": false,
     "isAuthentication": false,
     "isEncPlugin": false,
-    "id": "xXwpd8SPCfZ06vcvqQCTKXAiHQ8=",
+    "id": "7iw3GeT4AM/h3yrzdDHL4VKxb5A=",
     "isChatPlugin": false
   },
   "ubnKHQJKEkfIl2I+H2w27sj9Bx0=": {
