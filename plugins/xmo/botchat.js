@@ -54,7 +54,7 @@ module.exports = async (s) => {
       keydyy = strarr[1];
     }
     if (!keygjc) {
-      s.reply('设置失败：无关键词')
+      s.reply('设置失败：无关键词');
     } else {
       const result = await setReply(keyword, reply);
       // console.log(`Set reply result for keyword ${keyword}: ${result}`);
