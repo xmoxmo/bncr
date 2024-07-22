@@ -3,10 +3,10 @@
  * @author xmo
  * @name tgBot
  * @team xmo
- * @version 1.0.4
+ * @version 1.0.5
  * @description tgBot适配器
  * @adapter true
- * @public true
+ * @public false
  * @disable false
  * @priority 3
  * @classification ["官方适配器"]
@@ -123,6 +123,37 @@ module.exports = async () => {
       }
   });
   tgBot.on('polling_error', msg => console.log('tgBot轮询错误:', msg.message));
-  sysMethod.startOutLogs('链接tgBot 成功.');
+
+  async function gettgname() {
+    let baseApiUrl = ConfigDB.userConfig.proxyHost;
+    if (!baseApiUrl) {
+      baseApiUrl = 'https://api.telegram.org/';
+    }
+    const request = require('request');
+    const Token = ConfigDB.userConfig.token;
+    const ApiUrl = `${baseApiUrl}bot${Token}/getme`;
+    const ApiResponse = await new Promise((resolve, reject) => {
+      request.get(ApiUrl, (ApiError, ApiResponse, ApiBody) => {
+        if (ApiError) {
+          reject(ApiError);
+        } else {
+          resolve({ response: ApiResponse, body: ApiBody });
+        }
+      });
+    });
+    ApiData = JSON.parse(ApiResponse.body);
+    return ApiData.result.username;
+  }
+  tgname = await gettgname();
+  const tgDB = new BncrDB('tgBot');
+  dbtgname = tgDB.get("botname");
+  if (dbtgname) {
+    if (tgDB.get("botname") !== tgname) {
+      tgDB.set("botname", tgname);
+    }
+  } else {
+    tgDB.set("botname", tgname);
+  }
+  sysMethod.startOutLogs(`tgBot：Contact<${tgname}> 成功.`);
   return tg;
 };
