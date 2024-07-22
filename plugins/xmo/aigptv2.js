@@ -2,13 +2,13 @@
  * @author xmo
  * @name aigptv2
  * @team xmo
- * @version 1.0.1
+ * @version 1.0.2
  * @description aigptv2 触发命令aigptv2
  * @rule ^aigptv2([\s\S]+)$
  * @rule ^([\s\S]+)aigptv2$
  * @rule ^aigptv2清空上下文$
  * @admin false
- * @priority 9999
+ * @priority 9
  * @disable false
  * @service false
  * @public true
@@ -22,7 +22,7 @@
 /* 配置构造器 */
 const jsonSchema = BncrCreateSchema.object({
     markdown: BncrCreateSchema.boolean().setTitle('MarkDown开关').setDefault(false),
-    withoutMarkdown: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('不使用Markdown的适配器').setDescription(`qq、wechaty等`).setDefault(['qq', 'wechaty']),
+    withoutMarkdown: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('不使用Markdown的适配器').setDescription(`qq、wechaty、tgBot、web等`).setDefault(['qq', 'wechaty', 'tgBot', 'web']),
 });
 
 /* 完成细化后 BncrPluginConfig传递该jsonSchema */
@@ -61,12 +61,15 @@ module.exports = async s => {
     log.info(messagesSave);
     gpt.v2({
         messages: messagesSave,
-        markdown: markdown,
+        // 启用markdown用户配置
+        // markdown: markdown,
+        // 禁用markdown
+        markdown: false,
         stream: false
     },  async (error, result) => {
         if (error) {
             log.error(error);
-            s.reply('遇到了一些问题，请反馈控制台日志给开发者');
+            // s.reply('遇到了一些问题，请反馈控制台日志给开发者');
             return '';
         } else {
             if (result.code === 200) {
@@ -81,7 +84,7 @@ module.exports = async s => {
                 }
                 return '';
             } else {
-                s.reply('远程服务器返回错误代码 ' + result.code + ' ，请等待开发者修复');
+                // s.reply('远程服务器返回错误代码 ' + result.code + ' ，请等待开发者修复');
                 return '';
             }
         }
