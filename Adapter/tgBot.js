@@ -3,7 +3,7 @@
  * @author xmo
  * @name tgBot
  * @team xmo
- * @version 1.0.5
+ * @version 1.0.6
  * @description tgBot适配器
  * @adapter true
  * @public true
@@ -157,6 +157,6 @@ module.exports = async () => {
   } else {
     tgDB.set("botname", tgname);
   }
-  sysMethod.startOutLogs(`tgBot：Contact<${tgname}> 成功.`);
+  sysMethod.startOutLogs(`tgBot：Contact<${tgname}> 调用成功.`);
   return tg;
 };
