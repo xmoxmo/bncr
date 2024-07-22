@@ -71,7 +71,7 @@
     "name": "botchat",
     "author": "xmo",
     "team": "xmo",
-    "version": "2.0.4",
+    "version": "2.0.5",
     "description": "自动回复插件，可调用gpti，仅支持文本。",
     "classification": [
       "botchat"
