@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.0.1
+ * @version 2.0.2
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -104,7 +104,7 @@ module.exports = async (s) => {
           newkeyword = keyword;
         }
         if (await s.isAdmin()) {
-          await s.reply(`管理员调试消息：\n  >来源:${s.getFrom()}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >信息:${keyword}\n  >名字:${botname}\n  >内容:${newkeyword}`);
+          // await s.reply(`管理员调试消息：\n  >来源:${s.getFrom()}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >信息:${keyword}\n  >名字:${botname}\n  >内容:${newkeyword}`);
         }
       }
     }
