@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.0.2
+ * @version 2.0.3
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -99,6 +99,8 @@ module.exports = async (s) => {
           if (newkeyword) {
             s.inlineSugar(`aigptv2 ${newkeyword}`);
           }
+        } else {
+          return "next";
         }
         if (!(newkeyword)) {
           newkeyword = keyword;
