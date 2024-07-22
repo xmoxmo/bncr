@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.0.5
+ * @version 2.0.6
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -45,10 +45,21 @@ module.exports = async (s) => {
       // console.log('User does not have admin privileges');
       return s.reply('你没有权限执行此操作');
     }
-
-    const result = await setReply(keyword, reply);
-    // console.log(`Set reply result for keyword ${keyword}: ${result}`);
-    s.reply(result ? '设置成功' : '设置失败');
+    let str = keyword;
+    let keygjc = '';
+    let keydyy = '';
+    if (str.includes('|@|')) {
+      let strarr = str.split('|@|');
+      keygjc = strarr[0];
+      keydyy = strarr[1];
+    }
+    if (!keygjc) {
+      s.reply('设置失败：无关键词')
+    } else {
+      const result = await setReply(keyword, reply);
+      // console.log(`Set reply result for keyword ${keyword}: ${result}`);
+      s.reply(result ? '设置成功' : '设置失败');
+    }
   }
 
   async function handleDelReply(s, keyword) {
@@ -189,20 +200,22 @@ module.exports = async (s) => {
               keygjc = str;
               keydyy = '';
             }
-            if (groupId && groupId !== '0') {
-              if (keyword.includes(keygjc)) {
-                if (!keydyy) {
-                  keydyy = groupId;
+            if (keygjc) {
+              if (groupId && groupId !== '0') {
+                if (keyword.includes(keygjc)) {
+                  if (!keydyy) {
+                    keydyy = groupId;
+                  }
+                  if (keydyy.includes(groupId)) {
+                    keyword = keys[i];
+                    break;
+                  }
                 }
-                if (keydyy.includes(groupId)) {
+              } else {
+                if (keyword === keygjc) {
                   keyword = keys[i];
                   break;
                 }
-              }
-            } else {
-              if (keyword === keygjc) {
-                keyword = keys[i];
-                break;
               }
             }
           }
