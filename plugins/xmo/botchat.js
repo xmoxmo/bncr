@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.1.2
+ * @version 2.1.3
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -94,24 +94,28 @@ module.exports = async (s) => {
     } else {
       s.reply('更改失败：无标识符[|>>|]');
     }
-    let replymsg = '';
-    // 获取原回复
-    reply = await sysDB.get(oldkey);
-    if (reply) {
-      const addresult = await setReply(newkey, reply);
-      replymsg = (addresult ? '' : '添加newkey失败');
+    if (oldkey === newkey) {
+      s.reply('更改失败：修改前后key一致');
     } else {
-      s.reply('更改失败：请检查要修改的key是否正确');
-    }
-    if (replymsg) {
-      s.reply('更改失败：' + replymsg);
-    } else {
-      const delresult = await deleteReply(oldkey);
-      replymsg = (delresult ? '' : '删除oldkey失败');
+      let replymsg = '';
+      // 获取原回复
+      reply = await sysDB.get(oldkey);
+      if (reply) {
+        const addresult = await setReply(newkey, reply);
+        replymsg = (addresult ? '' : '添加newkey失败');
+      } else {
+        s.reply('更改失败：请检查要修改的key是否正确');
+      }
       if (replymsg) {
         s.reply('更改失败：' + replymsg);
       } else {
-        s.reply('更改成功');
+        const delresult = await deleteReply(oldkey);
+        replymsg = (delresult ? '' : '删除oldkey失败');
+        if (replymsg) {
+          s.reply('更改失败：' + replymsg);
+        } else {
+          s.reply('更改成功');
+        }
       }
     }
   }
