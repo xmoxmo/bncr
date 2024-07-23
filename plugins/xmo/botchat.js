@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.0.9
+ * @version 2.1.0
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -233,8 +233,9 @@ module.exports = async (s) => {
         if (keyword.includes('|@@|')) {
           let keywords = keyword.split('|@@|');
           for (var k = 0; k < keywords.length; k++) {
-            return await funreplydb(keywords[k]);
+            await funreplydb(keywords[k]);
           }
+          return "@noreply@"
         } else {
           return await funreplydb(keyword);
         }
