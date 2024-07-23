@@ -182,11 +182,12 @@ module.exports = async (s) => {
 
   async function sortArray(array) {
     array.sort((a, b) => b.length - a.length)
-  return array
+    return array
   }
 
   async function getReply(keyword) {
     try {
+      let newkeyword = '';
       if (keyword.slice(0, 7) === '@remsg@') {
         return "@noreply@";
       } else {
@@ -219,13 +220,15 @@ module.exports = async (s) => {
                 }
               } else {
                 if (keyword === keygjc) {
-                  keyword = keys[i];
-                  
+                  newkeyword += `|@@|${keys[i]}`;
                   // break;
                 }
               }
             }
           }
+        }
+        if (newkeyword) {
+          
         }
         replydb = await sysDB.get(keyword);
         if (replydb) {
