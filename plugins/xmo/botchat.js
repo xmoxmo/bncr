@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.0.6
+ * @version 2.0.7
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -228,18 +228,28 @@ module.exports = async (s) => {
           }
         }
         if (newkeyword) {
-          
+          keyword = newkeyword.slice(4);
         }
-        replydb = await sysDB.get(keyword);
-        if (replydb) {
-          if (replydb.slice(0, 7) === '@remsg@') {
-            s.inlineSugar(replydb.slice(7));
-            return "@noreply@";
-          } else {
-            return replydb;
+        if (keyword.includes('|@@|')) {
+          let keywords = str.split('|@|');
+          for (var k = 0; k < keywords.length; k++) {
+            await funreplydb(keywords[k]);
           }
         } else {
-          return null;
+          await funreplydb(keyword);
+        }
+        async function funreplydb(keyword) {
+          replydb = await sysDB.get(keyword);
+          if (replydb) {
+            if (replydb.slice(0, 7) === '@remsg@') {
+              s.inlineSugar(replydb.slice(7));
+              return "@noreply@";
+            } else {
+              return replydb;
+            }
+          } else {
+            return null;
+          }
         }
       }
     } catch (e) {
