@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.1.1
+ * @version 2.1.2
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -55,6 +55,8 @@ module.exports = async (s) => {
       let strarr = str.split('|@|');
       keygjc = strarr[0];
       keydyy = strarr[1];
+    } else {
+      keygjc = str;
     }
     if (!keygjc) {
       s.reply('设置失败：无关键词');
