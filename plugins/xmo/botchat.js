@@ -180,15 +180,21 @@ module.exports = async (s) => {
     }
   }
 
+  async function sortArray(array) {
+    array.sort((a, b) => b.length - a.length)
+  return array
+  }
+
   async function getReply(keyword) {
     try {
       if (keyword.slice(0, 7) === '@remsg@') {
         return "@noreply@";
       } else {
         groupId = s.getGroupId();
-        const keys = await sysDB.keys();
+        let keys = await sysDB.keys();
+        keys = await sortArray(keys);
         if (keys.length > 0) {
-          for (var i=0;i<keys.length;i++) {
+          for (var i = 0; i < keys.length; i++) {
             let str = keys[i];
             let keygjc = '';
             let keydyy = '';
@@ -214,7 +220,8 @@ module.exports = async (s) => {
               } else {
                 if (keyword === keygjc) {
                   keyword = keys[i];
-                  break;
+                  
+                  // break;
                 }
               }
             }
