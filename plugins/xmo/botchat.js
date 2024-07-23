@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.1.4
+ * @version 2.1.5
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -91,20 +91,17 @@ module.exports = async (s) => {
       let strarr = str.split('|>>|');
       oldkey = strarr[0];
       newkey = strarr[1];
-    } else {
-      s.reply('更改失败：无标识符[|>>|]');
-    }
-    if (oldkey === newkey) {
-      s.reply('更改失败：修改前后key一致');
-    } else {
       let replymsg = '';
-      // 获取原回复
-      reply = await sysDB.get(oldkey);
-      if (reply) {
-        const addresult = await setReply(newkey, reply);
-        replymsg = (addresult ? '' : '添加newkey失败');
+      if (oldkey === newkey) {
+        replymsg = '修改前后key一致';
       } else {
-        replymsg = '请检查要修改的key是否正确';
+        reply = await sysDB.get(oldkey);
+        if (reply) {
+          const addresult = await setReply(newkey, reply);
+          replymsg = (addresult ? '' : '添加newkey失败');
+        } else {
+          replymsg = '请检查要修改的key是否正确';
+        }
       }
       if (replymsg) {
         s.reply('更改失败：' + replymsg);
@@ -117,7 +114,10 @@ module.exports = async (s) => {
           s.reply('更改成功');
         }
       }
+    } else {
+      s.reply('更改失败：无标识符[|>>|]');
     }
+
   }
 
   async function handleGetReply(s, keyword) {
