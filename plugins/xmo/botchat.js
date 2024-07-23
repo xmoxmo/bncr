@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.1.3
+ * @version 2.1.4
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -104,7 +104,7 @@ module.exports = async (s) => {
         const addresult = await setReply(newkey, reply);
         replymsg = (addresult ? '' : '添加newkey失败');
       } else {
-        s.reply('更改失败：请检查要修改的key是否正确');
+        replymsg = '请检查要修改的key是否正确';
       }
       if (replymsg) {
         s.reply('更改失败：' + replymsg);
