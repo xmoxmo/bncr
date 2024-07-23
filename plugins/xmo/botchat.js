@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.1.0
+ * @version 2.1.1
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -33,6 +33,8 @@ module.exports = async (s) => {
       await handleEmptyKeywords(s);
     } else if (replyContent === 'del') {
       await handleDelReply(s, keyword);
+    } else if (keyword  === 'upkey') {
+      await handleModifykey(s, replyContent);
     } else {
       await handleAddReply(s, keyword, replyContent);
     }
@@ -45,6 +47,7 @@ module.exports = async (s) => {
       // console.log('User does not have admin privileges');
       return s.reply('你没有权限执行此操作');
     }
+
     let str = keyword;
     let keygjc = '';
     let keydyy = '';
@@ -71,6 +74,44 @@ module.exports = async (s) => {
     const result = await deleteReply(keyword);
     // console.log(`Delete reply result for keyword ${keyword}: ${result}`);
     s.reply(result ? '删除成功' : '删除失败');
+  }
+
+  async function handleModifykey(s, keyword) {
+    if (!(await s.isAdmin())) {
+      // console.log('User does not have admin privileges');
+      return s.reply('你没有权限执行此操作');
+    }
+    
+    let str = keyword;
+    let oldkey = '';
+    let newkey = '';
+    if (str.includes('|>>|')) {
+      let strarr = str.split('|>>|');
+      oldkey = strarr[0];
+      newkey = strarr[1];
+    } else {
+      s.reply('更改失败：无标识符[|>>|]');
+    }
+    let replymsg = '';
+    // 获取原回复
+    reply = await sysDB.get(oldkey);
+    if (reply) {
+      const addresult = await setReply(newkey, reply);
+      replymsg = (addresult ? '' : '添加newkey失败');
+    } else {
+      s.reply('更改失败：请检查要修改的key是否正确');
+    }
+    if (replymsg) {
+      s.reply('更改失败：' + replymsg);
+    } else {
+      const delresult = await deleteReply(oldkey);
+      replymsg = (delresult ? '' : '删除oldkey失败');
+      if (replymsg) {
+        s.reply('更改失败：' + replymsg);
+      } else {
+        s.reply('更改成功');
+      }
+    }
   }
 
   async function handleGetReply(s, keyword) {
