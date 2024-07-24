@@ -3,7 +3,7 @@
  * @author xmo
  * @name wechaty
  * @team xmo
- * @version 1.1.0
+ * @version 1.1.1
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -29,7 +29,7 @@ const jsonSchema = BncrCreateSchema.object({
         enable: BncrCreateSchema.boolean().setTitle('启用').setDescription('是否启用').setDefault(true),
         rule: BncrCreateSchema.object({
             joinIds: BncrCreateSchema.string().setTitle('进群监控').setDescription(`当有人进群后触发消息监控的群，多个用,隔开`).setDefault(""),
-            joinMsg: BncrCreateSchema.string().setTitle('进群提示').setDescription(`当有人进群后触发消息`).setDefault("欢迎加入大家庭~"),
+            joinMsg: BncrCreateSchema.string().setTitle('进群提示').setDescription(`当有人进群后触发消息，“\\n”换行`).setDefault("欢迎加入大家庭~"),
         }),
     })).setTitle('群聊相关').setDefault([])
 });
@@ -130,7 +130,7 @@ module.exports = async () => {
             const joinIds = group.rule.joinIds?.split(",") || [];
             const joinMsg = group.rule.joinMsg || '欢迎加入大家庭~';
             if (joinIds.includes(roomId) && joinMsg) {
-                await room.say(joinMsg);
+                await room.say(`${joinMsg.replaceAll('\\n', '\n')}`);
             }
         }
     });
