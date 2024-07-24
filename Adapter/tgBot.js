@@ -3,7 +3,7 @@
  * @author xmo
  * @name tgBot
  * @team xmo
- * @version 1.0.7
+ * @version 1.0.8
  * @description tgBot适配器
  * @adapter true
  * @public true
