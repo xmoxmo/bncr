@@ -3,7 +3,7 @@
  * @author xmo
  * @name wechaty
  * @team xmo
- * @version 1.0.6
+ * @version 1.0.7
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -94,6 +94,10 @@ module.exports = async () => {
 
     bot.on('scan', (qrcode, status) => {
         sysMethod.startOutLogs(`wechaty: 正在登录，${status}\nhttps://wechaty.js.org/qrcode/${encodeURIComponent(qrcode)}`);
+        sysMethod.pushAdmin({
+            platform: [],
+            msg: `wechaty登录: https://wechaty.js.org/qrcode/${encodeURIComponent(qrcode)}`,
+        });
     });
 
     bot.on('login', (user) => {
