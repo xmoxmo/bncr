@@ -3,7 +3,7 @@
  * @author xmo
  * @name wechaty
  * @team xmo
- * @version 1.0.9
+ * @version 1.1.0
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -105,12 +105,14 @@ module.exports = async () => {
         wxname = user.payload.name;
         const wxDB = new BncrDB('wechaty');
         dbwxname = wxDB.get("botname");
-        if (dbwxname) {
-          if (wxDB.get("botname") !== wxname) {
+        if (wxname) {
+            if (dbwxname) {
+            if (wxDB.get("botname") !== wxname) {
+                wxDB.set("botname", wxname);
+            }
+            } else {
             wxDB.set("botname", wxname);
-          }
-        } else {
-          wxDB.set("botname", wxname);
+            }
         }
     });
 
