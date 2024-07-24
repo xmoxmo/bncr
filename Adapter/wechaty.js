@@ -3,7 +3,7 @@
  * @author xmo
  * @name wechaty
  * @team xmo
- * @version 1.0.8
+ * @version 1.0.9
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -28,7 +28,7 @@ const jsonSchema = BncrCreateSchema.object({
     rooms: BncrCreateSchema.array(BncrCreateSchema.object({
         enable: BncrCreateSchema.boolean().setTitle('启用').setDescription('是否启用').setDefault(true),
         rule: BncrCreateSchema.object({
-            joinIds: BncrCreateSchema.string().setTitle('进群监控').setDescription(`当有人进群后触发消息监控的群`).setDefault(""),
+            joinIds: BncrCreateSchema.string().setTitle('进群监控').setDescription(`当有人进群后触发消息监控的群，多个用,隔开`).setDefault(""),
             joinMsg: BncrCreateSchema.string().setTitle('进群提示').setDescription(`当有人进群后触发消息`).setDefault("欢迎加入大家庭~"),
         }),
     })).setTitle('群聊相关').setDefault([])
