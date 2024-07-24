@@ -150,12 +150,14 @@ module.exports = async () => {
   tgname = await gettgname();
   const tgDB = new BncrDB('tgBot');
   dbtgname = tgDB.get("botname");
-  if (dbtgname) {
-    if (tgDB.get("botname") !== tgname) {
+  if (tgname) {
+    if (dbtgname) {
+      if (tgDB.get("botname") !== tgname) {
+        tgDB.set("botname", tgname);
+      }
+    } else {
       tgDB.set("botname", tgname);
     }
-  } else {
-    tgDB.set("botname", tgname);
   }
   sysMethod.startOutLogs(`tgBot：Contact<${tgname}> 调用成功`);
   return tg;
