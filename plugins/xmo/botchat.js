@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.1.6
+ * @version 2.1.7
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -147,7 +147,7 @@ module.exports = async (s) => {
     groupId = s.getGroupId();
     if (reply) {
       // console.log(`Replying with: ${reply}`);
-      if (!(reply === '@noreply@')) {
+      if (reply !== '@noreply@') {
         await s.reply(reply);
       }
     } else {
