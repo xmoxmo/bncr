@@ -3,7 +3,7 @@
  * @author xmo
  * @name wechaty
  * @team xmo
- * @version 1.0.7
+ * @version 1.0.8
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -25,10 +25,13 @@ const jsonSchema = BncrCreateSchema.object({
         hello: BncrCreateSchema.string().setTitle('好友验证消息').setDescription(`设置后需要验证消息后才会自动同意好友`).setDefault(''),
         autoReply: BncrCreateSchema.string().setTitle('通过好友后自动发送的消息').setDescription(`留空则不回复`).setDefault(''),
     }).setTitle('好友相关').setDefault({}),
-    room: BncrCreateSchema.object({
-        joinList: BncrCreateSchema.string().setTitle('进群监控').setDescription(`当有人进群后触发消息监控的群，多个用,隔开`).setDefault(""),
-        joinTips: BncrCreateSchema.string().setTitle('进群提示').setDescription(`当有人进群后触发消息`).setDefault("欢迎加入大家庭~")
-    }).setTitle('群聊相关').setDefault({})
+    rooms: BncrCreateSchema.array(BncrCreateSchema.object({
+        enable: BncrCreateSchema.boolean().setTitle('启用').setDescription('是否启用').setDefault(true),
+        rule: BncrCreateSchema.object({
+            joinIds: BncrCreateSchema.string().setTitle('进群监控').setDescription(`当有人进群后触发消息监控的群`).setDefault(""),
+            joinMsg: BncrCreateSchema.string().setTitle('进群提示').setDescription(`当有人进群后触发消息`).setDefault("欢迎加入大家庭~"),
+        }),
+    })).setTitle('群聊相关').setDefault([])
 });
 
 /* 配置管理器 */
@@ -46,9 +49,6 @@ module.exports = async () => {
     const accept = ConfigDB.userConfig.friend.accept;
     const hello = ConfigDB.userConfig.friend.hello || '';
     const autoReply = ConfigDB.userConfig.friend.autoReply || '';
-
-    const joinList = ConfigDB.userConfig.room.joinList?.split(",") || [];
-    const joinTips = ConfigDB.userConfig.room.joinTips || '欢迎加入大家庭~';
 
     /** 定时器 */
     let timeoutID = setTimeout(() => {
@@ -123,15 +123,20 @@ module.exports = async () => {
         await room.sync();
         const topic = await room.topic();
         const roomId = Buffer.from(topic, 'utf-8').toString('hex');
-        if (joinList.includes(roomId) && joinTips) {
-            await room.say(joinTips);
+        const rooms = ConfigDB.userConfig.rooms.filter(o => o.enable) || [];
+        for (const group of rooms) {
+            const joinIds = group.rule.joinIds?.split(",") || [];
+            const joinMsg = group.rule.joinMsg || '欢迎加入大家庭~';
+            if (joinIds.includes(roomId) && joinMsg) {
+                await room.say(joinMsg);
+            }
         }
     });
 
     // 邀请进群
     bot.on("room-invite", async (roomInvitation) => {
         log.warn(`wechaty：收到邀请机器人进群事件`);
-    })
+    });
 
     bot.on("room-topic", async (room, newTopic, oldTopic, changer) => {
         log.warn(`wechaty：收到群聊名称修改事件`);
