@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.1.5
+ * @version 2.1.6
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -289,6 +289,9 @@ module.exports = async (s) => {
 
         async function funreplydb(keyword) {
           replydb = await sysDB.get(keyword);
+          if (replydb === '@noreply@') {
+            return "@noreply@";
+          }         
           if (replydb) {
             if (replydb.slice(0, 7) === '@remsg@') {
               s.inlineSugar(replydb.slice(7));
