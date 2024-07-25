@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.1.7
+ * @version 2.1.8
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -17,9 +17,22 @@
  * @disable false
  */
 
+const jsonSchema = BncrCreateSchema.object({
+  basic: BncrCreateSchema.object({
+    forward: BncrCreateSchema.string().setTitle('指令关键词').setDescription(`请输入其他插件匹配指令关键词，留空则不启用调用，仅读取数据库内容。`).setDefault('aigptv2'),
+  }).setTitle('基本设置').setDefault({}),
+  debug: BncrCreateSchema.object({
+    enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
+  }).setTitle('调试设置').setDefault({})
+});
+const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
+  if (!Object.keys(ConfigDB.userConfig).length) {
+    s.reply('请前往前端web"插件配置"来完成插件首次配置。');
+    return 'next';
+  }
+  
   const sysDB = new BncrDB('BotReplyDB');
-
   const commandType = s.param(1);
   const keyword = s.param(2);
   const replyContent = s.param(3);
@@ -151,28 +164,48 @@ module.exports = async (s) => {
         await s.reply(reply);
       }
     } else {
+      const forwardline = ConfigDB.userConfig.basic.forward;
       if (!groupId || groupId === '0') {
-        s.inlineSugar(`aigptv2 ${keyword}`);
+        if (forwardline) {
+          s.inlineSugar(`${forwardline} ${keyword}`);
+        } else {
+          return "next";
+        }
       } else {
         let newkeyword = '';
+        let sreturn = '';
         if (atbotmsg) {
           if (keyword.includes(atbotmsg)) {
             newkeyword = keyword.replace(new RegExp(atbotmsg,'g'), "");
             newkeyword = newkeyword.replace(new RegExp(" ",'g'), "");
             if (newkeyword) {
-              s.inlineSugar(`aigptv2 ${newkeyword}`);
+              if (forwardline) {
+                s.inlineSugar(`${forwardline} ${newkeyword}`);
+              } else {
+                sreturn = 'next';
+              }
             }
           } else {
-            return "next";
+            sreturn = 'next';
           }
         } else {
-          return "next";
+          sreturn = 'next';
         }
         if (!(newkeyword)) {
           newkeyword = keyword;
         }
         if (await s.isAdmin()) {
-          // await s.reply(`管理员调试消息：\n  >来源:${s.getFrom()}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >信息:${keyword}\n  >名字:${botname}\n  >内容:${newkeyword}`);
+          let debug = ConfigDB.userConfig.debug.enable;
+          if (debug) {
+            // await s.reply(`管理员调试消息：\n  >来源:${s.getFrom()}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >信息:${keyword}\n  >名字:${botname}\n  >内容:${newkeyword}\n  >指令:${forwardline}\n  >调试:${debug}`);
+            sysMethod.pushAdmin({
+                platform: [`${sfrom}`],
+                msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >信息:${keyword}\n  >名字:${botname}\n  >内容:${newkeyword}\n  >指令:${forwardline}\n  >调试:${debug}`,
+            });
+          }
+        }
+        if (sreturn) {
+          return sreturn;
         }
       }
     }
