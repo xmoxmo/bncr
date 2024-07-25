@@ -48,6 +48,8 @@ module.exports = async (s) => {
       await handleDelReply(s, keyword);
     } else if (keyword  === 'upkey') {
       await handleModifykey(s, replyContent);
+    } else if (keyword  === 'treply') {
+      await handlereplacekeyword(s, replyContent);
     } else {
       await handleAddReply(s, keyword, replyContent);
     }
@@ -133,6 +135,45 @@ module.exports = async (s) => {
 
   }
 
+  async function handlereplacekeyword(s, keyword) {
+    if (!(await s.isAdmin())) {
+      // console.log('User does not have admin privileges');
+      return s.reply('你没有权限执行此操作');
+    }
+
+    if (keyword.includes('|tt|')) {
+      let wstrarr = keyword.split('|tt|');
+      oldt = wstrarr[0];
+      newt = wstrarr[1];
+      let replymsg = '';
+      if (oldt === newt) {
+        replymsg = '替换词前后一致';
+      } else {
+        let keys = await sysDB.keys();
+        if (keys.length > 0) {
+          for (var i = 0; i < keys.length; i++) {
+            let replydb = '';
+            let addmsg = '';
+            let key = keys[i];
+            replydb = await sysDB.get(key);
+            newreplydb = replydb.replace(new RegExp(atbotmsg,'g'), "");
+            addresult = await setReply(key, newreplydb);
+            addmsg = (addresult ? '' : key);
+            replymsg += '、' + addmsg;
+          }
+          replymsg = replymsg.slice(1);
+        }
+      }
+      if (replymsg) {
+        s.reply('替换失败：' + replymsg);
+      } else {
+        s.reply('替换成功');
+      }
+    } else {
+      s.reply('替换失败：无标识符[|tt|]');
+    }
+  }
+  
   async function handleGetReply(s, keyword) {
     const sfrom = s.getFrom();
     const naDB = new BncrDB(sfrom);
