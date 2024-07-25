@@ -2,13 +2,13 @@
  * @author Merrick
  * @name chatgpt
  * @origin Merrick
- * @version 1.0.5
+ * @version 1.0.6
  * @description ChatGpt聊天，适配无界3.0
  * @team Merrick
  * @rule ^(aichatgpt|aidraw) ([\s\S]+)$
  * @rule ^(aichatgpt)$
  * @admin true
- * @public false
+ * @public true
  * @priority 99999
  * @classification ["插件"]
  * @disable false
