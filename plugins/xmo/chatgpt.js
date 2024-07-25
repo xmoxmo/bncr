@@ -2,7 +2,7 @@
  * @author xmo
  * @name chatgpt
  * @origin xmo
- * @version 1.0.7
+ * @version 1.0.8
  * @description ChatGpt聊天，适配无界3.0
  * @team xmo
  * @rule ^(aichatgpt|aidraw) ([\s\S]+)$
@@ -95,7 +95,7 @@ module.exports = async s => {
         debug: false
     });
 
-    if (s.param(1) === 'ai') {
+    if (s.param(1) === 'aichatgpt') {
         let prompt = '';
         if (!promptDiy) {
             prompt = prompts[CDB.promptSel].prompt;
@@ -111,6 +111,7 @@ module.exports = async s => {
             timeoutMs: 3 * 10 * 1000
         });
         await relpyMod(s, isEdit, response.text);
+        /*
         while (true) {
             //超时1s自动结束
             let input = await s.waitInput(() => { }, 1);
@@ -134,7 +135,8 @@ module.exports = async s => {
                 return;
             }
         }
-    } else if (s.param(1) === '画图') {
+        */
+    } else if (s.param(1) === 'aidraw') {
         if (!imgBaseUrl) return await relpyMod(s, isEdit, "未配置画图ApiBaseUrl");
         if (!imgApiKey) return await relpyMod(s, isEdit, "未配置画图ApiKey");
         if (!imgMode) return await relpyMod(s, isEdit, "未配置画图模型");
