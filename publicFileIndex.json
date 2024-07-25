@@ -87,5 +87,27 @@
     "isEncPlugin": false,
     "id": "nIHYWehpLEtXuJadKJRMKPyJMas=",
     "isChatPlugin": true
+  },
+  "VuYp7vmilURtJaNRSTbK1U46bOI=": {
+    "type": "github",
+    "name": "chatgpt",
+    "author": "Merrick",
+    "team": "Merrick",
+    "version": "1.0.6",
+    "description": "ChatGpt聊天，适配无界3.0",
+    "classification": [
+      "插件"
+    ],
+    "filename": "chatgpt.js",
+    "fileDir": "/plugins/xmo/chatgpt.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "VuYp7vmilURtJaNRSTbK1U46bOI=",
+    "isChatPlugin": true
   }
 }
