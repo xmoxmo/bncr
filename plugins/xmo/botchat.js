@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.1.9
+ * @version 2.2.0
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -156,7 +156,7 @@ module.exports = async (s) => {
             let addmsg = '';
             let key = keys[i];
             replydb = await sysDB.get(key);
-            newreplydb = replydb.replace(new RegExp(atbotmsg,'g'), "");
+            newreplydb = replydb.replace(new RegExp(oldt,'g'), newt);
             addresult = await setReply(key, newreplydb);
             addmsg = (addresult ? '' : key);
             replymsg += '、' + addmsg;
