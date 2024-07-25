@@ -1,10 +1,10 @@
 /**
- * @author Merrick
+ * @author xmo
  * @name chatgpt
- * @origin Merrick
- * @version 1.0.6
+ * @origin xmo
+ * @version 1.0.7
  * @description ChatGpt聊天，适配无界3.0
- * @team Merrick
+ * @team xmo
  * @rule ^(aichatgpt|aidraw) ([\s\S]+)$
  * @rule ^(aichatgpt)$
  * @admin true
