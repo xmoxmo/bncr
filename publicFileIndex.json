@@ -88,12 +88,12 @@
     "id": "nIHYWehpLEtXuJadKJRMKPyJMas=",
     "isChatPlugin": true
   },
-  "VuYp7vmilURtJaNRSTbK1U46bOI=": {
+  "K7T7jAKMsYZDOEy6bBDXKCGqKug=": {
     "type": "github",
     "name": "chatgpt",
-    "author": "Merrick",
-    "team": "Merrick",
-    "version": "1.0.6",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "1.0.7",
     "description": "ChatGpt聊天，适配无界3.0",
     "classification": [
       "插件"
@@ -107,7 +107,7 @@
     "isService": false,
     "isAuthentication": false,
     "isEncPlugin": false,
-    "id": "VuYp7vmilURtJaNRSTbK1U46bOI=",
+    "id": "K7T7jAKMsYZDOEy6bBDXKCGqKug=",
     "isChatPlugin": true
   }
 }
