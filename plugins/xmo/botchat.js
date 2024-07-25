@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.2.1
+ * @version 2.2.2
  * @description 自动回复插件，可调用gpti，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -32,6 +32,8 @@ module.exports = async (s) => {
     return 'next';
   }
   
+  const forwardline = ConfigDB.userConfig.basic.forward;
+  const debug = ConfigDB.userConfig.debug.enable;
   const sysDB = new BncrDB('BotReplyDB');
   const commandType = s.param(1);
   const keyword = s.param(2);
@@ -209,7 +211,6 @@ module.exports = async (s) => {
         await s.reply(reply);
       }
     } else {
-      const forwardline = ConfigDB.userConfig.basic.forward;
       if (!groupId || groupId === '0') {
         if (forwardline) {
           s.inlineSugar(`${forwardline} ${keyword}`);
@@ -240,7 +241,6 @@ module.exports = async (s) => {
           newkeyword = keyword;
         }
         if (await s.isAdmin()) {
-          let debug = ConfigDB.userConfig.debug.enable;
           if (debug) {
             // await s.reply(`管理员调试消息：\n  >来源:${s.getFrom()}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >信息:${keyword}\n  >名字:${botname}\n  >内容:${newkeyword}\n  >指令:${forwardline}\n  >调试:${debug}`);
             sysMethod.pushAdmin({
@@ -372,7 +372,7 @@ module.exports = async (s) => {
           }         
           if (replydb) {
             if (replydb.slice(0, 7) === '@remsg@') {
-              s.inlineSugar(replydb.slice(7));
+              s.inlineSugar(replydb.slice(7).replace('@chatcom@',forwardline));
               return "@noreply@";
             } else {
               await s.reply(replydb)
