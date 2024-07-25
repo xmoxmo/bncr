@@ -2,8 +2,8 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.2.2
- * @description 自动回复插件，可调用gpti，仅支持文本。
+ * @version 2.2.3
+ * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
  * @rule ^(botreply)\s+(list)$
