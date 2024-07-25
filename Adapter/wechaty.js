@@ -3,7 +3,7 @@
  * @author xmo
  * @name wechaty
  * @team xmo
- * @version 1.1.1
+ * @version 1.1.2
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -18,7 +18,7 @@
 const jsonSchema = BncrCreateSchema.object({
     basic: BncrCreateSchema.object({
         enable: BncrCreateSchema.boolean().setTitle('是否开启适配器').setDescription(`设置为关则不加载该适配器`).setDefault(false),
-        name: BncrCreateSchema.string().setTitle('机器人标识').setDescription(`设置后后续自动登录，更换微信时请更换标识`).setDefault('wechaty')
+        name: BncrCreateSchema.string().setTitle('机器人标识').setDescription(`设置后后续自动登录，更换微信时请更换标识`).setDefault('wechaty'),
     }).setTitle('基本设置').setDefault({}),
     friend: BncrCreateSchema.object({
         accept: BncrCreateSchema.boolean().setTitle('自动同意好友申请').setDescription(`设置后自动同意微信好友申请`).setDefault(true),
