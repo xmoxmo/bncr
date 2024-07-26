@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.2.4
+ * @version 2.2.5
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -374,7 +374,15 @@ module.exports = async (s) => {
           }         
           if (replydb) {
             if (replydb.slice(0, 7) === '@remsg@') {
-              s.inlineSugar(replydb.slice(7).replace('@chatcom@',forwardline));
+              if (replydb.includes('@chatcom@')) {
+                if (forwardline) {
+                  s.inlineSugar(replydb.slice(7).replace('@chatcom@',forwardline));
+                } else {
+                  await s.reply('未在适配器定义“指令关键词”，无法执行重定向命令')
+                }
+              } else {
+                s.inlineSugar(replydb.slice(7));
+              }
               return "@noreply@";
             } else {
               await s.reply(replydb)
