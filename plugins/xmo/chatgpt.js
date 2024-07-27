@@ -2,12 +2,12 @@
  * @author xmo
  * @name chatgpt
  * @origin xmo
- * @version 1.0.8
+ * @version 1.0.9
  * @description ChatGpt聊天，适配无界3.0
  * @team xmo
  * @rule ^(aichatgpt|aidraw) ([\s\S]+)$
  * @rule ^(aichatgpt)$
- * @admin true
+ * @admin false
  * @public true
  * @priority 99999
  * @classification ["插件"]
