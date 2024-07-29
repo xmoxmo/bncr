@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.2.6
+ * @version 2.2.7
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -38,6 +38,7 @@ module.exports = async (s) => {
   if (forward) {
     forwardline = ConfigDB.userConfig.basic.forward;
   }
+  const sfrom = s.getFrom();
   const debug = ConfigDB.userConfig.debug.enable;
   const sysDB = new BncrDB('BotReplyDB');
   const commandType = s.param(1);
@@ -188,7 +189,6 @@ module.exports = async (s) => {
   }
 
   async function handleGetReply(s, keyword) {
-    const sfrom = s.getFrom();
     const naDB = new BncrDB(sfrom);
     botname = await naDB.get("botname");
     let atbotmsg = '';
