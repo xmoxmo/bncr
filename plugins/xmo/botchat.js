@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.2.9
+ * @version 2.3.0
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -244,7 +244,7 @@ module.exports = async (s) => {
         } else {
           sreturn = 'next';
         }
-        if (!(newkeyword)) {
+        if (!newkeyword) {
           newkeyword = keyword;
         }
         if (await s.isAdmin()) {
@@ -375,18 +375,20 @@ module.exports = async (s) => {
           replydb = await sysDB.get(keyword);
           if (replydb === '@noreply@') {
             return "@noreply@";
-          }         
+          }
           if (replydb) {
             if (replydb.slice(0, 7) === '@remsg@') {
               if (replydb.includes('@chatcom@')) {
                 if (forwardline) {
                   s.inlineSugar(replydb.slice(7).replace('@chatcom@',forwardline));
                 } else {
-                  if (debug) {
-                    sysMethod.pushAdmin({
-                        platform: [`${sfrom}`],
-                        msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >关键词:${keyword}\n  >对应回复:${replydb}\n  >相关指令:${forwardline}`,
-                    });
+                  if (await s.isAdmin()) {
+                    if (debug) {
+                      sysMethod.pushAdmin({
+                          platform: [`${sfrom}`],
+                          msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
+                      });
+                    }
                   }
                 }
               } else {
