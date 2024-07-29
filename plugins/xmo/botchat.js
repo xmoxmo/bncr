@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.2.5
+ * @version 2.2.6
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -19,6 +19,7 @@
 
 const jsonSchema = BncrCreateSchema.object({
   basic: BncrCreateSchema.object({
+    enable: BncrCreateSchema.boolean().setTitle('指令开关').setDescription(`开启将启用匹配其他插件指令，开启并填写指令关键词后生效。`).setDefault(true),
     forward: BncrCreateSchema.string().setTitle('指令关键词').setDescription(`请输入其他插件匹配指令关键词，留空则不启用调用，仅读取数据库内容。`).setDefault('aigptv2'),
   }).setTitle('基本设置').setDefault({}),
   debug: BncrCreateSchema.object({
@@ -32,7 +33,11 @@ module.exports = async (s) => {
     return 'next';
   }
   
-  const forwardline = ConfigDB.userConfig.basic.forward;
+  const forward = ConfigDB.userConfig.basic.enable;
+  let forwardline = '';
+  if (forward) {
+    forwardline = ConfigDB.userConfig.basic.forward;
+  }
   const debug = ConfigDB.userConfig.debug.enable;
   const sysDB = new BncrDB('BotReplyDB');
   const commandType = s.param(1);
@@ -378,7 +383,12 @@ module.exports = async (s) => {
                 if (forwardline) {
                   s.inlineSugar(replydb.slice(7).replace('@chatcom@',forwardline));
                 } else {
-                  await s.reply('未在适配器定义“指令关键词”，无法执行重定向命令')
+                  if (debug) {
+                    sysMethod.pushAdmin({
+                        platform: [`${sfrom}`],
+                        msg: '未在适配器开启指令开关或定义"指令关键词"，无法执行重定向命令',
+                    });
+                  }
                 }
               } else {
                 s.inlineSugar(replydb.slice(7));
