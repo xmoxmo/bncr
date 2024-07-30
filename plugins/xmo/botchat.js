@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.3.2
+ * @version 2.3.3
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -263,6 +263,11 @@ module.exports = async (s) => {
   }
 
   async function handleListKeywords(s) {
+    if (!(await s.isAdmin())) {
+      // console.log('User does not have admin privileges');
+      return s.reply('你没有权限执行此操作');
+    }
+    
     const keys = await sysDB.keys();
     // console.log(`Listing keywords: ${keys}`);
     if (keys.length > 0) {
