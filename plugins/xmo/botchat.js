@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.3.1
+ * @version 2.3.2
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -397,13 +397,17 @@ module.exports = async (s) => {
               return "@noreply@";
             } else {
               let replydbtype = '';
+              let replymsg = '';
               if (replydb.includes('@type@')) {
                 replydbtype = replydb.split('@type@');
+                replymsg = replydbtype[2];
+              } else {
+                replymsg = replydb;
               }
               await s.reply({
                 type: replydbtype[0] || 'text',
                 path: replydbtype[1] || '',
-                msg: replydbtype[2] || replydb,
+                msg: replymsg,
               });
               return "@noreply@";
             }
