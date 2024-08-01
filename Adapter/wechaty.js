@@ -3,7 +3,7 @@
  * @author xmo
  * @name wechaty
  * @team xmo
- * @version 1.1.4
+ * @version 1.1.5
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -129,7 +129,7 @@ module.exports = async () => {
         for (const group of rooms) {
             const joinIds = group.rule.joinIds?.split(",") || [];
             const joinMsg = group.rule.joinMsg || '欢迎加入大家庭~';
-            if (joinIds.includes(roomId) && joinMsg) {
+            if ((joinIds.indexOf(roomId) != -1) && joinMsg) {
                 await room.say(`${joinMsg.replaceAll('\\n', '\n')}`);
             }
         }
