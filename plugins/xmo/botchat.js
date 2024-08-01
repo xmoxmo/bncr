@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.3.3
+ * @version 2.3.4
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -197,7 +197,7 @@ module.exports = async (s) => {
     } else {
       botname = '';
       if (await s.isAdmin()) {
-        if (sfrom !== 'web') {
+        if (sfrom !== 'web' && sfrom !== 'ssh') {
           await s.reply(`警告：未读取到bot名称！\n    管理员发送[set ${sfrom} botname 机器人名称]设置bot的名称，否则@机器人的信息无法识别。`);
         }
       }
