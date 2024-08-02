@@ -3,7 +3,7 @@
  * @author xmo
  * @name wechaty
  * @team xmo
- * @version 1.1.6
+ * @version 1.1.7
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -185,7 +185,7 @@ module.exports = async () => {
             const type = message.type();
             // 屏蔽非文本消息
             if (type != 7) {
-                console.log(`wechaty收到暂不支持的消息：type[${type}]|toString[${message.toString()}]`);
+                console.log(`wechaty收到暂不支持的消息:type{${type}}|toString{${message.toString()}}`);
                 return;
             }
             const room = message.room();
