@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.3.9
+ * @version 2.4.0
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -22,7 +22,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('指令开关').setDescription(`开启将启用匹配其他插件指令，开启并填写指令关键词后生效。`).setDefault(true),
     forward: BncrCreateSchema.string().setTitle('指令关键词').setDescription(`请输入其他插件匹配指令关键词，留空则不启用调用，仅读取数据库内容。`).setDefault('aigptv2'),
     noname: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('无需设置bot名称的适配器').setDescription(`填写未设置bot名称不提示引导操作的适配器名称，设置bot名称主要用来识别群组内是否被@。`).setDefault(['web', 'ssh']),
-    outreply: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('禁用聊天模式的适配器').setDescription(`填写数据库中无匹配数据将不再调用"指令关键词"所属插件进行额外回复的适配器名称。`).setDefault([]),
+    outreply: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('禁用聊天模式的适配器').setDescription(`填写数据库中无匹配数据时不再调用"指令关键词"进行额外回复的适配器名称。`).setDefault([]),
   }).setTitle('基本设置').setDefault({}),
   debug: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
