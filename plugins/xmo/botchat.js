@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.3.6
+ * @version 2.3.7
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -21,6 +21,8 @@ const jsonSchema = BncrCreateSchema.object({
   basic: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('指令开关').setDescription(`开启将启用匹配其他插件指令，开启并填写指令关键词后生效。`).setDefault(true),
     forward: BncrCreateSchema.string().setTitle('指令关键词').setDescription(`请输入其他插件匹配指令关键词，留空则不启用调用，仅读取数据库内容。`).setDefault('aigptv2'),
+    noname: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('不用提示无bot名称的适配器').setDescription(`填写不用设置bot名称的适配器，设置bot名称主要用来识别所内是否被@。`).setDefault(['web', 'ssh']),
+    outreply: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('禁用聊天模式的适配器').setDescription(`数据库中无匹配数据将不再调用指令关键词所属插件进行额外回复。`).setDefault([]),
   }).setTitle('基本设置').setDefault({}),
   debug: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
@@ -38,6 +40,8 @@ module.exports = async (s) => {
   if (forward) {
     forwardline = ConfigDB.userConfig.basic.forward;
   }
+  const nonamearr = ConfigDB.userConfig.basic.noname;
+  const outreplyarr = ConfigDB.userConfig.basic.outreply;
   const sfrom = s.getFrom();
   const debug = ConfigDB.userConfig.debug.enable;
   const sysDB = new BncrDB('BotReplyDB');
@@ -197,7 +201,7 @@ module.exports = async (s) => {
     } else {
       botname = '';
       if (await s.isAdmin()) {
-        if (sfrom !== 'web' && sfrom !== 'ssh') {
+        if (nonamearr.indexOf(sfrom) == -1) {
           await s.reply(`警告：未读取到bot名称！\n    管理员发送[set ${sfrom} botname 机器人名称]设置bot的名称，否则@机器人的信息无法识别。`);
         }
       }
@@ -218,6 +222,9 @@ module.exports = async (s) => {
         await s.reply(reply);
       }
     } else {
+      if (outreplyarr.indexOf(sfrom) != -1) {
+        forwardline = '';
+      }
       if (!groupId || groupId === '0') {
         if (forwardline) {
           s.inlineSugar(`${forwardline} ${keyword}`);
