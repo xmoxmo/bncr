@@ -2,7 +2,7 @@
  * @author xmo
  * @name chatgpt
  * @origin xmo
- * @version 1.1.0
+ * @version 1.1.1
  * @description ChatGpt聊天，适配无界3.0
  * @team xmo
  * @rule ^(aichatgpt|aidraw) ([\s\S]+)$
@@ -113,8 +113,8 @@ module.exports = async s => {
         await relpyMod(s, isEdit, response.text);
         /*
         while (true) {
-            //超时1s自动结束
-            let input = await s.waitInput(() => { }, 1);
+            //超时60s自动结束
+            let input = await s.waitInput(() => { }, 60);
             if (!input) {
                 // await relpyMod(s, isEdit, "对话超时。");
                 break;
@@ -179,7 +179,8 @@ module.exports = async s => {
                 replyObj['groupId'] = groupId;
             }
             replyObj['userId'] = userId;
-            sysMethod.push(replyObj);
+            // sysMethod.push(replyObj);
+            await s.reply(replyObj);
         }
     }
 }    
