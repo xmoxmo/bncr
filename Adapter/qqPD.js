@@ -3,7 +3,7 @@
  * @author Mrzqd
  * @name qqPD
  * @team xmo
- * @version 3.0.2
+ * @version 3.0.3
  * @description qq频道机器人适配器
  * @adapter true
  * @public true
