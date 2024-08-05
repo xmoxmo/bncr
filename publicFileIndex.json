@@ -1,5 +1,27 @@
 {
   "annotation": "该文件由系统自动生成. 用于插件市场索引,请勿编辑该文件中的任何内容",
+  "hMJ9nhDyHedHrAPAHJdwF9Muzuc=": {
+    "type": "github",
+    "name": "qqPD",
+    "author": "Mrzqd",
+    "team": "Mrzqd",
+    "version": "3.0.2",
+    "description": "qq频道机器人适配器",
+    "classification": [
+      "适配器"
+    ],
+    "filename": "qqPD.js",
+    "fileDir": "/Adapter/qqPD.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": true,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "hMJ9nhDyHedHrAPAHJdwF9Muzuc=",
+    "isChatPlugin": false
+  },
   "7iw3GeT4AM/h3yrzdDHL4VKxb5A=": {
     "type": "github",
     "name": "tgBot",
