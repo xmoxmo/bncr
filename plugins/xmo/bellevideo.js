@@ -4,9 +4,9 @@
  * @admin true
  * @public true
  * @author zhu
- * @team zhu
+ * @team xmo
  * @Github https://github.com/Mrzqd
- * @version 1.0.1
+ * @version 1.0.2
  * @disable false
  * @priority 100
  * @classification ["插件"]
