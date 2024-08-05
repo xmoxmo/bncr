@@ -3,7 +3,7 @@
  * @author Mrzqd
  * @name qqPD
  * @team xmo
- * @version 3.0.3
+ * @version 3.0.4
  * @description qq频道机器人适配器
  * @adapter true
  * @public true
@@ -47,7 +47,7 @@ module.exports = async () => {
     await sysMethod.testModule(['request'], { install: true });
     await sysMethod.testModule(['fs'], { install: true });
     await sysMethod.testModule(['url'], { install: true });
-    /* HideStart */
+    
     const TOKEN = ConfigDB.userConfig.token;
     const APPID = ConfigDB.userConfig.appid;
     const INTENTS = ConfigDB.userConfig.intents ? ConfigDB.userConfig.intents.split(',') : [];
@@ -528,5 +528,4 @@ module.exports = async () => {
         }
     }
 
-    /* HideEnd */
 };
