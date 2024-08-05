@@ -2,7 +2,7 @@
  * This file is part of the App project.
  * @author Mrzqd
  * @name qqPD
- * @team Mrzqd
+ * @team xmo
  * @version 3.0.2
  * @description qq频道机器人适配器
  * @adapter true
