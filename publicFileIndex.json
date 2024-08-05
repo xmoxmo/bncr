@@ -27,7 +27,7 @@
     "name": "wechaty",
     "author": "xmo",
     "team": "xmo",
-    "version": "1.1.7",
+    "version": "1.1.8",
     "description": "wx机器人内置适配器，微信需要实名。",
     "classification": [
       "官方适配器"
