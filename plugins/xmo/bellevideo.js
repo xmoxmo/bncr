@@ -6,7 +6,7 @@
  * @author zhu
  * @team zhu
  * @Github https://github.com/Mrzqd
- * @version 1.0.0
+ * @version 1.0.1
  * @disable false
  * @priority 100
  * @classification ["插件"]
