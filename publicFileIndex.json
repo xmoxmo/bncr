@@ -88,12 +88,12 @@
     "id": "z1a1F3UPQ9uPXBiAIW7CNl2phUs=",
     "isChatPlugin": true
   },
-  "A74AL7yfcQxOWMXDM6YX+Rtx/mg=": {
+  "k+OHlXZbDNEdIBMwmbZ9Go9P5qw=": {
     "type": "github",
     "name": "bellevideo",
     "author": "zhu",
-    "team": "zhu",
-    "version": "1.0.1",
+    "team": "xmo",
+    "version": "1.0.2",
     "description": "bellevideo",
     "classification": [
       "插件"
@@ -107,7 +107,7 @@
     "isService": false,
     "isAuthentication": false,
     "isEncPlugin": false,
-    "id": "A74AL7yfcQxOWMXDM6YX+Rtx/mg=",
+    "id": "k+OHlXZbDNEdIBMwmbZ9Go9P5qw=",
     "isChatPlugin": true
   },
   "nIHYWehpLEtXuJadKJRMKPyJMas=": {
