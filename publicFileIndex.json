@@ -88,6 +88,28 @@
     "id": "z1a1F3UPQ9uPXBiAIW7CNl2phUs=",
     "isChatPlugin": true
   },
+  "A74AL7yfcQxOWMXDM6YX+Rtx/mg=": {
+    "type": "github",
+    "name": "bellevideo",
+    "author": "zhu",
+    "team": "zhu",
+    "version": "1.0.1",
+    "description": "bellevideo",
+    "classification": [
+      "插件"
+    ],
+    "filename": "bellevideo.js",
+    "fileDir": "/plugins/xmo/bellevideo.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "A74AL7yfcQxOWMXDM6YX+Rtx/mg=",
+    "isChatPlugin": true
+  },
   "nIHYWehpLEtXuJadKJRMKPyJMas=": {
     "type": "github",
     "name": "botchat",
