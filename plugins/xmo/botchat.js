@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.4.2
+ * @version 2.4.3
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -199,7 +199,7 @@ module.exports = async (s) => {
     let atbotmsg = '';
     if (botname) {
       if (sfrom === 'qq') {
-        atbotmsg = `[CQ:at,qq=${botname}]`;
+        atbotmsg = `CQ:at,qq=${botname}`;
       } else {
         atbotmsg = `@${botname}`;
       }
@@ -243,6 +243,8 @@ module.exports = async (s) => {
           if (keyword.includes(atbotmsg)) {
             newkeyword = keyword.replace(new RegExp(atbotmsg,'g'), "");
             newkeyword = newkeyword.replace(new RegExp(" ",'g'), "");
+            newkeyword = newkeyword.replace(/\[CQ:at.*\]/g, "");
+            newkeyword = newkeyword.replace(new RegExp(" ",'g'), "");
             if (newkeyword) {
               if (forwardline) {
                 s.inlineSugar(`${forwardline} ${newkeyword}`);
