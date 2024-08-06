@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.4.4
+ * @version 2.4.5
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -237,13 +237,19 @@ module.exports = async (s) => {
           return "next";
         }
       } else {
+        let keywordstr = '';
         let newkeyword = '';
         let sreturn = '';
         if (atbotmsg) {
           if (keyword.includes(atbotmsg)) {
-            newkeyword = keyword.replace(new RegExp(atbotmsg,'g'), "");
+            newkeyword = keyword;
+            keywordstr = keyword;
+            if (sfrom === "qq") {
+              keywordstr = keywordstr.replace(new RegExp(/CQ:at,qq=/, 'g'), "@");
+              newkeyword = newkeyword.replace(new RegExp(/\[CQ:at,.*?\]/, 'g'), "");
+            }
+            newkeyword = newkeyword.replace(new RegExp(atbotmsg,'g'), "");
             newkeyword = newkeyword.replace(new RegExp(" ",'g'), "");
-            newkeyword = newkeyword.replace(/\[CQ:at.*?\]/g, "");
             newkeyword = newkeyword.replace(new RegExp(" ",'g'), "");
             if (newkeyword) {
               if (forwardline) {
@@ -265,7 +271,7 @@ module.exports = async (s) => {
           if (debug) {
             sysMethod.pushAdmin({
                 platform: [`${sfrom}`],
-                msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >信息:${keyword}\n  >名字:${botname}\n  >内容:${newkeyword}\n  >指令:${forwardline}`,
+                msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >信息:${keywordstr}\n  >名字:${botname}\n  >内容:${newkeyword}\n  >指令:${forwardline}`,
             });
           }
         }
