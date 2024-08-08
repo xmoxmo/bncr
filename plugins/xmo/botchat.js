@@ -22,6 +22,7 @@ const jsonSchema = BncrCreateSchema.object({
   basic: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('指令开关').setDescription(`开启将启用匹配其他插件指令，开启并填写指令关键词后生效。`).setDefault(true),
     forward: BncrCreateSchema.string().setTitle('指令关键词').setDescription(`请输入其他插件匹配指令关键词，留空则不启用调用，仅读取数据库内容。`).setDefault('aigptv2'),
+    forwardchat: BncrCreateSchema.string().setTitle('聊天模式指令关键词').setDescription(`为聊天模式单独设置其他插件匹配指令关键词，留空则使用"指令关键词"。`).setDefault(''),
     noname: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('无需设置bot名称的适配器').setDescription(`填写未设置bot名称不提示引导操作的适配器名称，设置bot名称主要用来识别群组内是否被@。`).setDefault(['web', 'ssh']),
     outreply: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('禁用聊天模式的适配器').setDescription(`填写数据库中无匹配数据时不再调用"指令关键词"进行额外回复的适配器名称。`).setDefault([]),
   }).setTitle('基本设置').setDefault({}),
@@ -38,8 +39,10 @@ module.exports = async (s) => {
   
   const forward = ConfigDB.userConfig.basic.enable;
   let forwardline = '';
+  let forwardlinechat = '';
   if (forward) {
     forwardline = ConfigDB.userConfig.basic.forward;
+    forwardlinechat = ConfigDB.userConfig.basic.forwardchat;
   }
   const nonamearr = ConfigDB.userConfig.basic.noname;
   const outreplyarr = ConfigDB.userConfig.basic.outreply;
@@ -227,6 +230,9 @@ module.exports = async (s) => {
         await s.reply(reply);
       }
     } else {
+      if (forwardlinechat) {
+        forwardline = forwardlinechat;
+      }
       if (outreplyarr.indexOf(sfrom) != -1) {
         forwardline = '';
       }
