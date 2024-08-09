@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.4.9
+ * @version 2.5.0
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -22,10 +22,14 @@ const jsonSchema = BncrCreateSchema.object({
   basic: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('指令开关').setDescription(`开启将启用匹配其他插件指令，开启并填写指令关键词后生效。`).setDefault(true),
     forward: BncrCreateSchema.string().setTitle('指令关键词').setDescription(`请输入其他插件匹配指令关键词，留空则不启用调用，仅读取数据库内容。`).setDefault('aigptv2'),
-    forwardchat: BncrCreateSchema.string().setTitle('聊天模式指令关键词').setDescription(`为聊天模式单独设置其他插件匹配指令关键词，留空则使用"指令关键词"。`).setDefault(''),
-    replychat: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('禁用聊天模式的适配器').setDescription(`填写数据库中无匹配数据时不再调用"指令关键词"进行额外回复的适配器名称。`).setDefault([]),
-    noname: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('无需设置bot名称的适配器').setDescription(`填写未设置bot名称不提示引导操作的适配器名称，设置bot名称主要用来识别群组内是否被@。`).setDefault(['web', 'ssh']),
   }).setTitle('基本设置').setDefault({}),
+  chat: BncrCreateSchema.object({
+    forward: BncrCreateSchema.string().setTitle('聊天模式指令关键词').setDescription(`为聊天模式单独设置其他插件匹配指令关键词，留空则使用"指令关键词"。`).setDefault(''),
+    noreply: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('禁用聊天模式的适配器').setDescription(`填写数据库中无匹配数据时不再调用"指令关键词"进行额外回复的适配器名称。`).setDefault([]),
+  }).setTitle('聊天设置').setDefault({}),
+  bot: BncrCreateSchema.object({
+    noname: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('无需设置bot名称的适配器').setDescription(`填写未设置bot名称不提示引导操作的适配器名称，设置bot名称主要用来识别群组内是否被@。`).setDefault(['web', 'ssh']),
+  }).setTitle('bot设置').setDefault({}),
   debug: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
@@ -42,10 +46,10 @@ module.exports = async (s) => {
   let forwardlinechat = '';
   if (forward) {
     forwardline = ConfigDB.userConfig.basic.forward;
-    forwardlinechat = ConfigDB.userConfig.basic.forwardchat;
+    forwardlinechat = ConfigDB.userConfig.chat.forward;
   }
-  const nonamearr = ConfigDB.userConfig.basic.noname;
-  const replychatarr = ConfigDB.userConfig.basic.replychat;
+  const nonamearr = ConfigDB.userConfig.bot.noname;
+  const noreplychatarr = ConfigDB.userConfig.chat.noreply;
   const sfrom = s.getFrom();
   const debug = ConfigDB.userConfig.debug.enable;
   const sysDB = new BncrDB('BotReplyDB');
@@ -233,7 +237,7 @@ module.exports = async (s) => {
       if (forwardlinechat) {
         forwardline = forwardlinechat;
       }
-      if (replychatarr.indexOf(sfrom) != -1) {
+      if (noreplychatarr.indexOf(sfrom) != -1) {
         forwardline = '';
       }
       if (!groupId || groupId === '0') {
