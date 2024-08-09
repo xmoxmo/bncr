@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.5.0
+ * @version 2.5.1
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -45,11 +45,11 @@ module.exports = async (s) => {
   let forwardline = '';
   let forwardlinechat = '';
   if (forward) {
-    forwardline = ConfigDB.userConfig.basic.forward;
-    forwardlinechat = ConfigDB.userConfig.chat.forward;
+    forwardline = ConfigDB.userConfig.basic.forward  || '';
+    forwardlinechat = ConfigDB.userConfig.chat.forward  || '';
   }
-  const nonamearr = ConfigDB.userConfig.bot.noname;
-  const noreplychatarr = ConfigDB.userConfig.chat.noreply;
+  const nonamearr = ConfigDB.userConfig.bot.noname  || [];
+  const noreplychatarr = ConfigDB.userConfig.chat.noreply  || [];
   const sfrom = s.getFrom();
   const debug = ConfigDB.userConfig.debug.enable;
   const sysDB = new BncrDB('BotReplyDB');
