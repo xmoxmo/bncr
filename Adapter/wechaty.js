@@ -3,7 +3,7 @@
  * @author xmo
  * @name wechaty
  * @team xmo
- * @version 1.1.8
+ * @version 1.1.9
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -122,7 +122,6 @@ module.exports = async () => {
 
     bot.on("room-join", async (room, inviteeList, invite) => {
         log.warn(`wechaty：收到群员进群事件`);
-        console.log(`wechaty：收到群员进群事件`);
         await room.sync();
         const topic = await room.topic();
         const roomId = Buffer.from(topic, 'utf-8').toString('hex');
@@ -139,19 +138,16 @@ module.exports = async () => {
     // 邀请进群
     bot.on("room-invite", async (roomInvitation) => {
         log.warn(`wechaty：收到邀请机器人进群事件`);
-        console.log(`wechaty：收到邀请机器人进群事件`);
     });
 
     bot.on("room-topic", async (room, newTopic, oldTopic, changer) => {
         log.warn(`wechaty：收到群聊名称修改事件`);
-        console.log(`wechaty：收到群聊名称修改事件`);
         await room.sync();
         //todo：同步修改监听或回复的群id
     });
 
     bot.on('friendship', async friendship => {
         log.warn("wechaty：收到微信好友申请事件");
-        console.log("wechaty：收到微信好友申请事件");
         try {
             if (friendship.type() === types.Friendship.Receive && (friendship.hello() === hello || hello == "") && accept) {
                 await friendship.accept();
