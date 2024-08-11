@@ -46,7 +46,7 @@ module.exports = async (s) => {
   const noreplychatarr = ConfigDB.userConfig.noreplychat || [];
   const sfrom = s.getFrom();
   const debug = ConfigDB.userConfig.debug.enable;
-  const sysDB = new BncrDB('BotReplyDB');
+  const sysDB = new BncrDB('BotAuditDB');
   const commandType = s.param(1);
   const keyword = s.param(2);
   const replyContent = s.param(3);
@@ -352,70 +352,33 @@ module.exports = async (s) => {
 
   async function getReply(keyword) {
     try {
-      let newkeyword = '';
       if (keyword.slice(0, 7) === '@remsg@') {
         return "@noreply@";
       } else {
-        groupId = s.getGroupId();
-        let keys = await sysDB.keys();
-        keys = await sortArray(keys);
-        if (keys.length > 0) {
-          for (var i = 0; i < keys.length; i++) {
-            let str = keys[i];
-            let keygjc = '';
-            let keydyy = '';
-            if (str.includes('|@|')) {
-              let strarr = str.split('|@|');
-              keygjc = strarr[0];
-              keydyy = strarr[1];
-            } else {
-              keygjc = str;
-              keydyy = '';
-            }
-            if (keygjc) {
-              if (groupId && groupId !== '0') {
-                if (keyword.includes(keygjc)) {
-                  if (!keydyy) {
-                    keydyy = groupId;
-                  }
-                  if (keydyy.includes(groupId)) {
-                    let keydyyarr = keydyy.split('|');
-                    if (keydyyarr.indexOf(groupId) != -1) {
-                      keyword = keys[i];
-                      break;
-                    }
-                  } else {
-                    let getgroup = await sysDB.get(`@group@${keydyy}|@|0`);
-                    if (getgroup) {
-                      let getgrouparr = getgroup.split('|');
-                      if (getgrouparr.indexOf(groupId) != -1) {
-                        keyword = keys[i];
-                        break;
-                      }
-                    }
-                  }
-                }
-              } else {
-                if (keyword === keygjc) {
-                  newkeyword += `|@@|${keys[i]}`;
-                  // break;
-                }
-              }
-            }
-          }
+        let getreply = await sysDB.get(keyword);
+        if (!getreply) {
+          return null;
         }
-        if (newkeyword) {
-          keyword = newkeyword.slice(4);
-        }
-        if (keyword.includes('|@@|')) {
-          let keywords = keyword.split('|@@|');
-          for (var k = 0; k < keywords.length; k++) {
-            await funreplydb(keywords[k]);
-          }
-          return "@noreply@"
+        let getsfrom = await sysDB.get(`@sfrom@${keyword}`);
+        if (getsfrom) {
+          let getsfromarr = getsfrom.split('|');
+          if (getsfromarr.indexOf(sfrom) == -1) {
+            return null;
+           }
         } else {
-          return await funreplydb(keyword);
+          return null;
         }
+        groupId = s.getGroupId();
+        let getgroup = await sysDB.get(`@group@${keyword}`);
+        if (getgroup) {
+          let getgrouparr = getgroup.split('|');
+          if (getgrouparr.indexOf(groupId) == -1) {
+            return null;
+           }
+        } else {
+          return null;
+        }
+        return await funreplydb(keyword);
 
         async function funreplydb(keyword) {
           replydb = await sysDB.get(keyword);
