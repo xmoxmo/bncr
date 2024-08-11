@@ -1,6 +1,6 @@
 /**
  * @author xmo
- * @name botchat
+ * @name botaudit
  * @team xmo
  * @version 2.5.3
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
@@ -14,7 +14,7 @@
  * @admin false
  * @priority 9
  * @classification ["botchat"]
- * @public true
+ * @public false
  * @disable false
  */
 
