@@ -2,18 +2,16 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 2.5.3
- * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
+ * @version 1.5.3
+ * @description 按平台屏蔽关键词响应。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
  * @rule ^(botreply)\s+(list)$
  * @rule ^(botreply)\s+(empty)$
  * @rule ^(\S+)$
- * @rule ^(.*@.*)$
- * @rule ^(.*CQ:at,qq=.*)$
  * @admin false
- * @priority 9
- * @classification ["botchat"]
+ * @priority 99999999
+ * @classification ["botaudit"]
  * @public false
  * @disable false
  */
