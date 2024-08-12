@@ -2,12 +2,12 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.0.0
+ * @version 1.0.1
  * @description 按平台屏蔽关键词响应。
- * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
- * @rule ^(botreply)\s+(\S+)\s+(del)$
- * @rule ^(botreply)\s+(list)$
- * @rule ^(botreply)\s+(empty)$
+ * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
+ * @rule ^(botaudit)\s+(\S+)\s+(del)$
+ * @rule ^(botaudit)\s+(list)$
+ * @rule ^(botaudit)\s+(empty)$
  * @rule ^(\S+)$
  * @admin false
  * @priority 99999999
@@ -46,7 +46,7 @@ module.exports = async (s) => {
 
   // console.log(`Received command: ${commandType}, Keyword: ${keyword}, ReplyContent: ${replyContent}`);
 
-  if (commandType === 'botreply') {
+  if (commandType === 'botaudit') {
     if (keyword === 'list') {
       await handleListKeywords(s);
     } else if (keyword === 'empty') {
