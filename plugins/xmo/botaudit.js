@@ -2,8 +2,8 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.0.8
- * @description 按平台或群组屏蔽关键词响应。
+ * @version 1.0.9
+ * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
  * @rule ^(botaudit)\s+(list)$
@@ -278,9 +278,21 @@ module.exports = async (s) => {
         async function fungetlist(way) {
           let getdb = await sysDB.get(`@${way}@${keyword}`);
           if (getdb) {
-            let getdbarr = getsfrom.split('|');
-            if (getdbarr.indexOf(way) == -1) {
+            let getdbarr = getdb.split('|');
+            let sway = '';
+            if (way === 'sfrom') {
+              sway = sfrom;
+            }
+            if (way === 'group') {
+              sway = groupId;
+            }
+            if (way === 'user') {
+              sway = userId;
+            }
+            if (getdbarr.indexOf(sway) == -1) {
               return null;
+            } else {
+              return 'blacklist';
             }
           } else {
             return null;
