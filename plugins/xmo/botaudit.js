@@ -195,31 +195,8 @@ module.exports = async (s) => {
   }
 
   async function handleGetReply(s, keyword) {
-    const naDB = new BncrDB(sfrom);
-    botname = await naDB.get("botname");
-    let atbotmsg = '';
-    if (botname) {
-      if (sfrom === 'qq') {
-        atbotmsg = `CQ:at,qq=${botname}`;
-      } else {
-        atbotmsg = `@${botname}`;
-      }
-    } else {
-      botname = '';
-      if (await s.isAdmin()) {
-        if (nonamearr.indexOf(sfrom) == -1) {
-          await s.reply(`警告：未读取到bot名称或qq账号！\n    管理员发送[set ${sfrom} botname 机器人名称或机器人qq账号]设置bot的名称，否则@机器人的信息无法识别。`);
-        }
-      }
-    }
     let reply = '';
-    if (atbotmsg) {
-      if (!(keyword.includes(atbotmsg))) {
-        reply = await getReply(keyword);
-      }
-    } else {
-      reply = await getReply(keyword);
-    }
+    reply = await getReply(keyword);
     // console.log(`Get reply for keyword ${keyword}: ${reply}`);
     groupId = s.getGroupId();
     if (reply) {
@@ -228,67 +205,7 @@ module.exports = async (s) => {
         await s.reply(reply);
       }
     } else {
-      if (forwardlinechat) {
-        forwardline = forwardlinechat;
-      }
-      if (noreplychatarr.indexOf(sfrom) != -1) {
-        forwardline = '';
-      }
-      if (!groupId || groupId === '0') {
-        if (forwardline) {
-          s.inlineSugar(`${forwardline} ${keyword}`);
-        } else {
-          return "next";
-        }
-      } else {
-        let keywordstr = '';
-        let newkeyword = '';
-        let sreturn = '';
-        if (atbotmsg) {
-          if (keyword.includes(atbotmsg)) {
-            newkeyword = keyword;
-            if (sfrom === "qq") {
-              keywordstr = keyword.replace(new RegExp(/CQ:at,qq=/, 'g'), "@");
-              newkeyword = newkeyword.replace(new RegExp(/\[CQ:at,.*?\]/, 'g'), "");
-            }
-            newkeyword = newkeyword.replace(new RegExp(atbotmsg,'g'), "");
-            newkeyword = newkeyword.replace(new RegExp(" ",'g'), "");
-            newkeyword = newkeyword.replace(new RegExp(" ",'g'), "");
-            if (newkeyword) {
-              if (forwardline) {
-                s.inlineSugar(`${forwardline} ${newkeyword}`);
-              } else {
-                sreturn = 'next';
-              }
-            }
-          } else {
-            sreturn = 'next';
-          }
-        } else {
-          sreturn = 'next';
-        }
-        if (keyword.includes('CQ:at,qq=')) {
-          keyword = keyword.replace(new RegExp(/CQ:at,qq=/, 'g'), "@");
-        }
-        if (!newkeyword) {
-          newkeyword = keyword;
-        }
-        if (!keywordstr) {
-          keywordstr = keyword;
-        }
-        if (await s.isAdmin()) {
-          if (debug) {
-            sysMethod.pushAdmin({
-                platform: [`${sfrom}`],
-                msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >信息:${keywordstr}\n  >名字:${botname}\n  >内容:${newkeyword}\n  >指令:${forwardline}`,
-            });
-          }
-        }
-        if (sreturn) {
-          return sreturn;
-        }
-      }
-    }
+      return "next"
   }
 
   async function handleListKeywords(s) {
@@ -343,11 +260,6 @@ module.exports = async (s) => {
       console.error('删除失败:', e);
       return false;
     }
-  }
-
-  async function sortArray(array) {
-    array.sort((a, b) => b.length - a.length)
-    return array
   }
 
   async function getReply(keyword) {
