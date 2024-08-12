@@ -2,15 +2,15 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.0.3
- * @description 按平台屏蔽关键词响应。
+ * @version 1.0.4
+ * @description 按平台或群组屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
  * @rule ^(botaudit)\s+(list)$
  * @rule ^(botaudit)\s+(empty)$
  * @rule ^(\S+)$
  * @admin true
- * @priority 99999999
+ * @priority 100000000
  * @classification ["botaudit"]
  * @public false
  * @disable false
