@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.0.1
+ * @version 1.0.2
  * @description 按平台屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -185,6 +185,7 @@ module.exports = async (s) => {
       }
     } else {
       return "next"
+    }
   }
 
   async function handleListKeywords(s) {
