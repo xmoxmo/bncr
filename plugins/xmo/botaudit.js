@@ -382,6 +382,18 @@ module.exports = async (s) => {
 
         async function funreplydb(keyword) {
           replydb = await sysDB.get(keyword);
+          if (replydb.includes('|@@|')) {
+            let replydbs = replydb.split('|@@|');
+            for (var k = 0; k < replydbs.length; k++) {
+              await funsendreply(replydbs[k]);
+            }
+            return "@noreply@"
+          } else {
+            return await funsendreply(replydb);
+          }
+        }
+        
+        async function funsendreply(replydb) {
           if (replydb === '@noreply@') {
             return "@noreply@";
           }
