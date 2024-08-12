@@ -9,10 +9,10 @@
  * @rule ^(botaudit)\s+(list)$
  * @rule ^(botaudit)\s+(empty)$
  * @rule ^(\S+)$
- * @admin true
+ * @admin false
  * @priority 100000000
  * @classification ["botaudit"]
- * @public false
+ * @public true
  * @disable false
  */
 
