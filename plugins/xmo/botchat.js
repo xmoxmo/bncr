@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.5.7
+ * @version 2.5.8
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -72,7 +72,7 @@ module.exports = async (s) => {
     }
   } else {
     let endreturn = await handleGetReply(s, commandType);
-    if (endreturn ='next') {
+    if (endreturn === 'next') {
       return 'next';
     }
   }
@@ -152,7 +152,6 @@ module.exports = async (s) => {
     } else {
       s.reply('更改失败：无标识符[|>>|]');
     }
-
   }
 
   async function handlereplacekeyword(s, keyword) {
