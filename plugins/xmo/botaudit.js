@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.0.4
+ * @version 1.0.5
  * @description 按平台或群组屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -62,7 +62,7 @@ module.exports = async (s) => {
     }
   } else {
     let endreturn = await handleGetReply(s, commandType);
-    if (endreturn ='next') {
+    if (endreturn === 'next') {
       return 'next';
     }
   }
