@@ -110,34 +110,12 @@
     "id": "k+OHlXZbDNEdIBMwmbZ9Go9P5qw=",
     "isChatPlugin": true
   },
-  "TgATXfLyGGGlyg33eFoTXALMD3Y=": {
-    "type": "github",
-    "name": "botaudit",
-    "author": "xmo",
-    "team": "xmo",
-    "version": "1.0.2",
-    "description": "按平台屏蔽关键词响应。",
-    "classification": [
-      "botaudit"
-    ],
-    "filename": "botaudit.js",
-    "fileDir": "/plugins/xmo/botaudit.js",
-    "systemVersionRange": "",
-    "isCron": false,
-    "isAdapter": false,
-    "isMod": false,
-    "isService": false,
-    "isAuthentication": false,
-    "isEncPlugin": false,
-    "id": "TgATXfLyGGGlyg33eFoTXALMD3Y=",
-    "isChatPlugin": true
-  },
   "nIHYWehpLEtXuJadKJRMKPyJMas=": {
     "type": "github",
     "name": "botchat",
     "author": "xmo",
     "team": "xmo",
-    "version": "2.5.5",
+    "version": "2.5.6",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botchat"
