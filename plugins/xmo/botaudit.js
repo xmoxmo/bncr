@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.5.3
+ * @version 1.0.0
  * @description 按平台屏蔽关键词响应。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -20,10 +20,7 @@ const jsonSchema = BncrCreateSchema.object({
   basic: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('指令开关').setDescription(`开启将启用匹配其他插件指令，开启并填写指令关键词后生效。`).setDefault(true),
     forward: BncrCreateSchema.string().setTitle('指令关键词').setDescription(`请输入其他插件匹配指令关键词，留空则不启用调用，仅读取数据库内容。`).setDefault('aigptv2'),
-    forwardchat: BncrCreateSchema.string().setTitle('聊天模式指令关键词').setDescription(`为聊天模式单独设置其他插件匹配指令关键词，留空则使用"指令关键词"。`).setDefault(''),
   }).setTitle('基本设置').setDefault({}),
-  nobotname: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('Bot设置').setDescription(`填写未设置bot名称不提示引导操作的适配器名称，设置bot名称主要用来识别群组内是否被@。若bot所在适配器无群组功能则无需设置bot名称，并将此适配器名称填写到以下表单。`).setDefault(['web', 'ssh']),
-  noreplychat: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('聊天设置').setDescription(`禁用聊天模式的适配器，填写数据库中无匹配数据时不再调用"指令关键词"进行额外回复的适配器名称。`).setDefault([]),
   debug: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
@@ -37,13 +34,9 @@ module.exports = async (s) => {
   
   const forward = ConfigDB.userConfig.basic.enable;
   let forwardline = '';
-  let forwardlinechat = '';
   if (forward) {
     forwardline = ConfigDB.userConfig.basic.forward || '';
-    forwardlinechat = ConfigDB.userConfig.basic.forwardchat || '';
   }
-  const nonamearr = ConfigDB.userConfig.nobotname || [];
-  const noreplychatarr = ConfigDB.userConfig.noreplychat || [];
   const sfrom = s.getFrom();
   const debug = ConfigDB.userConfig.debug.enable;
   const sysDB = new BncrDB('BotAuditDB');
