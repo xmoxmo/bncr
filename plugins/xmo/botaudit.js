@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.0.6
+ * @version 1.0.8
  * @description 按平台或群组屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -38,6 +38,8 @@ module.exports = async (s) => {
     forwardline = ConfigDB.userConfig.basic.forward || '';
   }
   const sfrom = s.getFrom();
+  const groupId = s.getGroupId();
+  const userId = s.getUserId();
   const debug = ConfigDB.userConfig.debug.enable;
   const sysDB = new BncrDB('BotAuditDB');
   const commandType = s.param(1);
@@ -243,6 +245,8 @@ module.exports = async (s) => {
     }
   }
 
+
+
   async function getReply(keyword) {
     try {
       if (keyword.slice(0, 7) === '@remsg@') {
@@ -253,24 +257,36 @@ module.exports = async (s) => {
         if (!getreply) {
           return null;
         }
-        let getsfrom = await sysDB.get(`@sfrom@${keyword}`);
-        if (getsfrom) {
-          let getsfromarr = getsfrom.split('|');
-          if (getsfromarr.indexOf(sfrom) == -1) {
-            return null;
-           }
-        } else {
-          let groupId = s.getGroupId();
-          let getgroup = await sysDB.get(`@group@${keyword}`);
-          if (getgroup) {
-            let getgrouparr = getgroup.split('|');
-            if (getgrouparr.indexOf(groupId) == -1) {
+
+        let checkblack = 0;
+        let getsfrom = await fungetlist('sfrom');
+        if (!getsfrom) {
+          checkblack = checkblack + 1;
+        }
+        let getgroup = await fungetlist('group');
+        if (!getgroup) {
+          checkblack = checkblack + 1;
+        }
+        let getuser = await fungetlist('user');
+        if (!getuser) {
+          checkblack = checkblack + 1;
+        }
+        if (checkblack == 0) {
+          return null;
+        }
+
+        async function fungetlist(way) {
+          let getdb = await sysDB.get(`@${way}@${keyword}`);
+          if (getdb) {
+            let getdbarr = getsfrom.split('|');
+            if (getdbarr.indexOf(way) == -1) {
               return null;
-             }
+            }
           } else {
             return null;
           }
         }
+        
         return await funreplydb(keyword);
 
         async function funreplydb(keyword) {
@@ -300,7 +316,7 @@ module.exports = async (s) => {
                     if (debug) {
                       sysMethod.pushAdmin({
                           platform: [`${sfrom}`],
-                          msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
+                          msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${s.getUserId()}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
                       });
                     }
                   }
