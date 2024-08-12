@@ -2,14 +2,14 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.0.2
+ * @version 1.0.3
  * @description 按平台屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
  * @rule ^(botaudit)\s+(list)$
  * @rule ^(botaudit)\s+(empty)$
  * @rule ^(\S+)$
- * @admin false
+ * @admin true
  * @priority 99999999
  * @classification ["botaudit"]
  * @public false
@@ -61,7 +61,10 @@ module.exports = async (s) => {
       await handleAddReply(s, keyword, replyContent);
     }
   } else {
-    await handleGetReply(s, commandType);
+    let endreturn = await handleGetReply(s, commandType);
+    if (endreturn ='next') {
+      return 'next';
+    }
   }
 
   async function handleAddReply(s, keyword, reply) {
@@ -125,7 +128,6 @@ module.exports = async (s) => {
     } else {
       s.reply('更改失败：无标识符[|>>|]');
     }
-
   }
 
   async function handlereplacekeyword(s, keyword) {
@@ -177,7 +179,6 @@ module.exports = async (s) => {
     let reply = '';
     reply = await getReply(keyword);
     // console.log(`Get reply for keyword ${keyword}: ${reply}`);
-    groupId = s.getGroupId();
     if (reply) {
       // console.log(`Replying with: ${reply}`);
       if (reply !== '@noreply@') {
@@ -247,6 +248,7 @@ module.exports = async (s) => {
       if (keyword.slice(0, 7) === '@remsg@') {
         return "@noreply@";
       } else {
+
         let getreply = await sysDB.get(keyword);
         if (!getreply) {
           return null;
@@ -258,17 +260,16 @@ module.exports = async (s) => {
             return null;
            }
         } else {
-          return null;
-        }
-        groupId = s.getGroupId();
-        let getgroup = await sysDB.get(`@group@${keyword}`);
-        if (getgroup) {
-          let getgrouparr = getgroup.split('|');
-          if (getgrouparr.indexOf(groupId) == -1) {
+          let groupId = s.getGroupId();
+          let getgroup = await sysDB.get(`@group@${keyword}`);
+          if (getgroup) {
+            let getgrouparr = getgroup.split('|');
+            if (getgrouparr.indexOf(groupId) == -1) {
+              return null;
+             }
+          } else {
             return null;
-           }
-        } else {
-          return null;
+          }
         }
         return await funreplydb(keyword);
 
