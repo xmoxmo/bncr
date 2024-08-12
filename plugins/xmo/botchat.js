@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.5.6
+ * @version 2.5.7
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -47,6 +47,7 @@ module.exports = async (s) => {
   const nonamearr = ConfigDB.userConfig.nobotname || [];
   const noreplychatarr = ConfigDB.userConfig.noreplychat || [];
   const sfrom = s.getFrom();
+  const groupId = s.getGroupId();
   const debug = ConfigDB.userConfig.debug.enable;
   const sysDB = new BncrDB('BotReplyDB');
   const commandType = s.param(1);
@@ -226,7 +227,6 @@ module.exports = async (s) => {
       reply = await getReply(keyword);
     }
     // console.log(`Get reply for keyword ${keyword}: ${reply}`);
-    groupId = s.getGroupId();
     if (reply) {
       // console.log(`Replying with: ${reply}`);
       if (reply !== '@noreply@') {
@@ -285,7 +285,7 @@ module.exports = async (s) => {
           if (debug) {
             sysMethod.pushAdmin({
                 platform: [`${sfrom}`],
-                msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >信息:${keywordstr}\n  >名字:${botname}\n  >内容:${newkeyword}\n  >指令:${forwardline}`,
+                msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${s.getUserId()}\n  >信息:${keywordstr}\n  >名字:${botname}\n  >内容:${newkeyword}\n  >指令:${forwardline}`,
             });
           }
         }
@@ -361,7 +361,6 @@ module.exports = async (s) => {
       if (keyword.slice(0, 7) === '@remsg@') {
         return "@noreply@";
       } else {
-        groupId = s.getGroupId();
         let keys = await sysDB.keys();
         keys = await sortArray(keys);
         if (keys.length > 0) {
@@ -453,7 +452,7 @@ module.exports = async (s) => {
                     if (debug) {
                       sysMethod.pushAdmin({
                           platform: [`${sfrom}`],
-                          msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${s.getGroupId()}\n  >用户id:${s.getUserId()}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
+                          msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${s.getUserId()}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
                       });
                     }
                   }
