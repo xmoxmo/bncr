@@ -12,7 +12,7 @@
  * @admin false
  * @priority 99999999
  * @classification ["botaudit"]
- * @public false
+ * @public true
  * @disable false
  */
 
@@ -70,23 +70,9 @@ module.exports = async (s) => {
       return s.reply('你没有权限执行此操作');
     }
 
-    let str = keyword;
-    let keygjc = '';
-    let keydyy = '';
-    if (str.includes('|@|')) {
-      let strarr = str.split('|@|');
-      keygjc = strarr[0];
-      keydyy = strarr[1];
-    } else {
-      keygjc = str;
-    }
-    if (!keygjc) {
-      s.reply('设置失败：无关键词');
-    } else {
-      const result = await setReply(keyword, reply);
-      // console.log(`Set reply result for keyword ${keyword}: ${result}`);
-      s.reply(result ? '设置成功' : '设置失败');
-    }
+    const result = await setReply(keyword, reply);
+    // console.log(`Set reply result for keyword ${keyword}: ${result}`);
+    s.reply(result ? '设置成功' : '设置失败');
   }
 
   async function handleDelReply(s, keyword) {
