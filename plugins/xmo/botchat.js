@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.5.5
+ * @version 2.5.6
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -70,7 +70,10 @@ module.exports = async (s) => {
       await handleAddReply(s, keyword, replyContent);
     }
   } else {
-    await handleGetReply(s, commandType);
+    let endreturn = await handleGetReply(s, commandType);
+    if (endreturn ='next') {
+      return 'next';
+    }
   }
 
   async function handleAddReply(s, keyword, reply) {
@@ -421,22 +424,26 @@ module.exports = async (s) => {
 
         async function funreplydb(keyword) {
           replydb = await sysDB.get(keyword);
-          if (replydb.includes('|@@|')) {
-            let replydbs = replydb.split('|@@|');
-            for (var k = 0; k < replydbs.length; k++) {
-              await funsendreply(replydbs[k]);
+          if (replydb) {
+            if (replydb.includes('|@@|')) {
+              let replydbs = replydb.split('|@@|');
+              for (var k = 0; k < replydbs.length; k++) {
+                await funsendreply(replydbs[k]);
+              }
+              return "@noreply@"
+            } else {
+              return await funsendreply(replydb);
             }
-            return "@noreply@"
           } else {
-            return await funsendreply(replydb);
+            return null;
           }
         }
         
         async function funsendreply(replydb) {
-          if (replydb === '@noreply@') {
-            return "@noreply@";
-          }
           if (replydb) {
+            if (replydb === '@noreply@') {
+              return "@noreply@";
+            }
             if (replydb.slice(0, 7) === '@remsg@') {
               if (replydb.includes('@chatcom@')) {
                 if (forwardline) {
