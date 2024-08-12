@@ -12,7 +12,7 @@
  * @admin false
  * @priority 99999999
  * @classification ["botaudit"]
- * @public true
+ * @public false
  * @disable false
  */
 
