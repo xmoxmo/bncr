@@ -115,8 +115,8 @@
     "name": "botaudit",
     "author": "xmo",
     "team": "xmo",
-    "version": "1.0.8",
-    "description": "按平台或群组屏蔽关键词响应。",
+    "version": "1.0.9",
+    "description": "黑名单模式按平台、群组、用户屏蔽关键词响应。",
     "classification": [
       "botaudit"
     ],
