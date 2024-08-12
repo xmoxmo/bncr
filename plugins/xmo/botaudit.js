@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.0.7
+ * @version 1.0.8
  * @description 按平台或群组屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -271,7 +271,7 @@ module.exports = async (s) => {
         if (!getuser) {
           checkblack = checkblack + 1;
         }
-        if (checkblack == 0) {
+        if (checkblack == 3) {
           return null;
         }
 
