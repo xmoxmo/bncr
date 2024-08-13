@@ -2,11 +2,12 @@
  * @author Heyboi
  * @name upplugins
  * @team xmo
- * @version 2.0.1
+ * @version 2.0.2
  * @description 检测各个插件库并更新
  * @rule ^插件更新$
  * @admin true
  * @disable false
+ * @public true
  * 
  * 说明：
     1、 检测bncr插件更新
