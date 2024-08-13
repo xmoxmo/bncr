@@ -2,7 +2,7 @@
  * @author Heyboi
  * @name upplugins
  * @team xmo
- * @version 2.0.2
+ * @version 2.0.3
  * @description 检测各个插件库并更新
  * @rule ^插件更新$
  * @admin true
