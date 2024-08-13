@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.5.8
+ * @version 2.5.9
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -12,7 +12,7 @@
  * @rule ^(.*@.*)$
  * @rule ^(.*CQ:at,qq=.*)$
  * @admin false
- * @priority 9
+ * @priority -1
  * @classification ["botchat"]
  * @public true
  * @disable false
