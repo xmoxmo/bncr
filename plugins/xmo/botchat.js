@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.5.9
+ * @version 2.6.0
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -388,7 +388,7 @@ module.exports = async (s) => {
                       break;
                     }
                   } else {
-                    let getgroup = await sysDB.get(`@group@${keydyy}|@|0`);
+                    let getgroup = await sysDB.get(`${keydyy}@group@|@|0`);
                     if (getgroup) {
                       let getgrouparr = getgroup.split('|');
                       if (getgrouparr.indexOf(groupId) != -1) {
