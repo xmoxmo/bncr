@@ -175,5 +175,27 @@
     "isEncPlugin": false,
     "id": "K7T7jAKMsYZDOEy6bBDXKCGqKug=",
     "isChatPlugin": true
+  },
+  "D382+g+5PQ5fjCvCNF0Ht6h968M=": {
+    "type": "github",
+    "name": "upplugins",
+    "author": "Heyboi",
+    "team": "xmo",
+    "version": "2.0.2",
+    "description": "检测各个插件库并更新",
+    "classification": [
+      "插件"
+    ],
+    "filename": "upplugins.js",
+    "fileDir": "/plugins/xmo/upplugins.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "D382+g+5PQ5fjCvCNF0Ht6h968M=",
+    "isChatPlugin": true
   }
 }
