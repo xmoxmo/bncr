@@ -198,6 +198,7 @@ module.exports = async (s) => {
   }
 
   async function handleGetReply(s, keyword) {
+    if (!keyword) return 'next';
     if (keyword.includes('@group@')) {
       if (!(await s.isAdmin())) {
         keyword = keyword.replace(new RegExp('@group@','g'), "");
