@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.6.3
+ * @version 2.6.4
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -199,6 +199,20 @@ module.exports = async (s) => {
 
   async function handleGetReply(s, keyword) {
     if (!keyword) return 'next';
+    let keyblacklist = await sysDB.get('@keyblacklist@');
+    if (keyblacklist) {
+      let keyblacklists = replydb.split('|');
+      for (var k = 0; k < keyblacklists.length; k++) {
+        if keyword.includes.(keyblacklists[k]) {
+          return 'next'
+        }
+      }
+    }
+    if (keyword === '@keyblacklist@') {
+      if (!(await s.isAdmin())) {
+        return null;
+      }
+    }
     if (keyword.includes('@group@')) {
       if (!(await s.isAdmin())) {
         keyword = keyword.replace(new RegExp('@group@','g'), "");
