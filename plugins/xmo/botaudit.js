@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.1.1
+ * @version 1.1.2
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -361,10 +361,10 @@ module.exports = async (s) => {
           } else {
             sreturn = 'no';
           }
-          if （sreturn = 'no' && mode = 'black') {
+          if （sreturn === 'no' && mode === 'black') {
             rerurn null;
           }
-          if （sreturn = 'yes' && mode = 'white') {
+          if （sreturn === 'yes' && mode === 'white') {
             rerurn null;
           }
         }
