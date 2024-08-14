@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.1.7
+ * @version 1.1.8
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -316,31 +316,44 @@ module.exports = async (s) => {
         let checkblack = 0;
         let getdb = '';
         getdb = await fungetlist('sfrom', 'black');
-        if (!getdb) {
+        if (getdb) {
+          checkblack = checkblack + 1;
+        } else {
           getdb = await fungetlist('sfrom', 'white');
           if (getdb) {
             checkblack = checkblack + 1;
           }
         }
+        console.log(getdb);
+        console.log(checkblack);
         getdb = await fungetlist('group', 'black');
-        if (!getdb) {
-          getsfrom = await fungetlist('group', 'white');
+        if (getdb) {
+          checkblack = checkblack + 1;
+        } else {
+          getdb = await fungetlist('group', 'white');
           if (getdb) {
             checkblack = checkblack + 1;
           }
         }
+        console.log(getdb);
+        console.log(checkblack);
         getdb = await fungetlist('user', 'black');
-        if (!getdb) {
+        if (getdb) {
+          checkblack = checkblack + 1;
+        } else {
           getdb = await fungetlist('user', 'white');
           if (getdb) {
             checkblack = checkblack + 1;
           }
         }
-        if (checkblack == 3) {
+        console.log(getdb);
+        console.log(checkblack);
+        if (checkblack == 0) {
           return null;
         }
 
         async function fungetlist(way, mode) {
+          console.log(`${keyword}@${way}@@${mode}@`);
           let getdb = await sysDB.get(`${keyword}@${way}@@${mode}@`);
           if (getdb) {
             let getdbarr = getdb.split('|');
@@ -360,15 +373,26 @@ module.exports = async (s) => {
               sreturn = 'yes';
             }
           } else {
-            sreturn = 'no';
+            sreturn = 'null';
           }
-          if (sreturn === 'no' && mode === 'black') {
+          if (sreturn === 'null') {
             return null;
+          } else {
+            if (mode === 'black') {
+              if (sreturn === 'yes') {
+                return 'black';
+              } else {
+                return null;
+              }
+            }
+            if (mode === 'white') {
+              if (sreturn === 'yes') {
+                return null;
+              } else {
+                return 'black';
+              }
+            }
           }
-          if (sreturn === 'yes' && mode === 'white') {
-            return null;
-          }
-          return 'black';
         }
         
         return await funreplydb(keyword);
