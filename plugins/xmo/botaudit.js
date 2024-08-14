@@ -324,8 +324,6 @@ module.exports = async (s) => {
             checkblack = checkblack + 1;
           }
         }
-        console.log(getdb);
-        console.log(checkblack);
         getdb = await fungetlist('group', 'black');
         if (getdb) {
           checkblack = checkblack + 1;
@@ -335,8 +333,6 @@ module.exports = async (s) => {
             checkblack = checkblack + 1;
           }
         }
-        console.log(getdb);
-        console.log(checkblack);
         getdb = await fungetlist('user', 'black');
         if (getdb) {
           checkblack = checkblack + 1;
@@ -346,14 +342,11 @@ module.exports = async (s) => {
             checkblack = checkblack + 1;
           }
         }
-        console.log(getdb);
-        console.log(checkblack);
         if (checkblack == 0) {
           return null;
         }
 
         async function fungetlist(way, mode) {
-          console.log(`${keyword}@${way}@@${mode}@`);
           let getdb = await sysDB.get(`${keyword}@${way}@@${mode}@`);
           if (getdb) {
             let getdbarr = getdb.split('|');
