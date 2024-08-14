@@ -2,13 +2,13 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.1.0
+ * @version 1.1.1
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
  * @rule ^(botaudit)\s+(list)$
  * @rule ^(botaudit)\s+(empty)$
- * @rule ^(\S+)$
+ * @rule [\s\S]+
  * @admin false
  * @priority 100000000
  * @classification ["botaudit"]
@@ -178,6 +178,11 @@ module.exports = async (s) => {
   }
 
   async function handleGetReply(s, keyword) {
+    if (keyword.includes('@')) {
+      if (!(await s.isAdmin())) {
+        keyword = await keyconvert(keyword);
+      }
+    }
     let reply = '';
     reply = await getReply(keyword);
     // console.log(`Get reply for keyword ${keyword}: ${reply}`);
@@ -189,6 +194,16 @@ module.exports = async (s) => {
     } else {
       return "next"
     }
+  }
+
+  async function keyconvert(keyword) {
+    let newkeyword = keyword;
+    newkeyword = newkeyword.replace(new RegExp('@black@','g'), "");
+    newkeyword = newkeyword.replace(new RegExp('@white@','g'), "");
+    newkeyword = newkeyword.replace(new RegExp('@sfrom@','g'), "");
+    newkeyword = newkeyword.replace(new RegExp('@group@','g'), "");
+    newkeyword = newkeyword.replace(new RegExp('@user@','g'), "");
+    return newkeyword;
   }
 
   async function handleListKeywords(s) {
@@ -245,38 +260,87 @@ module.exports = async (s) => {
     }
   }
 
+  async function sortArray(array) {
+    array.sort((a, b) => b.length - a.length)
+    return array
+  }
 
+  async function keycheck(keyword) {
+    let check = 0;
+    if (keyword.includes('@black@')) {
+      check = check + 1;
+    }
+    if (check != 0) {
+      return 'black';
+    }
+    if (keyword.includes('@white@')) {
+      check = check + 1;
+    }
+    if (check != 0) {
+      return 'white';
+    }
+    if (check == 0) {
+      return null;
+    }
+  }
 
   async function getReply(keyword) {
     try {
       if (keyword.slice(0, 7) === '@remsg@') {
         return "@noreply@";
       } else {
-
         let getreply = await sysDB.get(keyword);
         if (!getreply) {
-          return null;
+          let keys = await sysDB.keys();
+          keys = await sortArray(keys);
+          if (keys.length > 0) {
+            let newkeyword = '';
+            for (var i = 0; i < keys.length; i++) {
+              let str = keys[i];
+              if (!(await keycheck(str))) {
+                if (keyword.includes(str)) {
+                  newkeyword = keys[i];
+                  break;
+                }
+              }
+            }
+            if (newkeyword) {
+              keyword = newkeyword;
+            } else {
+              return null;
+            }
+          }
         }
 
+
         let checkblack = 0;
-        let getsfrom = await fungetlist('sfrom');
+        let getsfrom = await fungetlist('sfrom', 'black');
         if (!getsfrom) {
-          checkblack = checkblack + 1;
+          getsfrom = await fungetlist('sfrom', 'white');
+          if (!getsfrom) {
+            checkblack = checkblack + 1;
+          }
         }
-        let getgroup = await fungetlist('group');
+        let getgroup = await fungetlist('group', 'black');
         if (!getgroup) {
-          checkblack = checkblack + 1;
+          getsfrom = await fungetlist('group', 'white');
+          if (!getsfrom) {
+            checkblack = checkblack + 1;
+          }
         }
-        let getuser = await fungetlist('user');
+        let getuser = await fungetlist('user', 'black');
         if (!getuser) {
-          checkblack = checkblack + 1;
+          getsfrom = await fungetlist('user', 'white');
+          if (!getsfrom) {
+            checkblack = checkblack + 1;
+          }
         }
         if (checkblack == 3) {
           return null;
         }
 
-        async function fungetlist(way) {
-          let getdb = await sysDB.get(`${keyword}@${way}@`);
+        async function fungetlist(way, mode) {
+          let getdb = await sysDB.get(`${keyword}@${way}@@${mode}@`);
           if (getdb) {
             let getdbarr = getdb.split('|');
             let sway = '';
@@ -290,12 +354,18 @@ module.exports = async (s) => {
               sway = userId;
             }
             if (getdbarr.indexOf(sway) == -1) {
-              return null;
+              sreturn = 'no';
             } else {
-              return 'blacklist';
+              sreturn = 'yes';
             }
           } else {
-            return null;
+            sreturn = 'no';
+          }
+          if （sreturn = 'no' && mode = 'black') {
+            rerurn null;
+          }
+          if （sreturn = 'yes' && mode = 'white') {
+            rerurn null;
           }
         }
         
@@ -303,14 +373,18 @@ module.exports = async (s) => {
 
         async function funreplydb(keyword) {
           replydb = await sysDB.get(keyword);
-          if (replydb.includes('|@@|')) {
-            let replydbs = replydb.split('|@@|');
-            for (var k = 0; k < replydbs.length; k++) {
-              await funsendreply(replydbs[k]);
+          if (replydb) {
+            if (replydb.includes('|@@|')) {
+              let replydbs = replydb.split('|@@|');
+              for (var k = 0; k < replydbs.length; k++) {
+                await funsendreply(replydbs[k]);
+              }
+              return "@noreply@"
+            } else {
+              return await funsendreply(replydb);
             }
-            return "@noreply@"
           } else {
-            return await funsendreply(replydb);
+            return null;
           }
         }
         
