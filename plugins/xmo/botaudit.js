@@ -361,11 +361,11 @@ module.exports = async (s) => {
           } else {
             sreturn = 'no';
           }
-          if （sreturn === 'no' && mode === 'black') {
-            rerurn null;
+          if (sreturn === 'no' && mode === 'black') {
+            return null;
           }
-          if （sreturn === 'yes' && mode === 'white') {
-            rerurn null;
+          if (sreturn === 'yes' && mode === 'white') {
+            return null;
           }
         }
         
