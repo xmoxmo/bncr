@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.6.5
+ * @version 2.6.6
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -204,7 +204,7 @@ module.exports = async (s) => {
       let keyblacklists = replydb.split('|');
       for (var k = 0; k < keyblacklists.length; k++) {
         if (keyword.includes.(keyblacklists[k])) {
-          return 'next'
+          return s.reply('你没有权限执行此操作');
         }
       }
     }
