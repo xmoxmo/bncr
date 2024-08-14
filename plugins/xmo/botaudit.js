@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.1.6
+ * @version 1.1.7
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -314,24 +314,25 @@ module.exports = async (s) => {
         }
 
         let checkblack = 0;
-        let getsfrom = await fungetlist('sfrom', 'black');
-        if (getsfrom === 'pass') {
-          getsfrom = await fungetlist('sfrom', 'white');
-          if (getsfrom === 'pass') {
+        let getdb = '';
+        getdb = await fungetlist('sfrom', 'black');
+        if (!getdb) {
+          getdb = await fungetlist('sfrom', 'white');
+          if (getdb) {
             checkblack = checkblack + 1;
           }
         }
-        let getgroup = await fungetlist('group', 'black');
-        if (getgroup === 'pass') {
+        getdb = await fungetlist('group', 'black');
+        if (!getdb) {
           getsfrom = await fungetlist('group', 'white');
-          if (getsfrom === 'pass') {
+          if (getdb) {
             checkblack = checkblack + 1;
           }
         }
-        let getuser = await fungetlist('user', 'black');
-        if (getuser === 'pass') {
-          getsfrom = await fungetlist('user', 'white');
-          if (getsfrom === 'pass') {
+        getdb = await fungetlist('user', 'black');
+        if (!getdb) {
+          getdb = await fungetlist('user', 'white');
+          if (getdb) {
             checkblack = checkblack + 1;
           }
         }
@@ -362,12 +363,12 @@ module.exports = async (s) => {
             sreturn = 'no';
           }
           if (sreturn === 'no' && mode === 'black') {
-            return 'pass';
+            return null;
           }
           if (sreturn === 'yes' && mode === 'white') {
-            return 'pass';
+            return null;
           }
-          return null;
+          return 'black';
         }
         
         return await funreplydb(keyword);
