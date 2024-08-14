@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.6.8
+ * @version 2.6.9
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -201,8 +201,8 @@ module.exports = async (s) => {
     if (!keyword) return 'next';
     let keyblacklist = await sysDB.get('@keyblacklist@');
     if (keyblacklist) {
-      if (keyblacklist.includes('|') {
-        let keyblacklists = replydb.split('|');
+      if (keyblacklist.includes('|')) {
+        let keyblacklists = keyblacklist.split('|');
         for (var k = 0; k < keyblacklists.length; k++) {
           if (keyword.includes(keyblacklists[k])) {
             return 'next';
