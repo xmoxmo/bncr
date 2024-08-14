@@ -318,21 +318,21 @@ module.exports = async (s) => {
         let getsfrom = await fungetlist('sfrom', 'black');
         if (!getsfrom) {
           getsfrom = await fungetlist('sfrom', 'white');
-          if (!getsfrom) {
+          if (getsfrom) {
             checkblack = checkblack + 1;
           }
         }
         let getgroup = await fungetlist('group', 'black');
         if (!getgroup) {
           getsfrom = await fungetlist('group', 'white');
-          if (!getsfrom) {
+          if (getsfrom) {
             checkblack = checkblack + 1;
           }
         }
         let getuser = await fungetlist('user', 'black');
         if (!getuser) {
           getsfrom = await fungetlist('user', 'white');
-          if (!getsfrom) {
+          if (getsfrom) {
             checkblack = checkblack + 1;
           }
         }
