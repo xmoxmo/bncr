@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.1.3
+ * @version 1.1.4
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -367,6 +367,7 @@ module.exports = async (s) => {
           if (sreturn === 'yes' && mode === 'white') {
             return null;
           }
+          return 'black';
         }
         
         return await funreplydb(keyword);
