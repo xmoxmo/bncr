@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.1.8
+ * @version 1.1.9
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -324,13 +324,15 @@ module.exports = async (s) => {
             checkblack = checkblack + 1;
           }
         }
-        getdb = await fungetlist('group', 'black');
-        if (getdb) {
-          checkblack = checkblack + 1;
-        } else {
-          getdb = await fungetlist('group', 'white');
+        if (groupId && groupId !== '0') {
+          getdb = await fungetlist('group', 'black');
           if (getdb) {
             checkblack = checkblack + 1;
+          } else {
+            getdb = await fungetlist('group', 'white');
+            if (getdb) {
+             checkblack = checkblack + 1;
+            }
           }
         }
         getdb = await fungetlist('user', 'black');
