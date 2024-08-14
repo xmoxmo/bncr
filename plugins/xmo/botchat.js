@@ -2,7 +2,7 @@
  * @author xmo
  * @name botchat
  * @team xmo
- * @version 2.6.1
+ * @version 2.6.2
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -201,7 +201,9 @@ module.exports = async (s) => {
 
   async function handleGetReply(s, keyword) {
     if (keyword.includes('@group@')) {
-      if (!(await s.isAdmin())) return 'next';
+      if (!(await s.isAdmin())) {
+        keyword = keyword.replace(new RegExp('@group@','g'), "");
+      }
     }
     const naDB = new BncrDB(sfrom);
     botname = await naDB.get("botname");
