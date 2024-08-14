@@ -2,13 +2,13 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.1.4
+ * @version 1.1.5
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
  * @rule ^(botaudit)\s+(list)$
  * @rule ^(botaudit)\s+(empty)$
- * @rule [\s\S]+
+ * @rule ^([\s\S]+)$
  * @admin false
  * @priority 100000000
  * @classification ["botaudit"]
@@ -178,6 +178,7 @@ module.exports = async (s) => {
   }
 
   async function handleGetReply(s, keyword) {
+    if (!keyword) return 'next';
     if (keyword.includes('@')) {
       if (!(await s.isAdmin())) {
         keyword = await keyconvert(keyword);
@@ -192,7 +193,7 @@ module.exports = async (s) => {
         await s.reply(reply);
       }
     } else {
-      return "next"
+      return 'next';
     }
   }
 
