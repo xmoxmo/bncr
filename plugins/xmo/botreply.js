@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 2.7.4
+ * @version 2.7.5
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -210,7 +210,7 @@ module.exports = async (s) => {
           }
         }
       } else {
-        if (keyword === keyblacklist) {
+        if (keyword.includes(keyblacklist)) {
           return 'next';
         }
       }
