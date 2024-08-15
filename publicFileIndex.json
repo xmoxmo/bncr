@@ -137,10 +137,10 @@
     "name": "botchat",
     "author": "xmo",
     "team": "xmo",
-    "version": "2.7.1",
+    "version": "2.7.2",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
-      "botchat"
+      "botreply"
     ],
     "filename": "botchat.js",
     "fileDir": "/plugins/xmo/botchat.js",
