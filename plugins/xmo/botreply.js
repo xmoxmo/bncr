@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 2.7.2
+ * @version 2.7.3
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -46,6 +46,7 @@ module.exports = async (s) => {
   const noreplychatarr = ConfigDB.userConfig.noreplychat || [];
   const sfrom = s.getFrom();
   const groupId = s.getGroupId();
+  const userId = s.getUserId();
   const debug = ConfigDB.userConfig.debug.enable;
   const sysDB = new BncrDB('BotReplyDB');
   const commandType = s.param(1);
@@ -214,7 +215,33 @@ module.exports = async (s) => {
         }
       }
     }
-    if (keyword === '@keyblacklist@') {
+    let userblacklist = await sysDB.get('@userblacklist@');
+    if (userblacklist) {
+      if (userblacklist.includes('|')) {
+        let userblacklists = userblacklist.split('|');
+        if (userblacklists.indexOf(userId) != -1) {
+            return 'next';
+        }
+      } else {
+        if (userId === userblacklist) {
+          return 'next';
+        }
+      }
+    }
+    let groupblacklist = await sysDB.get('@groupblacklist@');
+    if (groupblacklist) {
+      if (groupblacklist.includes('|')) {
+        let groupblacklists = groupblacklist.split('|');
+        if (groupblacklists.indexOf(groupId) != -1) {
+          return 'next';
+        }
+      } else {
+        if (groupId === groupblacklist) {
+          return 'next';
+        }
+      }
+    }
+    if (keyword === '@keyblacklist@' || keyword === '@userblacklist@' || keyword === '@groupblacklist@') {
       if (!(await s.isAdmin())) {
         return s.reply('你没有权限执行此操作');
       }
@@ -308,7 +335,7 @@ module.exports = async (s) => {
           if (debug) {
             sysMethod.pushAdmin({
                 platform: [`${sfrom}`],
-                msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${s.getUserId()}\n  >信息:${keywordstr}\n  >名字:${botname}\n  >内容:${newkeyword}\n  >指令:${forwardline}`,
+                msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >信息:${keywordstr}\n  >名字:${botname}\n  >内容:${newkeyword}\n  >指令:${forwardline}`,
             });
           }
         }
@@ -475,7 +502,7 @@ module.exports = async (s) => {
                     if (debug) {
                       sysMethod.pushAdmin({
                           platform: [`${sfrom}`],
-                          msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${s.getUserId()}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
+                          msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
                       });
                     }
                   }
