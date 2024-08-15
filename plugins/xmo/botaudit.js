@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.2.2
+ * @version 1.2.3
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -183,12 +183,15 @@ module.exports = async (s) => {
       if (await s.isAdmin()) {
         let list = await sysDB.get(keyword);
         if (list) {
-          return await s.reply(list);
+          await s.reply(list);
         } else {
-          return await s.reply('未设置此名单');
+          await s.reply('未设置此名单');
         }
+        return null;
       } else {
         keyword = await keyconvert(keyword);
+        s.inlineSugar(keyword);
+        return null;
       }
     }
     let reply = '';
@@ -198,6 +201,7 @@ module.exports = async (s) => {
       // console.log(`Replying with: ${reply}`);
       if (reply !== '@noreply@') {
         await s.reply(reply);
+        return null;
       }
     } else {
       return 'next';
