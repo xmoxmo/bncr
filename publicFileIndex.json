@@ -132,9 +132,9 @@
     "id": "TgATXfLyGGGlyg33eFoTXALMD3Y=",
     "isChatPlugin": true
   },
-  "nIHYWehpLEtXuJadKJRMKPyJMas=": {
+  "KqT81kjJl1qaIuyWjLMb6w6VJlM=": {
     "type": "github",
-    "name": "botchat",
+    "name": "botreply",
     "author": "xmo",
     "team": "xmo",
     "version": "2.7.2",
@@ -142,8 +142,8 @@
     "classification": [
       "botreply"
     ],
-    "filename": "botchat.js",
-    "fileDir": "/plugins/xmo/botchat.js",
+    "filename": "botreply.js",
+    "fileDir": "/plugins/xmo/botreply.js",
     "systemVersionRange": "",
     "isCron": false,
     "isAdapter": false,
@@ -151,7 +151,7 @@
     "isService": false,
     "isAuthentication": false,
     "isEncPlugin": false,
-    "id": "nIHYWehpLEtXuJadKJRMKPyJMas=",
+    "id": "KqT81kjJl1qaIuyWjLMb6w6VJlM=",
     "isChatPlugin": true
   },
   "K7T7jAKMsYZDOEy6bBDXKCGqKug=": {
