@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 2.7.7
+ * @version 2.7.8
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -245,12 +245,14 @@ module.exports = async (s) => {
       if (await s.isAdmin()) {
         let list = await sysDB.get(keyword);
         if (list) {
-          return await s.reply(list);
+          await s.reply(list);
         } else {
-          return await s.reply('未设置此黑名单');
+          await s.reply('未设置此黑名单');
         }
+        return null;
       } else {
-        return s.reply('你没有权限执行此操作');
+        s.reply('你没有权限执行此操作');
+        return null;
       }
     }
     if (keyword.includes('@group@')) {
@@ -288,6 +290,7 @@ module.exports = async (s) => {
       // console.log(`Replying with: ${reply}`);
       if (reply !== '@noreply@') {
         await s.reply(reply);
+        return null;
       }
     } else {
       if (forwardlinechat) {
@@ -319,6 +322,7 @@ module.exports = async (s) => {
             if (newkeyword) {
               if (forwardline) {
                 s.inlineSugar(`${forwardline} ${newkeyword}`);
+                sreturn = null;
               } else {
                 sreturn = 'next';
               }
