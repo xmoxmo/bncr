@@ -1,6 +1,6 @@
 /**
  * @author Merrick
- * @name aigemini
+ * @name gemini
  * @origin xmo
  * @version 1.0.3
  * @description gemini聊天
