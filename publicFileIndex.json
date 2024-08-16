@@ -66,28 +66,6 @@
     "id": "ubnKHQJKEkfIl2I+H2w27sj9Bx0=",
     "isChatPlugin": false
   },
-  "o0r1a6+CARFdJl0ie/Yd4g4+v5M=": {
-    "type": "github",
-    "name": "aigemini",
-    "author": "Merrick",
-    "team": "xmo",
-    "version": "1.0.3",
-    "description": "gemini聊天",
-    "classification": [
-      "插件"
-    ],
-    "filename": "aigemini.js",
-    "fileDir": "/plugins/xmo/aigemini.js",
-    "systemVersionRange": "",
-    "isCron": false,
-    "isAdapter": false,
-    "isMod": false,
-    "isService": false,
-    "isAuthentication": false,
-    "isEncPlugin": false,
-    "id": "o0r1a6+CARFdJl0ie/Yd4g4+v5M=",
-    "isChatPlugin": true
-  },
   "1WO5n9ocCRhvO7qBVFPpImHrE0k=": {
     "type": "github",
     "name": "aigptv2",
@@ -196,6 +174,28 @@
     "isAuthentication": false,
     "isEncPlugin": false,
     "id": "/W4l/qb4zyXNTzckmUadDO+FTq0=",
+    "isChatPlugin": true
+  },
+  "vWtgXt/brP5ywNfYyHb4KNS72dA=": {
+    "type": "github",
+    "name": "gemini",
+    "author": "Merrick",
+    "team": "xmo",
+    "version": "1.0.3",
+    "description": "gemini聊天",
+    "classification": [
+      "插件"
+    ],
+    "filename": "gemini.js",
+    "fileDir": "/plugins/xmo/gemini.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "vWtgXt/brP5ywNfYyHb4KNS72dA=",
     "isChatPlugin": true
   },
   "D382+g+5PQ5fjCvCNF0Ht6h968M=": {
