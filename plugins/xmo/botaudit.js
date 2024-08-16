@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.2.9
+ * @version 1.3.0
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -25,7 +25,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '1.2.9';
+const ver = '1.3.0';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -41,6 +41,7 @@ module.exports = async (s) => {
   const sfrom = s.getFrom();
   const groupId = s.getGroupId();
   const userId = s.getUserId();
+  const getTime = sysMethod.getTime();
   const debug = ConfigDB.userConfig.debug.enable;
   const sysDB = new BncrDB('BotAuditDB');
   const commandType = s.param(1);
@@ -180,11 +181,29 @@ module.exports = async (s) => {
 
   async function handleGetReply(s, keyword) {
     if (!keyword) return 'next';
+    let getlastmsg = await sysDB.get('@botauditlastmsg@');
+    let nowmsginfo = `${sfrom}/${groupId}@${userId}:${keyword}`;
+    let nowmsg = `${getTime}|${nowmsginfo}`;
+    if (getlastmsg) {
+      if (getlastmsg.includes('|')) {
+        let getlastmsgs = getlastmsg.split('|');
+        msgstamp = getlastmsgs[0];
+        msginfo = getlastmsgs[1];
+        let lag = Number(getTime) - Number(msgstamp);
+        if (Number(lag) < 200) {
+          if (nowmsginfo === msginfo) {
+            s.reply('终止了一个循环')
+            return null;
+          }
+        }
+      }
+    }
+    await sysDB.set('@botauditlastmsg@', nowmsg);
     if (keyword === 'botaudit_ver') {
       await s.reply(ver);
       return null;
     }
-    if (keyword.includes('@white@') || keyword.includes('@black@')) {
+    if (keyword.includes('@white@') || keyword.includes('@black@') || keyword === '@botauditlastmsg@') {
       if (await s.isAdmin()) {
         let list = await sysDB.get(keyword);
         if (list) {
