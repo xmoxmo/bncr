@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.3.0
+ * @version 1.3.1
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -25,7 +25,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '1.3.0';
+const ver = '1.3.1';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -199,11 +199,25 @@ module.exports = async (s) => {
       }
     }
     await sysDB.set('@botauditlastmsg@', nowmsg);
+    if (keyword === '@botauditlastmsg@') {
+      if (await s.isAdmin()) {
+        let list = await sysDB.get(keyword);
+        if (list) {
+          await s.reply(list);
+        } else {
+          await s.reply('未设置');
+        }
+        return null;
+      } else {
+        s.reply('你没有权限执行此操作');
+        return null;
+      }
+    }
     if (keyword === 'botaudit_ver') {
       await s.reply(ver);
       return null;
     }
-    if (keyword.includes('@white@') || keyword.includes('@black@') || keyword === '@botauditlastmsg@') {
+    if (keyword.includes('@white@') || keyword.includes('@black@')) {
       if (await s.isAdmin()) {
         let list = await sysDB.get(keyword);
         if (list) {
