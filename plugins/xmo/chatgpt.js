@@ -2,7 +2,7 @@
  * @author Merrick
  * @name chatgpt
  * @origin xmo
- * @version 1.1.2
+ * @version 1.1.3
  * @description ChatGpt聊天，适配无界3.0
  * @team xmo
  * @rule ^(aichatgpt|aidraw) ([\s\S]+)$
@@ -177,8 +177,9 @@ module.exports = async s => {
             replyObj['platform'] = platform
             if (groupId && groupId!=0) {
                 replyObj['groupId'] = groupId;
+            } else {
+                replyObj['userId'] = userId;
             }
-            replyObj['userId'] = userId;
             // sysMethod.push(replyObj);
             await s.reply(replyObj);
         }
