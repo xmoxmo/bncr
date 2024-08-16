@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.3.2
+ * @version 1.3.3
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -25,7 +25,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '1.3.2';
+const ver = '1.3.3';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -181,6 +181,10 @@ module.exports = async (s) => {
 
   async function handleGetReply(s, keyword) {
     if (!keyword) return 'next';
+    if (keyword === 'botaudit_ver') {
+      await s.reply(ver);
+      return null;
+    }
     let getlastmsg = await sysDB.get('@botauditlastmsg@');
     let nowmsginfo = `${sfrom}/${groupId}@${userId}:${keyword}`;
     let nowmsg = `${getTime}|${nowmsginfo}`;
@@ -202,7 +206,7 @@ module.exports = async (s) => {
       }
     }
     await sysDB.set('@botauditlastmsg@', nowmsg);
-    if (keyword === '@botauditlastmsg@') {
+    if (keyword === '@botauditlastmsg@' || keyword === '@botnoreplyuserid@') {
       if (await s.isAdmin()) {
         let list = await sysDB.get(keyword);
         if (list) {
@@ -216,8 +220,7 @@ module.exports = async (s) => {
         return null;
       }
     }
-    if (keyword === 'botaudit_ver') {
-      await s.reply(ver);
+    if (keyword.includes('@botauditlastmsg@') || keyword.includes('@botnoreplyuserid@')) {
       return null;
     }
     if (keyword.includes('@white@') || keyword.includes('@black@')) {
@@ -346,7 +349,7 @@ module.exports = async (s) => {
   async function getReply(keyword) {
     try {
       if (keyword.slice(0, 7) === '@remsg@') {
-        return "@noreply@";
+        return '@noreply@';
       } else {
         let getreply = await sysDB.get(keyword);
         if (!getreply) {
@@ -461,7 +464,7 @@ module.exports = async (s) => {
               for (var k = 0; k < replydbs.length; k++) {
                 await funsendreply(replydbs[k]);
               }
-              return "@noreply@"
+              return '@noreply@';
             } else {
               return await funsendreply(replydb);
             }
@@ -471,8 +474,21 @@ module.exports = async (s) => {
         }
         
         async function funsendreply(replydb) {
+          let noreplyuserid = await sysDB.get('@botnoreplyuserid@');
+          if (noreplyuserid) {
+            if (noreplyuserid.includes('|')) {
+              let noreplyuserids = noreplyuserid.split('|');
+              if (noreplyuserids.indexOf(userId) != -1) {
+                return '@noreply@';
+              }
+            } else {
+              if (userId === noreplyuserid) {
+                return '@noreply@';
+              }
+            }
+          }
           if (replydb === '@noreply@') {
-            return "@noreply@";
+            return '@noreply@';
           }
           if (replydb) {
             if (replydb.slice(0, 7) === '@remsg@') {
@@ -492,7 +508,7 @@ module.exports = async (s) => {
               } else {
                 s.inlineSugar(replydb.slice(7));
               }
-              return "@noreply@";
+              return '@noreply@';
             } else {
               let replydbtype = '';
               let replymsg = '';
@@ -507,7 +523,7 @@ module.exports = async (s) => {
                 path: replydbtype[1] || '',
                 msg: replymsg,
               });
-              return "@noreply@";
+              return '@noreply@';
             }
           } else {
             return null;
@@ -516,7 +532,7 @@ module.exports = async (s) => {
       }
     } catch (e) {
       console.error('获取失败:', e);
-      return "@noreply@";
+      return '@noreply@';
     }
   }
 };
