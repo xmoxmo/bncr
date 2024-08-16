@@ -1,8 +1,8 @@
 /**
- * @author xmo
+ * @author Merrick
  * @name chatgpt
  * @origin xmo
- * @version 1.1.1
+ * @version 1.1.2
  * @description ChatGpt聊天，适配无界3.0
  * @team xmo
  * @rule ^(aichatgpt|aidraw) ([\s\S]+)$
