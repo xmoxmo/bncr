@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.3.1
+ * @version 1.3.2
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -25,7 +25,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '1.3.1';
+const ver = '1.3.2';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -192,7 +192,10 @@ module.exports = async (s) => {
         let lag = Number(getTime) - Number(msgstamp);
         if (Number(lag) < 200) {
           if (nowmsginfo === msginfo) {
-            s.reply('终止了一个循环')
+            sysMethod.pushAdmin({
+              platform: [`${sfrom}`],
+              msg: `管理员消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >详情:疑似循环`,
+            });
             return null;
           }
         }
@@ -481,7 +484,7 @@ module.exports = async (s) => {
                     if (debug) {
                       sysMethod.pushAdmin({
                           platform: [`${sfrom}`],
-                          msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${s.getUserId()}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
+                          msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
                       });
                     }
                   }
