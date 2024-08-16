@@ -1,8 +1,8 @@
 /**
  * @author Merrick
- * @name Gemini
+ * @name aigemini
  * @origin xmo
- * @version 1.0.2
+ * @version 1.0.3
  * @description gemini聊天
  * @team xmo
  * @rule ^(aigeminis|aigeminic|aigeminip)([\s\S]+)$
