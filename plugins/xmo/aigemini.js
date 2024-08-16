@@ -6,8 +6,8 @@
  * @description gemini聊天
  * @team xmo
  * @rule ^(aigeminis|aigeminic|aigeminip)([\s\S]+)$
- * @admin true
- * @public false
+ * @admin fasle
+ * @public true
  * @priority 9999
  * @classification ["插件"]
  * @disable false
