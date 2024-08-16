@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 2.8.1
+ * @version 2.8.2
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -28,7 +28,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '2.8.1';
+const ver = '2.8.2';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -213,7 +213,10 @@ module.exports = async (s) => {
         let lag = Number(getTime) - Number(msgstamp);
         if (Number(lag) < 200) {
           if (nowmsginfo === msginfo) {
-            s.reply('终止了一个循环')
+            sysMethod.pushAdmin({
+              platform: [`${sfrom}`],
+              msg: `管理员消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >详情:疑似循环`,
+            });
             return null;
           }
         }
