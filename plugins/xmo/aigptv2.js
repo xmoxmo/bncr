@@ -1,8 +1,8 @@
 /**
- * @author xmo
+ * @author YuanKK
  * @name aigptv2
  * @team xmo
- * @version 1.0.2
+ * @version 1.0.3
  * @description aigptv2 触发命令aigptv2
  * @rule ^aigptv2([\s\S]+)$
  * @rule ^([\s\S]+)aigptv2$
