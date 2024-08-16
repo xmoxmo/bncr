@@ -66,12 +66,12 @@
     "id": "ubnKHQJKEkfIl2I+H2w27sj9Bx0=",
     "isChatPlugin": false
   },
-  "z1a1F3UPQ9uPXBiAIW7CNl2phUs=": {
+  "1WO5n9ocCRhvO7qBVFPpImHrE0k=": {
     "type": "github",
     "name": "aigptv2",
-    "author": "xmo",
+    "author": "YuanKK",
     "team": "xmo",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "aigptv2 触发命令aigptv2",
     "classification": [
       "GPTI"
@@ -85,7 +85,7 @@
     "isService": false,
     "isAuthentication": false,
     "isEncPlugin": false,
-    "id": "z1a1F3UPQ9uPXBiAIW7CNl2phUs=",
+    "id": "1WO5n9ocCRhvO7qBVFPpImHrE0k=",
     "isChatPlugin": true
   },
   "k+OHlXZbDNEdIBMwmbZ9Go9P5qw=": {
@@ -154,12 +154,12 @@
     "id": "KqT81kjJl1qaIuyWjLMb6w6VJlM=",
     "isChatPlugin": true
   },
-  "K7T7jAKMsYZDOEy6bBDXKCGqKug=": {
+  "/W4l/qb4zyXNTzckmUadDO+FTq0=": {
     "type": "github",
     "name": "chatgpt",
-    "author": "xmo",
+    "author": "Merrick",
     "team": "xmo",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "description": "ChatGpt聊天，适配无界3.0",
     "classification": [
       "插件"
@@ -173,7 +173,7 @@
     "isService": false,
     "isAuthentication": false,
     "isEncPlugin": false,
-    "id": "K7T7jAKMsYZDOEy6bBDXKCGqKug=",
+    "id": "/W4l/qb4zyXNTzckmUadDO+FTq0=",
     "isChatPlugin": true
   },
   "D382+g+5PQ5fjCvCNF0Ht6h968M=": {
