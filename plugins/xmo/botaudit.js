@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.3.6
+ * @version 1.3.7
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -25,7 +25,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '1.3.6';
+const ver = '1.3.7';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -88,6 +88,11 @@ module.exports = async (s) => {
       return s.reply('你没有权限执行此操作');
     }
 
+    let keys = await sysDB.keys();
+    if (keys.indexOf(keyword) == -1) {
+      s.reply('删除失败:未找到要删除的项目');
+      return null;
+    }
     const result = await deleteReply(keyword);
     // console.log(`Delete reply result for keyword ${keyword}: ${result}`);
     s.reply(result ? '删除成功' : '删除失败');
