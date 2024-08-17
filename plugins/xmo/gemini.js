@@ -2,7 +2,7 @@
  * @author Merrick
  * @name gemini
  * @origin xmo
- * @version 1.0.3
+ * @version 1.0.4
  * @description gemini聊天
  * @team xmo
  * @rule ^(aigeminis|aigeminic|aigeminip)([\s\S]+)$
