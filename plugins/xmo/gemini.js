@@ -95,7 +95,7 @@ module.exports = async s => {
             const response = await result.response;
             const text = response.text();
             // s.reply(`GeminiChat:\n\n${text}\n\n回复gemq退出聊天`);
-            s.reply(`${text}\n\n回复gemq退出聊天`);
+            s.reply(`${text}`);
             while (true) { // 进入持续对话模式
                 let input = await s.waitInput(() => { }, 60);
                 if (!input) {
@@ -103,7 +103,7 @@ module.exports = async s => {
                     break;
                 };
                 input = input.getMsg();
-                if (input.toLowerCase() === 'gemq') { // 用户可以通过输入 'exit' 来退出对话
+                if (input.toLowerCase() === 'q') { // 用户可以通过输入 'exit' 来退出对话
                     s.reply("对话结束");
                     break;
                 }
@@ -112,7 +112,7 @@ module.exports = async s => {
                 const response = await result.response;
                 const text = response.text();
                 // s.reply(`Gemini Chat:\n\n${text}\n\n回复gemq退出聊天`);
-                s.reply(`${text}\n\n回复gemq退出聊天`);
+                s.reply(`${text}`);
             }
         } catch (error) {
             // 捕获并处理异常
