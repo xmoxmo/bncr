@@ -32,6 +32,9 @@
        @chatcom@ 回复内容中出现此词将替换为适配器中填写的关键词一般配合执行重定向命令使用
        @type@ 示例【image@type@图片的URL@type@相关文本描述】 //指定消息类型回复，可发送图片视频
        |@@| 示例【botreply 关键词 回复内容1|@@|回复内容2】 //同一关键词多条回复用|@@|隔开
+       @sfrom@ 平台
+       @groupid@ 群组id
+       @userid@ 用户id
        
 
 **示例**
@@ -44,6 +47,12 @@
      
      关键词回复并重定向调用Ai回复，响应|@|之后的指定群，其他群不响应
      > botreply 绿萝|@|群id|群id2 @remsg@aigitv2 用简短的语言介绍下家里养绿萝有什么好处
+
+     获取wechaty用户或群组id
+     > botreply wxid* @remsg@eval Buffer.from('@userkeyword@', 'utf-8').toString('hex')
+
+     获取当前消息信息
+     > botreply ids @sfrom@/@groupid@@@userid@
 ****
 **名称** botaudit.js
 
