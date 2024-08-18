@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 2.8.6
+ * @version 2.8.7
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -28,7 +28,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '2.8.6';
+const ver = '2.8.7';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -498,7 +498,13 @@ module.exports = async (s) => {
               keygjc = str;
               keydyy = '';
             }
+            let userkeyword = '';
             if (keygjc) {
+              if keygjc.includes(':') {
+                let keygjcs = keygjc.split(':');
+                keygjc = keygjcs[0];
+                userkeyword = keygjcs[1];
+              }
               if (groupId && groupId !== '0') {
                 let smatch = '';
                 if (keygjc.includes('*')) {
@@ -546,53 +552,48 @@ module.exports = async (s) => {
         if (keyword.includes('|@@|')) {
           let keywords = keyword.split('|@@|');
           for (var k = 0; k < keywords.length; k++) {
-            await funreplydb(keywords[k]);
+            await funreplydb(keywords[k], userkeyword);
           }
           return '@noreply@';
         } else {
-          return await funreplydb(keyword);
+          return await funreplydb(keyword, userkeyword);
         }
 
-        async function funreplydb(keyword) {
+        async function funreplydb(keyword, userkeyword) {
           replydb = await sysDB.get(keyword);
           if (replydb) {
             if (replydb.includes('|@@|')) {
               let replydbs = replydb.split('|@@|');
               for (var k = 0; k < replydbs.length; k++) {
-                await funsendreply(replydbs[k]);
+                await funsendreply(replydbs[k], userkeyword);
               }
               return '@noreply@';
             } else {
-              return await funsendreply(replydb);
+              return await funsendreply(replydb, userkeyword);
             }
           } else {
             return null;
           }
         }
         
-        async function funsendreply(replydb) {
+        async function funsendreply(replydb, userkeyword) {
           if (replydb) {
             if (replydb === '@noreply@') {
               return '@noreply@';
             }
             if (replydb.slice(0, 7) === '@remsg@') {
+              replydb = replydb.slice(7);
+              if (replydb.includes('@userkeyword@')) {
+                replydb = replydb.replace('@userkeyword@', userkeyword);
+              }
               if (replydb.includes('@chatcom@')) {
+                replydb = replydb.replace('@chatcom@',forwardline);
                 if (forwardline) {
-                  s.inlineSugar(replydb.slice(7).replace('@chatcom@',forwardline));
-                } else {
-                  if (await s.isAdmin()) {
-                    if (debug) {
-                      sysMethod.pushAdmin({
-                          platform: [`${sfrom}`],
-                          msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
-                      });
-                    }
-                  }
+                  s.inlineSugar(replydb);
                 }
               } else {
-                s.inlineSugar(replydb.slice(7));
+                s.inlineSugar(replydb);
               }
-              return '@noreply@';
             } else {
               let replydbtype = '';
               let replymsg = '';
@@ -607,8 +608,16 @@ module.exports = async (s) => {
                 path: replydbtype[1] || '',
                 msg: replymsg,
               });
-              return '@noreply@';
             }
+            if (await s.isAdmin()) {
+              if (debug) {
+                sysMethod.pushAdmin({
+                    platform: [`${sfrom}`],
+                    msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
+                });
+              }
+            }
+            return '@noreply@';
           } else {
             return null;
           }
