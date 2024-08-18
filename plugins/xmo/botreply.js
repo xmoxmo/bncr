@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 2.8.4
+ * @version 2.8.5
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -28,7 +28,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '2.8.4';
+const ver = '2.8.5';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -499,8 +499,15 @@ module.exports = async (s) => {
               keydyy = '';
             }
             if (keygjc) {
-              if (groupId && groupId !== '0') {
-                if (keyword.includes(keygjc)) {
+              if (smatch) {
+                let smatch = '';
+                if (keygjc.includes('*')) {
+                  keygjc = keygjc.replace(new RegExp(/\*/,'g'), "");
+                  smatch = keyword.includes(keygjc);
+                } else {
+                  smatch = (keyword === keygjc);
+                }
+                if (smatch) {
                   if (!keydyy) {
                     keydyy = groupId;
                   }
@@ -522,6 +529,9 @@ module.exports = async (s) => {
                   }
                 }
               } else {
+                if (keygjc.includes('*')) {
+                  keygjc = keygjc.replace(new RegExp(/\*/,'g'), "");
+                }
                 if (keyword === keygjc) {
                   newkeyword += `|@@|${keys[i]}`;
                   // break;
