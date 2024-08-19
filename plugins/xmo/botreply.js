@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 2.9.2
+ * @version 2.9.3
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -28,7 +28,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '2.9.2';
+const ver = '2.9.3';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -323,7 +323,7 @@ module.exports = async (s) => {
     }
     if (keyword.includes('@group@')) {
       if (!(await s.isAdmin())) {
-        keyword = keyword.replace(new RegExp('@group@','g'), "");
+        keyword = keyword.replace(new RegExp('@group@','g'), '');
       }
     }
     const naDB = new BncrDB(sfrom);
@@ -379,12 +379,12 @@ module.exports = async (s) => {
           if (keyword.includes(atbotmsg)) {
             newkeyword = keyword;
             if (sfrom === "qq") {
-              keywordstr = keyword.replace(new RegExp(/CQ:at,qq=/, 'g'), "@");
-              newkeyword = newkeyword.replace(new RegExp(/\[CQ:at,.*?\]/, 'g'), "");
+              keywordstr = keyword.replace(new RegExp(/CQ:at,qq=/, 'g'), '@');
+              newkeyword = newkeyword.replace(new RegExp(/\[CQ:at,.*?\]/, 'g'), '');
             }
-            newkeyword = newkeyword.replace(new RegExp(atbotmsg,'g'), "");
-            newkeyword = newkeyword.replace(new RegExp(" ",'g'), "");
-            newkeyword = newkeyword.replace(new RegExp(" ",'g'), "");
+            newkeyword = newkeyword.replace(new RegExp(atbotmsg,'g'), '');
+            newkeyword = newkeyword.replace(new RegExp(' ','g'), '');
+            newkeyword = newkeyword.replace(new RegExp(' ','g'), '');
             if (newkeyword) {
               if (forwardline) {
                 s.inlineSugar(`${forwardline} ${newkeyword}`);
@@ -514,7 +514,7 @@ module.exports = async (s) => {
               if (groupId && groupId !== '0') {
                 let smatch = '';
                 if (keygjc.includes('*')) {
-                  keygjc = keygjc.replace(new RegExp(/\*/,'g'), "");
+                  keygjc = keygjc.replace(new RegExp(/\*/,'g'), '');
                   smatch = keyword.includes(keygjc);
                 } else {
                   smatch = keyword === keygjc;
@@ -542,7 +542,7 @@ module.exports = async (s) => {
                 }
               } else {
                 if (keygjc.includes('*')) {
-                  keygjc = keygjc.replace(new RegExp(/\*/,'g'), "");
+                  keygjc = keygjc.replace(new RegExp(/\*/,'g'), '');
                 }
                 if (keyword === keygjc) {
                   newkeyword += `|@@|${keys[i]}`;
@@ -610,7 +610,7 @@ module.exports = async (s) => {
             if (replydb.slice(0, 7) === '@remsg@') {
               replydb = replydb.slice(7);
               if (replydb.includes('@chatcom@')) {
-                replydb = replydb.replace(new RegExp(@chatcom@','g')',forwardline);
+                replydb = replydb.replace(new RegExp('@chatcom@','g')',forwardline);
                 if (forwardline) {
                   s.inlineSugar(replydb);
                 }
