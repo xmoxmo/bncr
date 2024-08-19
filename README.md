@@ -49,8 +49,8 @@
      关键词回复并重定向调用Ai回复，响应|@|之后的指定群，其他群不响应
      > botreply 绿萝|@|群id|群id2 @remsg@aigitv2 用简短的语言介绍下家里养绿萝有什么好处
 
-     获取wechaty用户或群组id
-     > botreply wxid* @remsg@eval Buffer.from('@userkeyword@', 'utf-8').toString('hex')
+     管理员获取wechaty用户或群组id
+     > botreply wxid* @remsg@eval Buffer.from('@userkeyword@', 'utf-8').toString('hex')@admin@
 
      获取当前消息信息
      > botreply ids @sfrom@/@groupid@@@userid@
