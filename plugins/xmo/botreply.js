@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 2.9.5
+ * @version 2.9.6
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -28,7 +28,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '2.9.5';
+const ver = '2.9.6';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -257,7 +257,7 @@ module.exports = async (s) => {
             return 'next';
           }
           if (str.includes('*')) { 
-            str = str.replace(new RegExp(/\*/,'g'), "");
+            str = str.replace(new RegExp(/\*/,'g'), '');
             if (keyword.includes(str)) {
               return 'next';
             }
@@ -327,7 +327,7 @@ module.exports = async (s) => {
       }
     }
     const naDB = new BncrDB(sfrom);
-    botname = await naDB.get("botname");
+    botname = await naDB.get('botname');
     let atbotmsg = '';
     if (botname) {
       if (sfrom === 'qq') {
@@ -378,8 +378,7 @@ module.exports = async (s) => {
         if (atbotmsg) {
           if (keyword.includes(atbotmsg)) {
             newkeyword = keyword;
-            if (sfrom === "qq") {
-              keywordstr = keyword.replace(new RegExp(/CQ:at,qq=/, 'g'), '@');
+            if (sfrom === 'qq') {
               newkeyword = newkeyword.replace(new RegExp(/\[CQ:at,.*?\]/, 'g'), '');
             }
             newkeyword = newkeyword.replace(new RegExp(atbotmsg,'g'), '');
@@ -400,10 +399,10 @@ module.exports = async (s) => {
           sreturn = 'next';
         }
         if (keyword.includes(',name=')) {
-          keyword = keyword.replace(new RegExp(/CQ:at,qq=.*,name=/, 'g'), "@");
+          keyword = keyword.replace(new RegExp(/CQ:at,qq=.*,name=/, 'g'), '@');
         }
         if (keyword.includes('CQ:at,qq=')) {
-          keyword = keyword.replace(new RegExp(/CQ:at,qq=/, 'g'), "@");
+          keyword = keyword.replace(new RegExp(/CQ:at,qq=/, 'g'), '@');
         }
         if (!newkeyword) {
           newkeyword = keyword;
