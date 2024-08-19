@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 2.9.1
+ * @version 2.9.2
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -28,7 +28,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '2.9.1';
+const ver = '2.9.2';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -313,7 +313,12 @@ module.exports = async (s) => {
         return null;
       }
     }
-    if (keyword.includes('@keyblacklist@') || keyword.includes('@userblacklist@') || keyword.includes('@groupblacklist@')) {
+    if (keyword.includes('@keyblacklist@') || keyword.includes('@userblacklist@') || keyword.includes('@groupblacklist@')|| keyword.includes('@botreplylastmsg@')) {
+      if (await s.isAdmin()) {
+        s.reply('指令有误');
+      } else {
+        s.reply('你没有权限执行此操作');
+      }
       return null;
     }
     if (keyword.includes('@group@')) {
@@ -582,22 +587,30 @@ module.exports = async (s) => {
             if (replydb === '@noreply@') {
               return '@noreply@';
             }
+            if (replydb.includes('@admin@')) {
+              if (await s.isAdmin()) {
+                replydb = replydb.replace(new RegExp('@admin@','g'), '');
+              } else {
+                s.reply('你没有权限执行此操作');
+                return '@noreply@';
+              }
+            }
             if (replydb.includes('@userkeyword@')) {
-              replydb = replydb.replace('@userkeyword@', userkeyword);
+              replydb = replydb.replace(new RegExp('@userkeyword@','g'), userkeyword);
             }
             if (replydb.includes('@sfrom@')) {
-              replydb = replydb.replace('@sfrom@', sfrom);
+              replydb = replydb.replace(new RegExp('@sfrom@','g'), sfrom);
             }
             if (replydb.includes('@groupid@')) {
-              replydb = replydb.replace('@groupid@', groupId);
+              replydb = replydb.replace(new RegExp('@groupid@','g'), groupId);
             }
             if (replydb.includes('@userid@')) {
-              replydb = replydb.replace('@userid@', userId);
+              replydb = replydb.replace(new RegExp('@userid@','g'), userId);
             }
             if (replydb.slice(0, 7) === '@remsg@') {
               replydb = replydb.slice(7);
               if (replydb.includes('@chatcom@')) {
-                replydb = replydb.replace('@chatcom@',forwardline);
+                replydb = replydb.replace(new RegExp(@chatcom@','g')',forwardline);
                 if (forwardline) {
                   s.inlineSugar(replydb);
                 }
