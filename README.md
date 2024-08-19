@@ -35,6 +35,7 @@
        @sfrom@ 平台
        @groupid@ 群组id
        @userid@ 用户id
+       @admin@ 管理员权限
        
 
 **示例**
