@@ -51,6 +51,7 @@
 
      管理员获取wechaty用户或群组id
      > botreply wxid* @remsg@eval Buffer.from('@userkeyword@', 'utf-8').toString('hex')@admin@
+       使用：wxid:文件传输助手 //发送“wxid:微信名或群组名”，中间用英文“:”隔开
 
      获取当前消息信息
      > botreply ids @sfrom@/@groupid@@@userid@
