@@ -74,7 +74,7 @@
 
     1、群组内任何人发言包含关键词，调用数据库回复。
     2、关键词可设置可选黑名单模式或白名单模式，如果设置白名单就删除设置的黑名单，存在黑名单时不响应白名单。
-        botaudit 关键词 屏蔽时回复内容，默静模式输入@noreply@。
+        botaudit 关键词 屏蔽时回复内容，默静模式输入@noreply@
         botaudit 关键词@sfrom@@black@ 平台 //平台黑名单
         botaudit 关键词@sfrom@@white@ 平台 //平台白名单
         botaudit 关键词@group@@black@ 群id //群组黑名单
