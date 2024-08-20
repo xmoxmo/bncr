@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 2.9.9
+ * @version 3.0.0
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -28,7 +28,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '2.9.9';
+const ver = '3.0.0';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -48,7 +48,7 @@ module.exports = async (s) => {
   const sfrom = s.getFrom();
   const groupId = s.getGroupId();
   const userId = s.getUserId();
-  const msgMsg = s.getMsg();
+  const msgSelf = s.getMsg();
   const msgId = s.getMsgId();
   const userName = s.getUserName();
   const groupName = s.getGroupName();
@@ -613,8 +613,8 @@ module.exports = async (s) => {
             if (replydb.includes('@userid@')) {
               replydb = replydb.replace(new RegExp('@userid@','g'), userId);
             }
-            if (replydb.includes('@msgmsg@')) {
-              replydb = replydb.replace(new RegExp('@msgmsg@','g'), msgMsg);
+            if (replydb.includes('@msgself@')) {
+              replydb = replydb.replace(new RegExp('@msgself@','g'), msgSelf);
             }
             if (replydb.includes('@msgid@')) {
               replydb = replydb.replace(new RegExp('@msgid@','g'), msgId);
