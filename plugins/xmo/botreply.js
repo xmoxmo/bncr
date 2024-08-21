@@ -327,7 +327,7 @@ module.exports = async (s) => {
     }
     if (forwardline) {
       if (keyword.includes(forwardline)) {
-        s.reply('“指令关键词”未响应，请检查“指令关键词”是否正确');
+        s.reply(`指令关键词[${forwardline}]未响应，请检查是否正确`);
         return null;
       }
     }
