@@ -44,12 +44,12 @@
     "id": "7iw3GeT4AM/h3yrzdDHL4VKxb5A=",
     "isChatPlugin": false
   },
-  "ubnKHQJKEkfIl2I+H2w27sj9Bx0=": {
+  "A+OGpa9VE7Lr00jQW8GVgxrdKhE=": {
     "type": "github",
     "name": "wechaty",
-    "author": "xmo",
+    "author": "小寒寒",
     "team": "xmo",
-    "version": "1.1.9",
+    "version": "1.2.0",
     "description": "wx机器人内置适配器，微信需要实名。",
     "classification": [
       "官方适配器"
@@ -63,7 +63,7 @@
     "isService": false,
     "isAuthentication": false,
     "isEncPlugin": false,
-    "id": "ubnKHQJKEkfIl2I+H2w27sj9Bx0=",
+    "id": "A+OGpa9VE7Lr00jQW8GVgxrdKhE=",
     "isChatPlugin": false
   },
   "1WO5n9ocCRhvO7qBVFPpImHrE0k=": {
