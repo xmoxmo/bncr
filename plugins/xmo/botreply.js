@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.0.2
+ * @version 3.0.3
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -28,7 +28,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '3.0.2';
+const ver = '3.0.3';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -327,7 +327,10 @@ module.exports = async (s) => {
     }
     if (forwardline) {
       if (keyword.includes(`${forwardline} `)) {
-        s.reply(`指令关键词[${forwardline}]未响应，请检查是否正确`);
+        sysMethod.pushAdmin({
+          platform: [`${sfrom}`],
+          msg: `管理员消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >指令:${forwardline}\n  >详情:指令未响应`,
+        });
         return null;
       }
     }
