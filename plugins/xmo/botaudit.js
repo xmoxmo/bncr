@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.4.1
+ * @version 1.4.2
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -25,7 +25,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '1.4.1';
+const ver = '1.4.2';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -41,6 +41,10 @@ module.exports = async (s) => {
   const sfrom = s.getFrom();
   const groupId = s.getGroupId();
   const userId = s.getUserId();
+  const msgSelf = s.getMsg();
+  const msgId = s.getMsgId();
+  const userName = s.getUserName();
+  const groupName = s.getGroupName();
   const getTime = sysMethod.getTime();
   const debug = ConfigDB.userConfig.debug.enable;
   const sysDB = new BncrDB('BotAuditDB');
@@ -259,12 +263,12 @@ module.exports = async (s) => {
 
   async function keyconvert(keyword) {
     let newkeyword = keyword;
-    newkeyword = newkeyword.replace(new RegExp('@black@','g'), "");
-    newkeyword = newkeyword.replace(new RegExp('@white@','g'), "");
-    newkeyword = newkeyword.replace(new RegExp('@sfrom@','g'), "");
-    newkeyword = newkeyword.replace(new RegExp('@group@','g'), "");
-    newkeyword = newkeyword.replace(new RegExp('@user@','g'), "");
-    newkeyword = newkeyword.replace(new RegExp('@one@','g'), "");
+    newkeyword = newkeyword.replace(new RegExp('@black@','g'), '');
+    newkeyword = newkeyword.replace(new RegExp('@white@','g'), '');
+    newkeyword = newkeyword.replace(new RegExp('@sfrom@','g'), '');
+    newkeyword = newkeyword.replace(new RegExp('@group@','g'), '');
+    newkeyword = newkeyword.replace(new RegExp('@user@','g'), '');
+    newkeyword = newkeyword.replace(new RegExp('@one@','g'), '');
     return newkeyword;
   }
 
@@ -367,7 +371,7 @@ module.exports = async (s) => {
               let str = keys[i];
               if (!(await keycheck(str))) {
                 if (str.includes('*')) {
-                  str = str.replace(new RegExp(/\*/,'g'), "");
+                  str = str.replace(new RegExp(/\*/,'g'), '');
                   if (keyword.includes(str)) {
                     newkeyword = keys[i];
                     break;
@@ -506,25 +510,38 @@ module.exports = async (s) => {
           if (replydb === '@noreply@') {
             return '@noreply@';
           }
+          if (replydb.includes('@sfrom@')) {
+            replydb = replydb.replace(new RegExp('@sfrom@','g'), sfrom);
+          }
+          if (replydb.includes('@groupid@')) {
+            replydb = replydb.replace(new RegExp('@groupid@','g'), groupId);
+          }
+          if (replydb.includes('@userid@')) {
+            replydb = replydb.replace(new RegExp('@userid@','g'), userId);
+          }
+          if (replydb.includes('@msgself@')) {
+            replydb = replydb.replace(new RegExp('@msgself@','g'), msgSelf);
+          }
+          if (replydb.includes('@msgid@')) {
+            replydb = replydb.replace(new RegExp('@msgid@','g'), msgId);
+          }
+          if (replydb.includes('@username@')) {
+            replydb = replydb.replace(new RegExp('@username@','g'), userName);
+          }
+          if (replydb.includes('@groupname@')) {
+            replydb = replydb.replace(new RegExp('@groupname@','g'), groupName);
+          }
           if (replydb) {
             if (replydb.slice(0, 7) === '@remsg@') {
+              replydb = replydb.slice(7);
               if (replydb.includes('@chatcom@')) {
+                replydb = replydb.replace(new RegExp('@chatcom@','g'), forwardline);
                 if (forwardline) {
-                  s.inlineSugar(replydb.slice(7).replace('@chatcom@',forwardline));
-                } else {
-                  if (await s.isAdmin()) {
-                    if (debug) {
-                      sysMethod.pushAdmin({
-                          platform: [`${sfrom}`],
-                          msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
-                      });
-                    }
-                  }
+                  s.inlineSugar(replydb);
                 }
               } else {
-                s.inlineSugar(replydb.slice(7));
+                s.inlineSugar(replydb);
               }
-              return '@noreply@';
             } else {
               let replydbtype = '';
               let replymsg = '';
@@ -539,8 +556,16 @@ module.exports = async (s) => {
                 path: replydbtype[1] || '',
                 msg: replymsg,
               });
-              return '@noreply@';
             }
+            if (await s.isAdmin()) {
+              if (debug) {
+                sysMethod.pushAdmin({
+                    platform: [`${sfrom}`],
+                    msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
+                });
+              }
+            }
+            return '@noreply@';
           } else {
             return null;
           }
