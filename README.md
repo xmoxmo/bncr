@@ -103,7 +103,6 @@
        @sfrom@ 平台
        @groupid@ 群组id
        @userid@ 用户id
-       @admin@ 管理员权限
        @msgself@ 消息内容
        @msgid@ 消息id
        @groupname@ 群组名称
