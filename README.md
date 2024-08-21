@@ -100,6 +100,14 @@
        @chatcom@ 回复内容中出现此词将替换为适配器中填写的关键词一般配合执行重定向命令使用
        @type@ 示例【image@type@图片的URL@type@相关文本描述】 //指定消息类型回复，可发送图片视频
        |@@| 示例【botreply 关键词 回复内容1|@@|回复内容2】 //同一关键词多条回复用|@@|隔开
+       @sfrom@ 平台
+       @groupid@ 群组id
+       @userid@ 用户id
+       @admin@ 管理员权限
+       @msgself@ 消息内容
+       @msgid@ 消息id
+       @groupname@ 群组名称
+       @username@ 用户名称
        
 
 **示例**
