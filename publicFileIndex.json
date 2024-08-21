@@ -22,12 +22,12 @@
     "id": "eheOT/zjlOyQrDvEJjQBEa/K2Ok=",
     "isChatPlugin": false
   },
-  "7iw3GeT4AM/h3yrzdDHL4VKxb5A=": {
+  "dv22lvF1dsli/hsKefdWyFZb3+w=": {
     "type": "github",
     "name": "tgBot",
-    "author": "xmo",
+    "author": "Aming",
     "team": "xmo",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "tgBot适配器",
     "classification": [
       "官方适配器"
@@ -41,7 +41,7 @@
     "isService": false,
     "isAuthentication": false,
     "isEncPlugin": false,
-    "id": "7iw3GeT4AM/h3yrzdDHL4VKxb5A=",
+    "id": "dv22lvF1dsli/hsKefdWyFZb3+w=",
     "isChatPlugin": false
   },
   "A+OGpa9VE7Lr00jQW8GVgxrdKhE=": {
