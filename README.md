@@ -19,9 +19,13 @@
     1、群组内任何人发言包含关键词，调用关键词信息回复，如果@机器人则Ai回复
     2、关键词可设置仅特定群组生效。
         botreply 关键词|@|群id[多个用|连接，可省略、省略将所有有权限群响应] 回复内容
-        botreply @keyblacklist@ 关键词 //屏蔽不响应的关键词
-        botreply @groupblacklist@ 关键词 //屏蔽不响应群组
-        botreply @userblacklist@ 关键词 //屏蔽不响应的用户
+        botreply @keyblacklist@ 关键词 //关键词黑名单
+        botreply @groupblacklist@ 群id //群黑名单
+        botreply @groupwhitelist@ 群id //群白名单
+        botreply @userblacklist@ 用户id //用户黑名单
+        botreply @userwhitelist@ 用户id //用户白名单
+        botreply @oneblacklist@ 用户id //私聊黑名单
+        botreply @onewhitelist@ 用户id //私聊白名单
     3、相关命令
         botreply 关键词 回复内容 //向数据库中添加新的回复
         botreply list //数据库中关键词列表
