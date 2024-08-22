@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.0.3
+ * @version 3.0.4
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -20,15 +20,16 @@ const jsonSchema = BncrCreateSchema.object({
   basic: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('指令开关').setDescription(`开启将启用匹配其他插件指令，开启并填写指令关键词后生效。`).setDefault(true),
     forward: BncrCreateSchema.string().setTitle('指令关键词').setDescription(`请输入其他插件匹配指令关键词，留空则不启用调用，仅读取数据库内容。`).setDefault('aigptv2'),
+    enablechat: BncrCreateSchema.boolean().setTitle('聊天模式开关').setDescription(`聊天模式总开关，当数据库中无匹配回复时自动调用聊天模式指令关键词所在ai插件回复。`).setDefault(false),
     forwardchat: BncrCreateSchema.string().setTitle('聊天模式指令关键词').setDescription(`为聊天模式单独设置其他插件匹配指令关键词，留空则使用"指令关键词"。`).setDefault(''),
   }).setTitle('基本设置').setDefault({}),
   nobotname: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('Bot设置').setDescription(`填写未设置bot名称不提示引导操作的适配器名称，设置bot名称主要用来识别群组内是否被@。若bot所在适配器无群组功能则无需设置bot名称，并将此适配器名称填写到以下表单。`).setDefault(['web', 'ssh']),
-  noreplychat: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('聊天设置').setDescription(`禁用聊天模式的适配器，填写数据库中无匹配数据时不再调用"指令关键词"进行额外回复的适配器名称。`).setDefault([]),
+  noreplychat: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('聊天设置').setDescription(`禁用聊天模式的适配器，填写数据库中无匹配数据时不再调用"指令关键词"进行额外回复的适配器名称。当聊天模式开关开启时此处才会生效。`).setDefault([]),
   debug: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '3.0.3';
+const ver = '3.0.4';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -36,7 +37,8 @@ module.exports = async (s) => {
     return 'next';
   }
   
-  const forward = ConfigDB.userConfig.basic.enable;
+  const forward = ConfigDB.userConfig.basic.enable || true;
+  const forwardchat = ConfigDB.userConfig.basic.enablechat || false;
   let forwardline = '';
   let forwardlinechat = '';
   if (forward) {
@@ -369,25 +371,29 @@ module.exports = async (s) => {
       // console.log(`Replying with: ${reply}`);
       if (reply !== '@noreply@') {
         await s.reply(reply);
-        return null;
       }
+      return null;
     } else {
+      let sreturn = '';
       if (forwardlinechat) {
         forwardline = forwardlinechat;
       }
-      if (noreplychatarr.indexOf(sfrom) != -1) {
+      if (forwardchat) {
+        if (noreplychatarr.indexOf(sfrom) != -1) {
+          forwardline = '';
+        }
+      } else {
         forwardline = '';
       }
       if (!groupId || groupId === '0') {
         if (forwardline) {
           s.inlineSugar(`${forwardline} ${keyword}`);
         } else {
-          return 'next';
+          sreturn = 'next';
         }
       } else {
         let keywordstr = '';
         let newkeyword = '';
-        let sreturn = '';
         if (atbotmsg) {
           if (keyword.includes(atbotmsg)) {
             newkeyword = keyword;
@@ -423,17 +429,17 @@ module.exports = async (s) => {
         if (!keywordstr) {
           keywordstr = keyword;
         }
-        if (await s.isAdmin()) {
-          if (debug) {
-            sysMethod.pushAdmin({
-                platform: [`${sfrom}`],
-                msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >信息:${keywordstr}\n  >名字:${botname}\n  >内容:${newkeyword}\n  >指令:${forwardline}`,
-            });
-          }
+      }
+      if (await s.isAdmin()) {
+        if (debug) {
+          sysMethod.pushAdmin({
+            platform: [`${sfrom}`],
+            msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >信息:${keywordstr}\n  >名字:${botname}\n  >内容:${newkeyword}\n  >指令:${forwardline}`,
+          });
         }
-        if (sreturn) {
-          return sreturn;
-        }
+      }
+      if (sreturn) {
+        return sreturn;
       }
     }
   }
