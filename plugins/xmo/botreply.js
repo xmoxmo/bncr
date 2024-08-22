@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.0.6
+ * @version 3.0.7
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -29,7 +29,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '3.0.6';
+const ver = '3.0.7';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -259,7 +259,10 @@ module.exports = async (s) => {
         for (var k = 0; k < keyblacklists.length; k++) {
           let str = keyblacklists[k];
           if (str === '*') {
-            await s.reply('关键词黑名单设置了“*”，插件被禁用');
+            sysMethod.pushAdmin({
+              platform: [`${sfrom}`],
+              msg: 'botreply关键词黑名单“@keyblacklist@”设置了“*”，插件被禁用',
+            });
             return 'next';
           }
           if (str.includes('*')) { 
