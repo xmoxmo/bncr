@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.0.5
+ * @version 3.0.6
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -29,7 +29,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '3.0.5';
+const ver = '3.0.6';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -233,7 +233,6 @@ module.exports = async (s) => {
         }
       }
     }
-    await sysDB.set('@botreplylastmsg@', nowmsg);
     if (keyword === '@botreplylastmsg@') {
       if (await s.isAdmin()) {
         let list = await sysDB.get(keyword);
@@ -248,6 +247,7 @@ module.exports = async (s) => {
         return null;
       }
     }
+    await sysDB.set('@botreplylastmsg@', nowmsg);
     if (keyword === 'botreply_ver') {
       await s.reply(ver);
       return null;
@@ -291,27 +291,85 @@ module.exports = async (s) => {
           return 'next';
         }
       }
-    }
-    let groupblacklist = await sysDB.get('@groupblacklist@');
-    if (groupblacklist) {
-      if (groupblacklist.includes('|')) {
-        let groupblacklists = groupblacklist.split('|');
-        if (groupblacklists.indexOf(groupId) != -1) {
-          return 'next';
-        }
-      } else {
-        if (groupId === groupblacklist) {
-          return 'next';
+    } else {
+      let userwhitelist = await sysDB.get('@userwhitelist@');
+      if (userwhitelist) {
+        if (userwhitelist.includes('|')) {
+          let userwhitelists = userwhitelist.split('|');
+          if (userwhitelists.indexOf(userId) == -1) {
+            return 'next';
+          }
+        } else {
+          if (userId !== userwhitelist) {
+            return 'next';
+          }
         }
       }
     }
-    if (keyword === '@keyblacklist@' || keyword === '@userblacklist@' || keyword === '@groupblacklist@') {
+    if (!groupId || groupId === '0') {
+      let oneblacklist = await sysDB.get('@oneblacklist@');
+      if (oneblacklist) {
+        if (oneblacklist.includes('|')) {
+          let oneblacklists = oneblacklist.split('|');
+          if (oneblacklists.indexOf(userId) != -1) {
+            return 'next';
+          }
+        } else {
+          if (userId === oneblacklist) {
+            return 'next';
+          }
+        }
+      } else {
+        let onewhitelist = await sysDB.get('@onewhitelist@');
+        if (onewhitelist) {
+          if (onewhitelist.includes('|')) {
+            let onewhitelists = onewhitelist.split('|');
+            if (onewhitelists.indexOf(userId) == -1) {
+              return 'next';
+            }
+          } else {
+            if (userId !== onewhitelist) {
+              return 'next';
+            }
+          }
+        }
+      }
+    } else {
+      let groupblacklist = await sysDB.get('@groupblacklist@');
+      if (groupblacklist) {
+        if (groupblacklist.includes('|')) {
+          let groupblacklists = groupblacklist.split('|');
+          if (groupblacklists.indexOf(groupId) != -1) {
+            return 'next';
+          }
+        } else {
+          if (groupId === groupblacklist) {
+            return 'next';
+          }
+        }
+      } else {
+        let groupwhitelist = await sysDB.get('@groupwhitelist@');
+        if (groupwhitelist) {
+          if (groupwhitelist.includes('|')) {
+            let groupwhitelists = groupwhitelist.split('|');
+            if (groupwhitelists.indexOf(groupId) == -1) {
+              return 'next';
+            }
+          } else {
+            if (groupId !== groupwhitelist) {
+              return 'next';
+            }
+          }
+        }
+      }
+    }
+    if (keyword === '@keyblacklist@' || keyword === '@userblacklist@' || keyword === '@groupblacklist@' || keyword === '@userwhitelist@' || keyword === '@groupwhitelist@' || keyword === '@oneblacklist@' || keyword === '@onewhitelist@') {
       if (await s.isAdmin()) {
         let list = await sysDB.get(keyword);
         if (list) {
           await s.reply(list);
         } else {
-          await s.reply('未设置此黑名单');
+          await s.reply('未设置');
         }
         return null;
       } else {
@@ -319,7 +377,7 @@ module.exports = async (s) => {
         return null;
       }
     }
-    if (keyword.includes('@keyblacklist@') || keyword.includes('@userblacklist@') || keyword.includes('@groupblacklist@')|| keyword.includes('@botreplylastmsg@')) {
+    if (keyword.includes('@keyblacklist@') || keyword.includes('@userblacklist@') || keyword.includes('@groupblacklist@') || keyword.includes('@botreplylastmsg@') || keyword.includes('@userwhitelist@') || keyword.includes('@groupwhitelist@') || keyword.includes('@oneblacklist@') || keyword.includes('@onewhitelist@')) {
       if (await s.isAdmin()) {
         s.reply('指令有误');
       } else {
