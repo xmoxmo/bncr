@@ -49,7 +49,7 @@
     "name": "wechaty",
     "author": "小寒寒",
     "team": "xmo",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "wx机器人内置适配器，微信需要实名。",
     "classification": [
       "官方适配器"
