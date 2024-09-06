@@ -3,7 +3,7 @@
  * @author 小寒寒
  * @name wechaty
  * @team xmo
- * @version 1.2.1
+ * @version 1.2.2
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -70,7 +70,7 @@ module.exports = async () => {
         try {
             let namenew = Buffer.from(replyInfo.userId, 'hex').toString('utf-8');
             if (namenew) {
-                if (str.includes('<||>')) {
+                if (namenew.includes('<||>')) {
                     let namenews = namenew.split('<||>');
                     namenew = namenews[0];
                 }
@@ -202,7 +202,7 @@ module.exports = async () => {
                 topic = await room.topic();
             }
             const msg = message.text();
-            const alias = contact.alias();
+            const alias = await contact.alias();
             let name = '';
             if (alias) {
                 name = contact.name() + '<||>' + alias;
