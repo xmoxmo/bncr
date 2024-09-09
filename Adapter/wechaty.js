@@ -3,7 +3,7 @@
  * @author 小寒寒
  * @name wechaty
  * @team xmo
- * @version 1.2.4
+ * @version 1.2.5
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -180,7 +180,7 @@ module.exports = async () => {
             }
             catch (e) {
                 nbec = nbec + 1;
-                sysMethod.startOutLogs('wechaty：心跳同步出错，尝试重启');
+                sysMethod.startOutLogs('wechaty：心跳同步出错 ', nbec);
                 if (nbec > 3) {
                     sysMethod.startOutLogs('wechaty：心跳同步出错，尝试重启');
                     await bot.stop();
