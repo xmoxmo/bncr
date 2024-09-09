@@ -3,7 +3,7 @@
  * @author 小寒寒
  * @name wechaty
  * @team xmo
- * @version 1.2.3
+ * @version 1.2.4
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -171,11 +171,26 @@ module.exports = async () => {
 
     // 心跳，防止掉线
     bot.on('heartbeat', async data => {
-        try {
-            const contact = await bot.Contact.find({ name: "文件传输助手" });
-            await contact.say("[爱心]")
+        let nbec = 0;
+        if (bot.logonoff()) {
+            try {
+                const contact = await bot.Contact.find({ name: "文件传输助手" });
+                await contact.say("[爱心]");
+                nbec = 0;
+            }
+            catch (e) {
+                nbec = nbec + 1;
+                sysMethod.startOutLogs('wechaty：心跳同步出错，尝试重启');
+                if (nbec > 3) {
+                    sysMethod.startOutLogs('wechaty：心跳同步出错，尝试重启');
+                    await bot.stop();
+                    await new Promise((resolve) => setTimeout(resolve, 5000));
+                    await bot.start();
+                }
+            }
+        } else {
+            // sysMethod.startOutLogs('wechaty：机器人下线了，停止同步心跳');
         }
-        catch (e) { }
     });
 
     bot.on('error', async (error) => {
@@ -194,7 +209,7 @@ module.exports = async () => {
             const type = message.type();
             // 屏蔽非文本消息
             if (type != 7) {
-                console.log(`wechaty收到暂不支持的消息:type{${type}}|toString{${message.toString()}}`);
+                sysMethod.startOutLogs(`wechaty收到暂不支持的消息:type{${type}}|toString{${message.toString()}}`);
                 return;
             }
             const room = message.room();
@@ -219,7 +234,7 @@ module.exports = async () => {
                 msg: msg || '',
                 msgId: message.payload.id || '',
             };
-            // console.log(msgInfo);
+            // sysMethod.startOutLogs(msgInfo);
             wx.receive(msgInfo);
         } catch (e) {
             log.error('wechaty接收器报错:', e);
@@ -227,7 +242,7 @@ module.exports = async () => {
     });
 
     bot.use(QRCodeTerminal({ small: true }))
-    bot.start().catch(e => console.log(e));
+    bot.start().catch(e => sysMethod.startOutLogs(e));
 
     clearTimeout(timeoutID);
     return wx;
