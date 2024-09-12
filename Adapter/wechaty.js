@@ -3,7 +3,7 @@
  * @author 小寒寒
  * @name wechaty
  * @team xmo
- * @version 1.2.5
+ * @version 1.2.6
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -169,7 +169,7 @@ module.exports = async () => {
         catch (e) { }
     });
 
-    // 心跳，防止掉线
+    /* 心跳，防止掉线 [貌似没啥用，暂时屏蔽，后续观察]
     bot.on('heartbeat', async data => {
         let nbec = 0;
         if (bot.logonoff()) {
@@ -192,6 +192,7 @@ module.exports = async () => {
             // sysMethod.startOutLogs('wechaty：机器人下线了，停止同步心跳');
         }
     });
+    */
 
     bot.on('error', async (error) => {
         if (error.message.includes('Network error')) {
