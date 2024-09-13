@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.0.1
+ * @version 0.0.2
  * @description wechatbot适配器，暂不支持发送图片和文件
  * @adapter true
  * @public true
@@ -17,9 +17,9 @@
 /* 配置构造器 */
 const jsonSchema = BncrCreateSchema.object({
   enable: BncrCreateSchema.boolean().setTitle('是否开启适配器').setDescription(`设置为关则不加载该适配器`).setDefault(false),
-  sendUrl: BncrCreateSchema.string().setTitle('上报地址').setDescription(`wechatbot的地址`).setDefault('http://127.0.0.1:12345/'),
+  sendUrl: BncrCreateSchema.string().setTitle('上报地址').setDescription(`wechatbot的地址`).setDefault('http://127.0.0.1:12345'),
   sendToken: BncrCreateSchema.string().setTitle('上报Token').setDescription(`wechatbot的地址Token`).setDefault(''),
-  fileServer: BncrCreateSchema.string().setTitle('文件服务器地址').setDescription(`和微信在同一机器的文件服务器地址,需单独部署`).setDefault('http://127.0.0.1:3000/'),
+  fileServer: BncrCreateSchema.string().setTitle('文件服务器地址').setDescription(`和微信在同一机器的文件服务器地址,需单独部署`).setDefault('http://127.0.0.1:3000'),
 });
 /* 配置管理器 */
 const ConfigDB = new BncrPluginConfig(jsonSchema);
@@ -167,7 +167,7 @@ module.exports = async () => {
   // 发送消息请求体
   async function requestwxBot(body, stype) {
     const options = {
-      url: `http://10.10.1.60:12345/${stype}?token=${wechatbotToken}`,
+      url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
