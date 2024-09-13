@@ -96,16 +96,16 @@
         botaudit 关键词@user@@white@ 用户id //用户白名单
         botaudit @botnoreplyuserid@ 用户id //屏蔽不响应屏蔽时回复内容的用户id
     3、相关命令
-        botreply 关键词 回复内容 //向数据库中添加新的回复
-        botreply list //数据库中关键词列表
-        botreply empty //清空所有关键词
-        botreply upkey 旧key|>>|新key //更新key，回复内容不变
+        botaudit 关键词 回复内容 //向数据库中添加新的回复
+        botaudit list //数据库中关键词列表
+        botaudit empty //清空所有关键词
+        botaudit upkey 旧key|>>|新key //更新key，回复内容不变
 
    >回复内容：
 
     1、回复内容开头为"@remsg@"，执行命令重定向
     2、相关命令
-       botreply treply 旧回复中需要替换的词|tt|新回复中需要替换为的词 //替换旧回复中的特定词
+       botaudit treply 旧回复中需要替换的词|tt|新回复中需要替换为的词 //替换旧回复中的特定词
     3、回复内容中的相关功能词
        @remsg@ 回复内容开头出现此词将执行重定向命令
        @chatcom@ 回复内容中出现此词将替换为适配器中填写的关键词一般配合执行重定向命令使用
