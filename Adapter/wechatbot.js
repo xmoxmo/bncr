@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.0.3
+ * @version 0.0.4
  * @description wechatbot适配器，暂不支持发送图片和文件
  * @adapter true
  * @public true
@@ -149,12 +149,12 @@ module.exports = async () => {
         };
         stype = 'sendText';
         break;
-      /*
       case 'image':
         body = {
           target: newname,
           type: ntype,
-          file: fileServer ? await getLocalPath(replyInfo.path, "img") : replyInfo.path,
+          // file: fileServer ? await getLocalPath(replyInfo.path, "img") : replyInfo.path,
+          file: replyInfo.path,
         };
         stype = 'sendImage'
         break;
@@ -162,14 +162,14 @@ module.exports = async () => {
         body = {
           target: newname,
           type: ntype,
-          file: fileServer ? await getLocalPath(replyInfo.path, "video") : replyInfo.path,
+          // file: fileServer ? await getLocalPath(replyInfo.path, "video") : replyInfo.path,
+          file: replyInfo.path,
         };
         stype = 'sendFile'
         break;
       default:
         return;
         break;
-      */
     }
     body && (await requestwxBot(body, stype));
     return '';
