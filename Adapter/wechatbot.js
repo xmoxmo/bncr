@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.0.2
+ * @version 0.0.3
  * @description wechatbot适配器，暂不支持发送图片和文件
  * @adapter true
  * @public true
@@ -18,7 +18,7 @@
 const jsonSchema = BncrCreateSchema.object({
   enable: BncrCreateSchema.boolean().setTitle('是否开启适配器').setDescription(`设置为关则不加载该适配器`).setDefault(false),
   sendUrl: BncrCreateSchema.string().setTitle('上报地址').setDescription(`wechatbot的地址`).setDefault('http://127.0.0.1:12345'),
-  sendToken: BncrCreateSchema.string().setTitle('上报Token').setDescription(`wechatbot的地址Token`).setDefault(''),
+  sendToken: BncrCreateSchema.string().setTitle('上报Token').setDescription(`wechatbot的地址Token`).setDefault('1AZ2WSX3EDC'),
   fileServer: BncrCreateSchema.string().setTitle('文件服务器地址').setDescription(`和微信在同一机器的文件服务器地址,需单独部署`).setDefault('http://127.0.0.1:3000'),
 });
 /* 配置管理器 */
@@ -56,6 +56,10 @@ module.exports = async () => {
     try {
       const body = req.body;
       // console.log(body);
+      if (body.type !== 'TEXT') {
+        sysMethod.startOutLogs(`wechatbot收到暂不支持的消息:type{${body.type}}|toString{${body.content.toString()}}`);
+        return;
+      }
       let msgInfo = null;
       // console.log(body.from.UserName.slice(0, 2))
       let name = '';
@@ -109,14 +113,23 @@ module.exports = async () => {
     let newname = '';
     let newmsg = '';
     let stype = '';
+    let ntype = 'NICK_NAME';
     if (replyInfo.userName) {
       if (replyInfo.userName.includes('<||>')) {
         const names = replyInfo.userName.split('<||>');
         replyInfo.userName = names[0];
+        replyInfo.userRemarkName = names[1];
+        if (!replyInfo.groupId || replyInfo.groupId === '0') {
+          ntype = 'REMARK_NAME';
+        }
       }
     }
     if (!replyInfo.groupId || replyInfo.groupId === '0') {
-      newname = replyInfo.userName;
+      if (ntype === 'REMARK_NAME') {
+        newname = replyInfo.userRemarkName;
+      } else {
+        newname = replyInfo.userName;
+      }
       newmsg = replyInfo.msg;
     } else {
       newname = replyInfo.groupName;
@@ -130,7 +143,8 @@ module.exports = async () => {
       case 'text':
         // replyInfo.msg = replyInfo.msg.replace(/\n/g, '\r');
         body = {
-          nickname: newname,
+          target: newname,
+          type: ntype,
           message: newmsg,
         };
         stype = 'sendText';
@@ -138,14 +152,16 @@ module.exports = async () => {
       /*
       case 'image':
         body = {
-          nickname: newname,
+          target: newname,
+          type: ntype,
           file: fileServer ? await getLocalPath(replyInfo.path, "img") : replyInfo.path,
         };
         stype = 'sendImage'
         break;
       case 'video':
         body = {
-          nickname: newname,
+          target: newname,
+          type: ntype,
           file: fileServer ? await getLocalPath(replyInfo.path, "video") : replyInfo.path,
         };
         stype = 'sendFile'
@@ -160,32 +176,24 @@ module.exports = async () => {
   };
 
   // 推送消息方法
-  wechatbot.push = async function (replyInfo) {
-    return this.reply(replyInfo);
+  wechatbot.push = async function (replyInfo) { 
+    return await this.reply(replyInfo);
   };
   
   // 发送消息请求体
   async function requestwxBot(body, stype) {
     const options = {
       url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
-      method: 'POST',
+      method: 'post',
       headers: {
         "Content-Type": "application/json",
       },
       json: true,
       body: body,
     };
-    return (
-      await request(options, function(error, response, body) {
-        if (!error && response.statusCode === 200) {
-          // console.log(body);
-        } else {
-          console.error(error);
-        }
-      })
-    );
-  }
-  ;
+    // console.log(`${wechatbotUrl}${stype}?token=${wechatbotToken}`);
+    return (await request(options)).body;
+  };
 
   // 获取windows文件路径
   async function getLocalPath(url, type) {
@@ -199,6 +207,6 @@ module.exports = async () => {
         json: true,
       })
     ).body.path;
-  }
+  };
   return wechatbot;
 };
