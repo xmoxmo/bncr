@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.0.4
+ * @version 0.0.5
  * @description wechatbot适配器，暂不支持发送图片和文件
  * @adapter true
  * @public true
@@ -19,7 +19,6 @@ const jsonSchema = BncrCreateSchema.object({
   enable: BncrCreateSchema.boolean().setTitle('是否开启适配器').setDescription(`设置为关则不加载该适配器`).setDefault(false),
   sendUrl: BncrCreateSchema.string().setTitle('上报地址').setDescription(`wechatbot的地址`).setDefault('http://127.0.0.1:12345'),
   sendToken: BncrCreateSchema.string().setTitle('上报Token').setDescription(`wechatbot的地址Token`).setDefault('1AZ2WSX3EDC'),
-  fileServer: BncrCreateSchema.string().setTitle('文件服务器地址').setDescription(`和微信在同一机器的文件服务器地址,需单独部署`).setDefault('http://127.0.0.1:3000'),
 });
 /* 配置管理器 */
 const ConfigDB = new BncrPluginConfig(jsonSchema);
@@ -153,8 +152,7 @@ module.exports = async () => {
         body = {
           target: newname,
           type: ntype,
-          // file: fileServer ? await getLocalPath(replyInfo.path, "img") : replyInfo.path,
-          file: replyInfo.path,
+          url: replyInfo.path,
         };
         stype = 'sendImage'
         break;
@@ -162,8 +160,15 @@ module.exports = async () => {
         body = {
           target: newname,
           type: ntype,
-          // file: fileServer ? await getLocalPath(replyInfo.path, "video") : replyInfo.path,
-          file: replyInfo.path,
+          url: replyInfo.path,
+        };
+        stype = 'sendVideo'
+        break;
+      case 'file':
+        body = {
+          target: newname,
+          type: ntype,
+          url: replyInfo.path,
         };
         stype = 'sendFile'
         break;
@@ -182,31 +187,30 @@ module.exports = async () => {
   
   // 发送消息请求体
   async function requestwxBot(body, stype) {
-    const options = {
-      url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
-      method: 'post',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      json: true,
-      body: body,
-    };
+    let options = '';
+    if (stype === 'sendText') {
+      options = {
+        url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
+        method: 'post',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        json: true,
+        body: body,
+      };
+    } else {
+      options = {
+        url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
+        method: 'post',
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        formData: body,
+      };
+    }
     // console.log(`${wechatbotUrl}${stype}?token=${wechatbotToken}`);
     return (await request(options)).body;
   };
 
-  // 获取windows文件路径
-  async function getLocalPath(url, type) {
-    let req = { url: url, type: type }
-    console.log("开始下载:",type,"文件:",url)
-    return (
-      await request({
-        url: `${fileServer}download`,
-        method: 'post',
-        body: req,
-        json: true,
-      })
-    ).body.path;
-  };
   return wechatbot;
 };
