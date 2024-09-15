@@ -2,12 +2,14 @@
  * @author xmo
  * @name groupper
  * @team xmo
- * @version 1.0.0
+ * @version 1.0.1
  * @description 测试
  * @rule ^(监听|屏蔽|回复|禁言)群 ([^ \n]+) ([^ \n]+)$
  * @admin true
  * @public true
  * @priority 0
+ * @disable false
+ * @classification ["插件"]
  * @disable false
 */
 
