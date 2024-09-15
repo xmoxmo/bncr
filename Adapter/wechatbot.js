@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.0.5
+ * @version 0.0.6
  * @description wechatbot适配器，暂不支持发送图片和文件
  * @adapter true
  * @public true
@@ -40,13 +40,9 @@ module.exports = async () => {
       wechatbotUrl += '/';
     }
   }
-  if (fileServer) {
-    if (fileServer.slice(-1) !== "/") {
-      fileServer += '/';
-    }
-  }
   //这里new的名字将来会作为 sender.getFrom() 的返回值
   const wechatbot = new Adapter('wechatbot');
+  await sysMethod.testModule(['request', 'axios'], { install: true });
   const request = require('util').promisify(require('request'));
   const wxDB = new BncrDB('wechatbot');
   // 向/api/系统路由中添加路由
@@ -91,7 +87,7 @@ module.exports = async () => {
       msgInfo && wechatbot.receive(msgInfo);
       res.send({ status: 200, data: '', msg: 'ok' });
     } catch (e) {
-      console.error('wechat:', e);
+      console.error('wechatbot接收信息出错:', e);
       res.send({ status: 400, data: '', msg: e.toString() });
     }
   });
@@ -99,6 +95,7 @@ module.exports = async () => {
   wechatbot.reply = async function (replyInfo) {
     // console.log(replyInfo);
     let body = null;
+    let bodytext = null;
     if (!replyInfo.userName) {
       if (replyInfo.userId) {
         replyInfo.userName = Buffer.from(replyInfo.userId, 'hex').toString('utf-8');
@@ -138,45 +135,174 @@ module.exports = async () => {
         newmsg = replyInfo.msg;
       }
     }
-    switch (replyInfo.type) {
-      case 'text':
-        // replyInfo.msg = replyInfo.msg.replace(/\n/g, '\r');
-        body = {
-          target: newname,
-          type: ntype,
-          message: newmsg,
-        };
+
+    let way = replyInfo.path;
+    // console.log(way);
+    getfileinfo(way, function(fpath) {
+      // console.log(fpath);
+      let sendway = '';
+      const fs = require('fs');
+      if (replyInfo.type !== 'text') {
+        if (replyInfo.msg) {
+          bodytext = {
+            target: newname,
+            type: ntype,
+            message: newmsg,
+          };
+        }
+        const fileinfo = fpath;
+        if (replyInfo.type === fileinfo.type) {
+          if (fileinfo.path) {
+            sendway = 'file';
+            way = fileinfo.path;
+          }
+        } else {
+          console.log('wechatbot检测到文件格式不匹配，尝试url发送');
+          if (fileinfo.path) {
+            delfile(fileinfo.path, function(e) {
+              console.log(e, fileinfo.path);
+            });
+          }
+        }
+      }
+      switch (replyInfo.type) {
+        case 'text':
+          // replyInfo.msg = replyInfo.msg.replace(/\n/g, '\r');
+          body = {
+            target: newname,
+            type: ntype,
+            message: newmsg,
+          };
+          stype = 'sendText';
+          break;
+        case 'image':
+          if (sendway === 'file') {
+            body = {
+              target: newname,
+              type: ntype,
+              file: {
+                value: fs.createReadStream(way),
+                options: {
+                  filename: way,
+                  contentType: null,
+                }
+              }
+            };
+          } else {
+            body = {
+              target: newname,
+              type: ntype,
+              url: replyInfo.path,
+            };
+          }
+          stype = 'sendImage'
+          break;
+        case 'video':
+          if (sendway === 'file') {
+            body = {
+              target: newname,
+              type: ntype,
+              file: {
+                value: fs.createReadStream(way),
+                options: {
+                  filename: way,
+                  contentType: null,
+                }
+              }
+            };
+          } else {
+            body = {
+              target: newname,
+              type: ntype,
+              url: replyInfo.path,
+            };
+          }
+          stype = 'sendVideo'
+          break;
+        case 'file':
+          if (sendway === 'file') {
+            body = {
+              target: newname,
+              type: ntype,
+              file: {
+                value: fs.createReadStream(way),
+                options: {
+                  filename: way,
+                  contentType: null,
+                }
+              }
+            };
+          } else {
+            body = {
+              target: newname,
+              type: ntype,
+              url: replyInfo.path,
+            };
+          }
+          stype = 'sendFile'
+          break;
+        default:
+          return;
+          break;
+      }
+      body && (requestwxBot(body, stype));
+      if (bodytext) {
+        body = bodytext;
         stype = 'sendText';
-        break;
-      case 'image':
-        body = {
-          target: newname,
-          type: ntype,
-          url: replyInfo.path,
-        };
-        stype = 'sendImage'
-        break;
-      case 'video':
-        body = {
-          target: newname,
-          type: ntype,
-          url: replyInfo.path,
-        };
-        stype = 'sendVideo'
-        break;
-      case 'file':
-        body = {
-          target: newname,
-          type: ntype,
-          url: replyInfo.path,
-        };
-        stype = 'sendFile'
-        break;
-      default:
-        return;
-        break;
-    }
-    body && (await requestwxBot(body, stype));
+        body && (requestwxBot(body, stype));
+      }
+      
+
+      // 发送消息请求体
+      function requestwxBot(body, stype) {
+        let options = '';
+        if (stype === 'sendText') {
+          options = {
+            url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
+            method: 'post',
+            headers: {
+              "Content-Type": "application/json",
+            },
+            json: true,
+            body: body,
+          };
+        } else {
+          options = {
+            url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
+            method: 'post',
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            formData: body,
+          };
+        }
+        // console.log(`${wechatbotUrl}${stype}?token=${wechatbotToken}`);
+        request(options, function (error, response) {
+          // if (error) throw new Error(error);
+          // console.log(options);
+          // console.log(options.url);
+          if (options.url) {
+            if (!options.url.includes('sendText?')) {
+              const localurl = options.formData.url;
+              // console.log(localurl);
+              if (!localurl) {
+                const localoptions = options.formData.file.options;
+                const localpath = localoptions.filename;
+                // console.log(localpath);
+                if (response.body === "success") {
+                  console.log('wechatbot文件发送成功：', localpath);
+                }
+                if (localpath) {
+                  delfile(localpath, function(e) {
+                  console.log(e, localpath);
+                  });
+                }
+              }
+            }
+          }
+        });
+      };
+    });
     return '';
   };
 
@@ -185,32 +311,67 @@ module.exports = async () => {
     return await this.reply(replyInfo);
   };
   
-  // 发送消息请求体
-  async function requestwxBot(body, stype) {
-    let options = '';
-    if (stype === 'sendText') {
-      options = {
-        url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
-        method: 'post',
-        headers: {
-          "Content-Type": "application/json",
-        },
-        json: true,
-        body: body,
-      };
-    } else {
-      options = {
-        url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
-        method: 'post',
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        formData: body,
-      };
+  // 下载文件的方法
+  async function getfileinfo(url, cb) {
+    if (!url) {
+      fileinfo = {
+        path: '',
+        type: '',
+        ext: '',
+      }
+      cb(fileinfo);
+      return '';
     }
-    // console.log(`${wechatbotUrl}${stype}?token=${wechatbotToken}`);
-    return (await request(options)).body;
+    const axios = require('axios');
+    const path = require('path');
+    const fs = require('fs');
+    try {
+      const response = await axios.get(url, {
+        responseType: 'stream',
+      });
+      const info = response.headers['content-type'];
+      // console.log(info);
+      let filetype = '';
+      let fileext = '';
+      if (info) {
+        if (info.includes('/')) {
+          let infos = info.split('/');  
+          filetype = infos[0];
+          fileext = infos[1];
+        }
+      }
+      const filepath = path.join(process.cwd(), `BncrData/public/file_${Date.now()}.${fileext}`);
+      const writer = fs.createWriteStream(filepath);
+      response.data.pipe(writer);
+      let fileinfo = null;
+      fileinfo = {
+        path: filepath,
+        type: filetype,
+        ext: fileext,
+      }
+      writer.on('error', async (err) => {
+        console.error('wechatbot写入文件时发生错误:', err);
+      });
+
+      writer.on('finish', async () => {
+          console.log('wechatbot写入文件成功：', fileinfo.path);
+          cb(fileinfo);
+      });
+    } catch (error) {
+      console.error('wechatbot写入文件发生错误:', error);
+    }
   };
 
+  // 删除文件的方法
+  async function delfile(path, cb) {
+    const fs = require('fs');
+      fs.unlink(path, (err) => {
+        if (err) {
+          console.error('wechatbot删除文件失败：', err);
+        } else {
+          cb('wechatbot删除文件成功：');
+        }
+      });
+  };
   return wechatbot;
 };
