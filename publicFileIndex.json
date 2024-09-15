@@ -220,6 +220,28 @@
     "id": "vWtgXt/brP5ywNfYyHb4KNS72dA=",
     "isChatPlugin": true
   },
+  "IuFBpG491/yysi+pK9jCKl2KcmU=": {
+    "type": "github",
+    "name": "groupper",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "1.0.1",
+    "description": "测试",
+    "classification": [
+      "插件"
+    ],
+    "filename": "groupper.ts",
+    "fileDir": "/plugins/xmo/groupper.ts",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "IuFBpG491/yysi+pK9jCKl2KcmU=",
+    "isChatPlugin": true
+  },
   "D382+g+5PQ5fjCvCNF0Ht6h968M=": {
     "type": "github",
     "name": "upplugins",
