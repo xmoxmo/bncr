@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.0.9
+ * @version 0.1.0
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -257,55 +257,8 @@ module.exports = async () => {
       }
       
 
-      // 发送消息请求体
-      function requestwxBot(body, stype) {
-        let options = '';
-        if (stype === 'sendText') {
-          options = {
-            url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
-            method: 'post',
-            headers: {
-              "Content-Type": "application/json",
-            },
-            json: true,
-            body: body,
-          };
-        } else {
-          options = {
-            url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
-            method: 'post',
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            formData: body,
-          };
-        }
-        // console.log(`${wechatbotUrl}${stype}?token=${wechatbotToken}`);
-        request(options, function (error, response) {
-          // if (error) throw new Error(error);
-          // console.log(options);
-          // console.log(options.url);
-          if (options.url) {
-            if (!options.url.includes('sendText?')) {
-              const localurl = options.formData.url;
-              // console.log(localurl);
-              if (!localurl) {
-                const localoptions = options.formData.file.options;
-                const localpath = localoptions.filename;
-                // console.log(localpath);
-                if (response.body === "success") {
-                  console.log('wechatbot发送文件成功：', localpath);
-                }
-                if (localpath) {
-                  delfile(localpath, function(e) {
-                  console.log(e, localpath);
-                  });
-                }
-              }
-            }
-          }
-        });
-      };
+      
+      
     });
     return '';
   };
@@ -315,6 +268,58 @@ module.exports = async () => {
     return await this.reply(replyInfo);
   };
   
+  // 发送消息请求体
+  async function requestwxBot(body, stype) {
+    let options = '';
+    if (stype === 'sendText') {
+      options = {
+        url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
+        method: 'post',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        json: true,
+        body: body,
+      };
+    } else {
+      options = {
+        url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
+        method: 'post',
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        formData: body,
+      };
+    }
+    // console.log(`${wechatbotUrl}${stype}?token=${wechatbotToken}`);
+    request(options, function (error, response) {
+      if (error) {
+        console.log(error);
+      }
+      // console.log(options);
+      // console.log(options.url);
+      if (options.url) {
+        if (!options.url.includes('sendText?')) {
+          const localurl = options.formData.url;
+          // console.log(localurl);
+          if (!localurl) {
+            const localoptions = options.formData.file.options;
+            const localpath = localoptions.filename;
+            // console.log(localpath);
+            if (response.body === "success") {
+              console.log('wechatbot发送文件成功：', localpath);
+            }
+            if (localpath) {
+              delfile(localpath, function(e) {
+              console.log(e, localpath);
+              });
+            }
+          }
+        }
+      }
+    });
+  };
+
   // 下载文件的方法
   async function getfileinfo(url, cb) {
     if (!url) {
