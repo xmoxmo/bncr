@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.0.7
+ * @version 3.0.8
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -574,7 +574,11 @@ module.exports = async (s) => {
         if (keyword.includes(':')) {
           let keywords = keyword.split(':');
           keyword = keywords[0];
-          userkeyword = userkeyword.replace(new RegExp(`${keyword}:`,'g'), '');;
+          try {
+            userkeyword = userkeyword.replace(new RegExp(`${keyword}:`,'g'), '');
+          } catch (e) {
+            console.error('正则替换失败:', e);
+          }
         }
         let keys = await sysDB.keys();
         keys = await sortArray(keys);
