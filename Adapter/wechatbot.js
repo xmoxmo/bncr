@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.0.7
+ * @version 0.0.8
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -157,7 +157,7 @@ module.exports = async () => {
             way = fileinfo.path;
           }
         } else {
-          console.log('wechatbot检测到文件格式不匹配，尝试url发送');
+          console.log('wechatbot检测到文件格式不匹配，尝试原始url发送');
           if (fileinfo.path) {
             delfile(fileinfo.path, function(e) {
               console.log(e, fileinfo.path);
@@ -290,7 +290,7 @@ module.exports = async () => {
                 const localpath = localoptions.filename;
                 // console.log(localpath);
                 if (response.body === "success") {
-                  console.log('wechatbot文件发送成功：', localpath);
+                  console.log('wechatbot发送文件成功：', localpath);
                 }
                 if (localpath) {
                   delfile(localpath, function(e) {
@@ -350,15 +350,15 @@ module.exports = async () => {
         ext: fileext,
       }
       writer.on('error', async (err) => {
-        console.error('wechatbot写入文件时发生错误:', err);
+        console.error('wechatbot下载文件时发生错误:', err);
       });
 
       writer.on('finish', async () => {
-          console.log('wechatbot写入文件成功：', fileinfo.path);
+          console.log('wechatbot下载文件成功：', fileinfo.path);
           cb(fileinfo);
       });
     } catch (error) {
-      console.error('wechatbot写入文件发生错误:', error);
+      console.error('wechatbot下载文件发生错误:', error);
     }
   };
 
