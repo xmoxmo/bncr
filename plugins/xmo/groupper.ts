@@ -2,8 +2,8 @@
  * @author xmo
  * @name groupper
  * @team xmo
- * @version 1.0.1
- * @description 测试
+ * @version 1.0.2
+ * @description 管理员使用命令调整群权限
  * @rule ^(监听|屏蔽|回复|禁言)群 ([^ \n]+) ([^ \n]+)$
  * @admin true
  * @public true
