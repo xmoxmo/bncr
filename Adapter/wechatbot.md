@@ -3,12 +3,21 @@
 ****
    >1、拉取docker镜像
 
+    // x86
     docker run -dit \
       --name wechatbot \
       --restart always \
       -v /root/wechatbot:/app \
       -p 12345:12345 \
     xmoxmo/wechat-bot
+
+    // arm64
+    docker run -dit \
+      --name wechatbot \
+      --restart always \
+      -v /root/wechatbot:/app \
+      -p 12345:12345 \
+    xmoxmo/wechat-bot-arm64
 
    >2、配置机器人管理员
 
