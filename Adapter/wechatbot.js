@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.1.0
+ * @version 0.1.1
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -161,7 +161,12 @@ module.exports = async () => {
             way = fileinfo.path;
           }
         } else {
-          console.log('wechatbot检测到文件格式不匹配，尝试原始url发送');
+          console.log('wechatbot检测到文件类型不匹配，尝试原始url发送');
+          if (getext(way)) {
+            console.log(`wechatbot检测到url中的存在的扩展名：${getext(way)}`);
+          } else{
+            console.log(`wechatbot检测到url中的不存在的扩展名`);
+          }
           if (fileinfo.path) {
             delfile(fileinfo.path, function(e) {
               console.log(e, fileinfo.path);
@@ -255,10 +260,6 @@ module.exports = async () => {
         stype = 'sendText';
         body && (requestwxBot(body, stype));
       }
-      
-
-      
-      
     });
     return '';
   };
@@ -308,6 +309,8 @@ module.exports = async () => {
             // console.log(localpath);
             if (response.body === "success") {
               console.log('wechatbot发送文件成功：', localpath);
+            } else {
+              console.log('wechatbot发送文件失败：', localpath);
             }
             if (localpath) {
               delfile(localpath, function(e) {
@@ -349,7 +352,7 @@ module.exports = async () => {
           fileext = infos[1];
         }
       }
-      const filepath = path.join(process.cwd(), `BncrData/public/file_${Date.now()}.${fileext}`);
+      const filepath = path.join(process.cwd(), `BncrData/public/wechatbot_filecache_${Date.now()}.${fileext}`);
       const writer = fs.createWriteStream(filepath);
       response.data.pipe(writer);
       let fileinfo = null;
@@ -382,5 +385,11 @@ module.exports = async () => {
         }
       });
   };
+
+  // 提取链接中的扩展名
+  function getext(path) {
+    return path.split('.').pop().toLocaleLowerCase();
+  }
+
   return wechatbot;
 };
