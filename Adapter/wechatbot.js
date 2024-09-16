@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.1.3
+ * @version 0.1.4
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -41,7 +41,7 @@ module.exports = async () => {
   }
   if (!ConfigDB.userConfig.basic?.enable) return sysMethod.startOutLogs('未启用wechatbot 退出.');
   let wechatbotUrl = ConfigDB.userConfig.basic.sendUrl;
-  if (!wechatbotUrl) return console.log('wechatbot:配置文件未设置sendUrl');
+  if (!wechatbotUrl) return sysMethod.startOutLogs('wechatbot:配置文件未设置sendUrl');
   let wechatbotToken = ConfigDB.userConfig.basic.sendToken;
   if (wechatbotUrl) {
     if (wechatbotUrl.slice(-1) !== "/") {
@@ -59,12 +59,12 @@ module.exports = async () => {
   router.post('/api/bot/wechat', async (req, res) => {
     try {
       const body = req.body;
-      // console.log(body);
+      // sysMethod.startOutLogs(body);
       if (body.type !== 'TEXT') {
         if (body.type === 'SYSTEM') {
           const tips = body.content;
           if (tips.includes('加入了群聊')) {
-            console.log(`wechatbot：收到群员进群事件`);
+            sysMethod.startOutLogs(`wechatbot：收到群员进群事件`);
             const topic = body.from.NickName;
             const tipss = tips.split(`"`);
             const users = tipss[3];
@@ -94,7 +94,7 @@ module.exports = async () => {
         return;
       }
       let msgInfo = null;
-      // console.log(body.from.UserName.slice(0, 2))
+      // sysMethod.startOutLogs(body.from.UserName.slice(0, 2))
       let name = '';
       let group = '';
       let rname = '';
@@ -121,17 +121,17 @@ module.exports = async () => {
         msgId: body.id || '',
         atme: body.atMe,
       };
-      // console.log(msgInfo);
+      // sysMethod.startOutLogs(msgInfo);
       msgInfo && wechatbot.receive(msgInfo);
       res.send({ status: 200, data: '', msg: 'ok' });
     } catch (e) {
-      console.error('wechatbot接收信息出错:', e);
+      sysMethod.startOutLogs('wechatbot接收信息出错:', e);
       res.send({ status: 400, data: '', msg: e.toString() });
     }
   });
 
   wechatbot.reply = async function (replyInfo) {
-    // console.log(replyInfo);
+    // sysMethod.startOutLogs(replyInfo);
     let body = null;
     let bodytext = null;
     if (!replyInfo.userName) {
@@ -175,9 +175,9 @@ module.exports = async () => {
     }
 
     let way = replyInfo.path;
-    // console.log(way);
+    // sysMethod.startOutLogs(way);
     getfileinfo(way, function(fpath) {
-      // console.log(fpath);
+      // sysMethod.startOutLogs(fpath);
       let sendway = '';
       const fs = require('fs');
       if (replyInfo.type !== 'text') {
@@ -195,15 +195,15 @@ module.exports = async () => {
             way = fileinfo.path;
           }
         } else {
-          console.log('wechatbot检测到文件类型不匹配，尝试原始url发送');
+          sysMethod.startOutLogs('wechatbot检测到文件类型不匹配，尝试原始url发送');
           if (getext(way)) {
-            console.log(`wechatbot检测到url中的存在的扩展名：${getext(way)}`);
+            sysMethod.startOutLogs(`wechatbot检测到url中的存在的扩展名：${getext(way)}`);
           } else{
-            console.log(`wechatbot检测到url中的不存在的扩展名`);
+            sysMethod.startOutLogs(`wechatbot检测到url中的不存在的扩展名`);
           }
           if (fileinfo.path) {
             delfile(fileinfo.path, function(e) {
-              console.log(e, fileinfo.path);
+              sysMethod.startOutLogs(e, fileinfo.path);
             });
           }
         }
@@ -326,36 +326,36 @@ module.exports = async () => {
         formData: body,
       };
     }
-    // console.log(`${wechatbotUrl}${stype}?token=${wechatbotToken}`);
+    // sysMethod.startOutLogs(`${wechatbotUrl}${stype}?token=${wechatbotToken}`);
     request(options, function (error, response) {
       if (error) {
-        console.log(error);
+        sysMethod.startOutLogs(error);
       }
-      // console.log(options);
-      // console.log(options.url);
+      // sysMethod.startOutLogs(options);
+      // sysMethod.startOutLogs(options.url);
       if (options.url) {
         if (!options.url.includes('sendText?')) {
           const localurl = options.formData.url;
-          // console.log(localurl);
+          // sysMethod.startOutLogs(localurl);
           if (!localurl) {
             const localoptions = options.formData.file.options;
             const localpath = localoptions.filename;
-            // console.log(localpath);
+            // sysMethod.startOutLogs(localpath);
             if (response.body === "success") {
-              console.log('wechatbot发送文件成功：', localpath);
+              sysMethod.startOutLogs('wechatbot发送文件成功：', localpath);
             } else {
-              console.log('wechatbot发送文件失败：', localpath);
+              sysMethod.startOutLogs('wechatbot发送文件失败：', localpath);
             }
             if (localpath) {
               delfile(localpath, function(e) {
-              console.log(e, localpath);
+                sysMethod.startOutLogs(e, localpath);
               });
             }
           } else {
             if (response.body === "success") {
-              console.log('wechatbot通过原始url发送文件成功');
+              sysMethod.startOutLogs('wechatbot通过原始url发送文件成功');
             } else {
-              console.log('wechatbot通过原始url发送文件失败');
+              sysMethod.startOutLogs('wechatbot通过原始url发送文件失败');
             }
           }
         }
@@ -382,7 +382,7 @@ module.exports = async () => {
         responseType: 'stream',
       });
       const info = response.headers['content-type'];
-      // console.log(info);
+      // sysMethod.startOutLogs(info);
       let filetype = '';
       let fileext = '';
       if (info) {
@@ -402,15 +402,15 @@ module.exports = async () => {
         ext: fileext,
       }
       writer.on('error', async (err) => {
-        console.error('wechatbot下载文件时发生错误:', err);
+        sysMethod.startOutLogs('wechatbot下载文件时发生错误:', err);
       });
 
       writer.on('finish', async () => {
-          console.log('wechatbot下载文件成功：', fileinfo.path);
+        sysMethod.startOutLogs('wechatbot下载文件成功：', fileinfo.path);
           cb(fileinfo);
       });
     } catch (error) {
-      console.error('wechatbot下载文件发生错误:', error);
+      sysMethod.startOutLogs('wechatbot下载文件发生错误:', error);
     }
   };
 
@@ -419,7 +419,7 @@ module.exports = async () => {
     const fs = require('fs');
       fs.unlink(path, (err) => {
         if (err) {
-          console.error('wechatbot删除文件失败：', err);
+          sysMethod.startOutLogs('wechatbot删除文件失败：', err);
         } else {
           cb('wechatbot删除文件成功：');
         }
