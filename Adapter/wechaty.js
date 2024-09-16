@@ -3,7 +3,7 @@
  * @author 小寒寒
  * @name wechaty
  * @team xmo
- * @version 1.2.7
+ * @version 1.2.8
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -19,6 +19,7 @@ const jsonSchema = BncrCreateSchema.object({
     basic: BncrCreateSchema.object({
         enable: BncrCreateSchema.boolean().setTitle('是否开启适配器').setDescription(`设置为关则不加载该适配器`).setDefault(false),
         name: BncrCreateSchema.string().setTitle('机器人标识').setDescription(`设置后后续自动登录，更换微信时请更换标识`).setDefault('wechaty'),
+        notify: BncrCreateSchema.number().setTitle('登录通知次数').setDescription(`设置机器人下线后通知其他平台管理员的通知次数`).setDefault(20),
     }).setTitle('基本设置').setDefault({}),
     friend: BncrCreateSchema.object({
         accept: BncrCreateSchema.boolean().setTitle('自动同意好友申请').setDescription(`设置后自动同意微信好友申请`).setDefault(true),
@@ -36,6 +37,8 @@ const jsonSchema = BncrCreateSchema.object({
 
 /* 配置管理器 */
 const ConfigDB = new BncrPluginConfig(jsonSchema);
+/* 重置通知计次 */
+let tzco = 0;
 module.exports = async () => {
     /* 读取用户配置 */
     await ConfigDB.get();
@@ -49,6 +52,7 @@ module.exports = async () => {
     const accept = ConfigDB.userConfig.friend.accept;
     const hello = ConfigDB.userConfig.friend.hello || '';
     const autoReply = ConfigDB.userConfig.friend.autoReply || '';
+    const notifyco = ConfigDB.userConfig.basic.notify || 20;
 
     /** 定时器 */
     let timeoutID = setTimeout(() => {
@@ -110,25 +114,52 @@ module.exports = async () => {
 
     bot.on('scan', (qrcode, status) => {
         sysMethod.startOutLogs(`wechaty: 正在登录，${status}\nhttps://wechaty.js.org/qrcode/${encodeURIComponent(qrcode)}`);
-        sysMethod.pushAdmin({
-            platform: [],
-            msg: `wechaty登录: https://wechaty.js.org/qrcode/${encodeURIComponent(qrcode)}`,
-        });
+        if (!tzco) {
+            tzco = 0;
+        }
+        if (status == 2) {
+            tzco = tzco + 1;
+            if (tzco <= notifyco) {
+                try {
+                    sysMethod.pushAdmin({
+                        platform: [],
+                        msg: `wechaty登录: https://wechaty.js.org/qrcode/${encodeURIComponent(qrcode)}`,
+                    });
+                    sysMethod.startOutLogs('wechaty扫码通知-计次：' + tzco);
+                } catch (e) {
+                    tzco = tzco - 1;
+                    // 发送失败
+                }
+            } else {
+                try {
+                    sysMethod.pushAdmin({
+                        platform: [],
+                        msg: `wechaty登录消息发送超过指定次数，请进入ssh扫码登录或重启无界后等待重新发送扫码链接后登录`,
+                    });
+                } catch (e) {
+                    // 发送失败
+                }
+            }
+        }
+        if (status == 3) {
+            try {
+                sysMethod.pushAdmin({
+                    platform: [],
+                    msg: `wechaty扫码成功，请在手机端确认登录`,
+                });
+            } catch (e) {
+                // 发送失败
+            }
+        }
     });
 
     bot.on('login', (user) => {
         sysMethod.startOutLogs(`wechaty：${user} 登录成功`);
+        tzco = 0;
         wxname = user.payload.name;
         const wxDB = new BncrDB('wechaty');
-        dbwxname = wxDB.get("botname");
         if (wxname) {
-            if (dbwxname) {
-                if (wxDB.get("botname") !== wxname) {
-                    wxDB.set("botname", wxname);
-                }
-            } else {
-                wxDB.set("botname", wxname);
-            }
+            wxDB.set("botname", wxname);
         }
     });
 
@@ -172,8 +203,7 @@ module.exports = async () => {
                 await new Promise((resolve) => setTimeout(resolve, 1000));
                 autoReply && await contact.say(autoReply);
             }
-        }
-        catch (e) { }
+        } catch (e) { }
     });
 
     /* 心跳，防止掉线 [貌似没啥用，暂时屏蔽，后续观察]
@@ -184,8 +214,7 @@ module.exports = async () => {
                 const contact = await bot.Contact.find({ name: "文件传输助手" });
                 await contact.say("[爱心]");
                 nbec = 0;
-            }
-            catch (e) {
+            } catch (e) {
                 nbec = nbec + 1;
                 sysMethod.startOutLogs('wechaty：心跳同步出错 ', nbec);
                 if (nbec > 3) {
