@@ -39,6 +39,7 @@ const jsonSchema = BncrCreateSchema.object({
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 /* 重置通知计次 */
 let tzco = 0;
+let tzzz = 0;
 module.exports = async () => {
     /* 读取用户配置 */
     await ConfigDB.get();
@@ -131,14 +132,18 @@ module.exports = async () => {
                     // 发送失败
                 }
             } else {
-                try {
-                    sysMethod.pushAdmin({
-                        platform: [],
-                        msg: `wechaty登录消息发送超过指定次数，请进入ssh扫码登录或重启无界后等待重新发送扫码链接后登录`,
-                    });
-                } catch (e) {
-                    // 发送失败
+                if (tzzz == 0) {
+                    try {
+                        sysMethod.pushAdmin({
+                            platform: [],
+                            msg: `wechaty登录消息发送超过指定次数，请进入ssh扫码登录或重启无界后等待重新发送扫码链接后登录`,
+                        });
+                        tzzz = 1;
+                    } catch (e) {
+                        // 发送失败
+                    }
                 }
+
             }
         }
         if (status == 3) {
@@ -156,6 +161,7 @@ module.exports = async () => {
     bot.on('login', (user) => {
         sysMethod.startOutLogs(`wechaty：${user} 登录成功`);
         tzco = 0;
+        tzzz = 0;
         wxname = user.payload.name;
         const wxDB = new BncrDB('wechaty');
         if (wxname) {
