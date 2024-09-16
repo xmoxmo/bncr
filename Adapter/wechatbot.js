@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.1.1
+ * @version 0.1.2
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -316,6 +316,12 @@ module.exports = async () => {
               delfile(localpath, function(e) {
               console.log(e, localpath);
               });
+            }
+          } else {
+            if (response.body === "success") {
+              console.log('wechatbot通过原始url发送文件成功');
+            } else {
+              console.log('wechatbot通过原始url发送文件失败');
             }
           }
         }
