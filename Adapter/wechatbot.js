@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.1.2
+ * @version 0.1.3
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -16,9 +16,18 @@
  */
 /* 配置构造器 */
 const jsonSchema = BncrCreateSchema.object({
-  enable: BncrCreateSchema.boolean().setTitle('是否开启适配器').setDescription(`设置为关则不加载该适配器`).setDefault(false),
-  sendUrl: BncrCreateSchema.string().setTitle('上报地址').setDescription(`wechatbot的地址`).setDefault('http://127.0.0.1:12345'),
-  sendToken: BncrCreateSchema.string().setTitle('上报Token').setDescription(`wechatbot的地址Token`).setDefault('1AZ2WSX3EDC'),
+  basic: BncrCreateSchema.object({
+    enable: BncrCreateSchema.boolean().setTitle('是否开启适配器').setDescription(`设置为关则不加载该适配器`).setDefault(false),
+    sendUrl: BncrCreateSchema.string().setTitle('上报地址').setDescription(`wechatbot的地址`).setDefault('http://127.0.0.1:12345'),
+    sendToken: BncrCreateSchema.string().setTitle('上报Token').setDescription(`wechatbot的地址Token`).setDefault('1AZ2WSX3EDC'),
+  }).setTitle('基本设置').setDefault({}),
+  rooms: BncrCreateSchema.array(BncrCreateSchema.object({
+    enable: BncrCreateSchema.boolean().setTitle('启用').setDescription('是否启用').setDefault(true),
+    rule: BncrCreateSchema.object({
+    joinIds: BncrCreateSchema.string().setTitle('进群监控').setDescription(`当有人进群后触发消息监控的群，多个用,隔开`).setDefault(""),
+    joinMsg: BncrCreateSchema.string().setTitle('进群提示').setDescription(`当有人进群后触发消息，“\\n”换行`).setDefault("欢迎加入大家庭~"),
+    }),
+  })).setTitle('群聊相关').setDefault([])
 });
 /* 配置管理器 */
 const ConfigDB = new BncrPluginConfig(jsonSchema);
@@ -30,16 +39,16 @@ module.exports = async () => {
     sysMethod.startOutLogs('未启用wechatbot适配器,退出.');
     return;
   }
-  if (!ConfigDB.userConfig.enable) return sysMethod.startOutLogs('未启用wechatbot 退出.');
-  let wechatbotUrl = ConfigDB.userConfig.sendUrl;
-  let fileServer = ConfigDB.userConfig.fileServer;
+  if (!ConfigDB.userConfig.basic?.enable) return sysMethod.startOutLogs('未启用wechatbot 退出.');
+  let wechatbotUrl = ConfigDB.userConfig.basic.sendUrl;
   if (!wechatbotUrl) return console.log('wechatbot:配置文件未设置sendUrl');
-  let wechatbotToken = ConfigDB.userConfig.sendToken;
+  let wechatbotToken = ConfigDB.userConfig.basic.sendToken;
   if (wechatbotUrl) {
     if (wechatbotUrl.slice(-1) !== "/") {
       wechatbotUrl += '/';
     }
   }
+
   //这里new的名字将来会作为 sender.getFrom() 的返回值
   const wechatbot = new Adapter('wechatbot');
   await sysMethod.testModule(['request', 'axios'], { install: true });
@@ -52,11 +61,36 @@ module.exports = async () => {
       const body = req.body;
       // console.log(body);
       if (body.type !== 'TEXT') {
+        if (body.type === 'SYSTEM') {
+          const tips = body.content;
+          if (tips.includes('加入了群聊')) {
+            console.log(`wechatbot：收到群员进群事件`);
+            const topic = body.from.NickName;
+            const tipss = tips.split(`"`);
+            const users = tipss[3];
+            const roomId = Buffer.from(topic, 'utf-8').toString('hex');
+            const rooms = ConfigDB.userConfig.rooms.filter(o => o.enable) || [];
+            for (const group of rooms) {
+              const joinIds = group.rule.joinIds?.split(",") || [];
+              const joinMsg = group.rule.joinMsg || '欢迎加入大家庭~';
+              if ((joinIds.indexOf(roomId) != -1) && joinMsg) {
+                const bodysys = {
+                  target: topic,
+                  type: 'NICK_NAME',
+                  message: `@${users.replaceAll('、', ' @')}\n${joinMsg.replaceAll('\\n', '\n')}`,
+                };
+                body && (requestwxBot(bodysys, 'sendText'));
+              }
+            }
+          }
+        }
         let tostr = '';
         if (body.content) {
           tostr = body.content.toString();
         }
-        sysMethod.startOutLogs(`wechatbot收到暂不支持的消息:type{${body.type}}|toString{${tostr}}`);
+        if (!tostr.includes('加入了群聊')) {
+          sysMethod.startOutLogs(`wechatbot收到暂不支持的消息:type{${body.type}}|toString{${tostr}}`);
+        }
         return;
       }
       let msgInfo = null;
