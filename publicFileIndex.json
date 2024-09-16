@@ -263,5 +263,27 @@
     "isEncPlugin": true,
     "id": "D382+g+5PQ5fjCvCNF0Ht6h968M=",
     "isChatPlugin": true
+  },
+  "gUJuGCJmg+BT0vQWwjtMHq3zVrg=": {
+    "type": "github",
+    "name": "wnl",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.1",
+    "description": "万年历 或 万年历 2024-09-16",
+    "classification": [
+      "插件"
+    ],
+    "filename": "wnl.js",
+    "fileDir": "/plugins/xmo/wnl.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "gUJuGCJmg+BT0vQWwjtMHq3zVrg=",
+    "isChatPlugin": true
   }
 }
