@@ -2,7 +2,7 @@
  * @author xmo
  * @name wnl
  * @team xmo
- * @version 0.0.1
+ * @version 0.0.2
  * @description 万年历 或 万年历 2024-09-16
  * @rule ^(万年历)$
  * @rule ^(万年历) ([^ \n]+)$
@@ -34,7 +34,7 @@ module.exports = async s => {
       "User-Agent": "Mozilla/5.0 (X11; U; Linux x86_64; zh-CN; rv:1.9.2.10) Gecko/20100922 Ubuntu/10.10 (maverick) Firefox/3.6.10",
     },
   };
-  console.log(`${apiurl}${handledate}`);
+  // console.log(`${apiurl}${handledate}`);
   request(options, function (error, response) {
     if (error) {
       console.log(error);
@@ -44,7 +44,7 @@ module.exports = async s => {
     // console.log(sbody.msg);
     if (sbody.msg === '成功获取') {
       const data = sbody.data;
-      console.log(data);
+      // console.log(data);
       const gldate = moment(data.GregorianDateTime).format('YYYY-MM-DD');
       const nldate = moment(data.LunarDateTime).format('YYYY-MM-DD');
       const sformat =`>>>>>>>>>万年历<<<<<<<<<
