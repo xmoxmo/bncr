@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.1.9
+ * @version 0.2.0
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -195,6 +195,9 @@ module.exports = async () => {
           };
         }
         const fileinfo = fpath;
+        if (fileinfo.type === 'synctype') {
+          fileinfo.type = replyInfo.type;
+        }
         if (replyInfo.type === fileinfo.type) {
           if (fileinfo.path) {
             sendway = 'file';
@@ -208,9 +211,11 @@ module.exports = async () => {
             sysMethod.startOutLogs(`wechatbot检测到url中的不存在的扩展名`);
           }
           if (fileinfo.path) {
-            delfile(fileinfo.path, function(e) {
-              sysMethod.startOutLogs(e, fileinfo.path);
-            });
+            if (fileinfo.path.includes('/wechatbot_filecache_')) {
+              delfile(fileinfo.path, function(e) {
+                sysMethod.startOutLogs(e, fileinfo.path);
+              });
+            }
           }
         }
       }
@@ -353,9 +358,11 @@ module.exports = async () => {
               sysMethod.startOutLogs('wechatbot发送文件失败：', localpath);
             }
             if (localpath) {
-              delfile(localpath, function(e) {
-                sysMethod.startOutLogs(e, localpath);
-              });
+              if (localpath.includes('/wechatbot_filecache_')) {
+                delfile(localpath, function(e) {
+                  sysMethod.startOutLogs(e, localpath);
+                });
+              }
             }
           } else {
             if (response.body === "success") {
@@ -383,6 +390,17 @@ module.exports = async () => {
     const axios = require('axios');
     const path = require('path');
     const fs = require('fs');
+    // sysMethod.startOutLogs(url + ' + ' + fs.existsSync(url));
+    if (fs.existsSync(url)) {
+      const spath = url;
+      fileinfo = {
+        path: spath,
+        type: 'synctype',
+        ext: getext(spath),
+      }
+      cb(fileinfo);
+      return '';
+    }
     try {
       const response = await axios.get(url, {
         responseType: 'stream',
