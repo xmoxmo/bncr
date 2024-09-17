@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.1.7
+ * @version 0.1.8
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -67,11 +67,12 @@ module.exports = async () => {
             const topic = body.from.NickName;
             sysMethod.startOutLogs(`wechatbot：收到群员进群事件：${tips}[${topic}]`);
             const tipss = tips.split(`"`);
-            if (tips.includes('加入了群聊') {
-              const users = tipss[3];
+            const users = '';
+            if (tips.includes('加入了群聊')) {
+              users = tipss[3];
             }
-            if (tips.includes('加入群聊') {
-              const users = tipss[1];
+            if (tips.includes('加入群聊')) {
+              users = tipss[1];
             }
             const roomId = Buffer.from(topic, 'utf-8').toString('hex');
             const rooms = ConfigDB.userConfig.rooms.filter(o => o.enable) || [];
