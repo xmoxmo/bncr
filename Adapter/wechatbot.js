@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.2.1
+ * @version 0.2.2
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -524,12 +524,10 @@ module.exports = async () => {
         sysMethod.startOutLogs(error);
       }
       try {
-        if (response.body !== '未找到联系人信息') {
-          let sbody = JSON.parse(response.body);
-          contact.botid = sbody.UserName;
-          contact.botname = sbody.NickName;
-          cb(contact);
-        }
+        let sbody = JSON.parse(response.body);
+        contact.botid = sbody.UserName;
+        contact.botname = sbody.NickName;
+        cb(contact);
       } catch (error) {
         cb(contact);
       }
@@ -579,13 +577,11 @@ module.exports = async () => {
         sysMethod.startOutLogs(error);
       }
       try {
-        if (response.body !== '未找到联系人信息') {
-          let sbody = JSON.parse(response.body);
-          contact.nname = sbody.NickName;
-          contact.rname = sbody.RemarkName;
-          contact.dname = sbody.DisplayName;
-          cb(contact);
-        }
+        let sbody = JSON.parse(response.body);
+        contact.nname = sbody.NickName;
+        contact.rname = sbody.RemarkName;
+        contact.dname = sbody.DisplayName;
+        cb(contact);
       } catch (error) {
         cb(contact);
       }
