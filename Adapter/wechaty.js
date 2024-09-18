@@ -147,6 +147,8 @@ module.exports = async () => {
             }
         }
         if (status == 3) {
+          tzco = 0;
+          tzzz = 0;
             try {
                 sysMethod.pushAdmin({
                     platform: [],
@@ -158,14 +160,17 @@ module.exports = async () => {
         }
     });
 
-    bot.on('login', (user) => {
+    bot.on('login', async (user) => {
         sysMethod.startOutLogs(`wechaty：${user} 登录成功`);
         tzco = 0;
         tzzz = 0;
         wxname = user.payload.name;
         const wxDB = new BncrDB('wechaty');
+        const dbname = await wxDB.get("botname");
         if (wxname) {
+          if (dbname !== wxname) {
             wxDB.set("botname", wxname);
+          }
         }
     });
 
