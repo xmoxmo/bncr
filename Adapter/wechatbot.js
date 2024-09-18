@@ -54,6 +54,7 @@ module.exports = async () => {
   await sysMethod.testModule(['request', 'axios'], { install: true });
   const request = require('util').promisify(require('request'));
   const wxDB = new BncrDB('wechatbot');
+    getbotself(function(botinfo) {
   // 向/api/系统路由中添加路由
   router.get('/api/bot/wechat', (req, res) => res.send({ msg: '这是wechatbotUrl Api接口，你的get请求测试正常~，请用post交互数据' }));
   router.post('/api/bot/wechat', async (req, res) => {
