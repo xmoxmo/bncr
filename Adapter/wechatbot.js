@@ -9,7 +9,7 @@
  * @adapter true
  * @public true
  * @disable false
- * @priority 2
+ * @priority 100
  * @Copyright ©2024 xmo. All rights reserved
  * @classification ["适配器"]
  * Unauthorized copying of this file, via any medium is strictly prohibited
