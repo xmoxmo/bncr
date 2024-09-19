@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.2.3
+ * @version 0.2.4
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -14,7 +14,7 @@
  * @classification ["适配器"]
  * Unauthorized copying of this file, via any medium is strictly prohibited
  */
-/* 配置构造器 */
+// 配置构造器
 const jsonSchema = BncrCreateSchema.object({
   basic: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('是否开启适配器').setDescription(`设置为关则不加载该适配器`).setDefault(false),
@@ -29,13 +29,13 @@ const jsonSchema = BncrCreateSchema.object({
     }),
   })).setTitle('群聊相关').setDefault([])
 });
-/* 配置管理器 */
+// 配置管理器
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 let onstart = 0;
 module.exports = async () => {
-  /* 读取用户配置 */
+  // 读取用户配置
   await ConfigDB.get();
-  /* 如果用户未配置,userConfig则为空对象{} */
+  // 如果用户未配置,userConfig则为空对象{}
   if (!Object.keys(ConfigDB.userConfig).length) {
     sysMethod.startOutLogs('未启用wechatbot适配器,退出.');
     return;
@@ -49,8 +49,7 @@ module.exports = async () => {
       wechatbotUrl += '/';
     }
   }
-
-  //这里new的名字将来会作为 sender.getFrom() 的返回值
+  // 这里new的名字将来会作为 sender.getFrom() 的返回值
   const wechatbot = new Adapter('wechatbot');
   await sysMethod.testModule(['request', 'axios'], { install: true });
   const request = require('util').promisify(require('request'));
@@ -76,7 +75,7 @@ module.exports = async () => {
       }
     });
   }
-  // 向/api/系统路由中添加路由
+  // 接收消息API
   router.get('/api/bot/wechat', (req, res) => res.send({ msg: '这是wechatbotUrl Api接口，你的get请求测试正常~，请用post交互数据' }));
   router.post('/api/bot/wechat', async (req, res) => {
     try {
@@ -186,6 +185,7 @@ module.exports = async () => {
     }
   });
 
+  // 回复消息
   wechatbot.reply = async function (replyInfo) {
     // sysMethod.startOutLogs(replyInfo);
     let body = null;
@@ -229,7 +229,6 @@ module.exports = async () => {
         newmsg = replyInfo.msg;
       }
     }
-
     let way = replyInfo.path;
     // sysMethod.startOutLogs(way);
     getfileinfo(way, function(fpath) {
@@ -363,7 +362,7 @@ module.exports = async () => {
   wechatbot.push = async function (replyInfo) { 
     return await this.reply(replyInfo);
   };
-  
+
   // 发送消息请求体
   async function requestwxBot(body, stype) {
     let options = '';
@@ -428,7 +427,7 @@ module.exports = async () => {
     });
   };
 
-  // 下载文件的方法
+  // 下载文件
   async function getfileinfo(url, cb) {
     if (!url) {
       fileinfo = {
@@ -489,7 +488,7 @@ module.exports = async () => {
     }
   };
 
-  // 删除文件的方法
+  // 删除文件
   async function delfile(path, cb) {
     const fs = require('fs');
       fs.unlink(path, (err) => {
