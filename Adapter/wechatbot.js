@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.2.4
+ * @version 0.2.5
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -61,24 +61,20 @@ module.exports = async () => {
   const wxDB = new BncrDB('wechatbot');
   if (onstart == 0) {
     onstart = 1;
-    getbotself(function(botinfo) {
-      const wxname = botinfo.botname;
-      const wxid = botinfo.botid;
-      if (wxname) {
-        sysMethod.startOutLogs(`wechatbot：Contact<${wxname}> 调用成功`);
-        setbotname(wxname, wxid);
-        async function setbotname(wxname, wxid) {
-          const dbname = await wxDB.get("botname");
-          if (dbname !== wxname) {
-            wxDB.set("botname", wxname);
-          }
-          const dbid = await wxDB.get("botid");
-          if (dbid !== wxid) {
-            wxDB.set("botid", wxid);
-          }
-        }
+    const botinfo = await getbotself();
+    const wxname = botinfo.botname;
+    const wxid = botinfo.botid;
+    if (wxname) {
+      sysMethod.startOutLogs(`wechatbot：Contact<${wxname}> 调用成功`);
+      const dbname = await wxDB.get("botname");
+      if (dbname !== wxname) {
+        wxDB.set("botname", wxname);
       }
-    });
+      const dbid = await wxDB.get("botid");
+      if (dbid !== wxid) {
+        wxDB.set("botid", wxid);
+      }
+    }
   }
   // 接收消息API
   router.get('/api/bot/wechat', (req, res) => res.send({ msg: '这是wechatbotUrl Api接口，你的get请求测试正常~，请用post交互数据' }));
@@ -159,31 +155,30 @@ module.exports = async () => {
         sysMethod.startOutLogs(`wechatbot屏蔽自己发的消息:type{${body.type}}|toString{${tostr}}`);
         return;
       }
-      getcontact(botuserid, botgroupname, function(userinfo) {
-        // sysMethod.startOutLogs(userinfo);
-        let msgInfo = null;
-        let name = userinfo.nname || msgnname;
-        let group = userinfo.group;
-        let rname = userinfo.rname || msgrname;
-        if (rname === name) {
-          rname = '';
-        }
-        if (rname) {
-          name = name + '<||>' + rname;
-        }
-        msgInfo = {
-          userId: Buffer.from(name, 'utf-8').toString('hex') || '',
-          userName: name || '',
-          groupId: Buffer.from(group, 'utf-8').toString('hex') || '0',
-          groupName: group || '',
-          msg: body.content.replace(new RegExp('<br/>','g'), '\n') || '',
-          msgId: body.id || '',
-          atme: body.atMe,
-        };
-        // sysMethod.startOutLogs(msgInfo);
-        msgInfo && wechatbot.receive(msgInfo);
-        res.send({ status: 200, data: '', msg: 'ok' });
-      });
+      const userinfo = await getcontact(botuserid, botgroupname);
+      // sysMethod.startOutLogs(userinfo);
+      let msgInfo = null;
+      let name = userinfo.nname || msgnname;
+      let group = userinfo.group;
+      let rname = userinfo.rname || msgrname;
+      if (rname === name) {
+        rname = '';
+      }
+      if (rname) {
+        name = name + '<||>' + rname;
+      }
+      msgInfo = {
+        userId: Buffer.from(name, 'utf-8').toString('hex') || '',
+        userName: name || '',
+        groupId: Buffer.from(group, 'utf-8').toString('hex') || '0',
+        groupName: group || '',
+        msg: body.content.replace(new RegExp('<br/>','g'), '\n') || '',
+        msgId: body.id || '',
+        atme: body.atMe,
+      };
+      // sysMethod.startOutLogs(msgInfo);
+      msgInfo && wechatbot.receive(msgInfo);
+      res.send({ status: 200, data: '', msg: 'ok' });
     } catch (e) {
       sysMethod.startOutLogs('wechatbot接收信息出错:', e);
       res.send({ status: 400, data: '', msg: e.toString() });
@@ -262,7 +257,7 @@ module.exports = async () => {
           if (getext(way)) {
             sysMethod.startOutLogs(`wechatbot检测到url中的存在的扩展名：${getext(way)}`);
           } else{
-            sysMethod.startOutLogs(`wechatbot检测到url中的不存在的扩展名`);
+            sysMethod.startOutLogs(`wechatbot未在url中检测到扩展名`);
           }
           if (fileinfo.path) {
             if (fileinfo.path.includes('/wechatbot_filecache_')) {
@@ -391,45 +386,44 @@ module.exports = async () => {
         formData: body,
       };
     }
-    request(options, function (error, response) {
-      if (error) {
-        sysMethod.startOutLogs('wechatbot发送文件请求出错:', error);
-      }
-      // sysMethod.startOutLogs(options.url);
-      try {
-        if (options.url) {
-          if (!options.url.includes('sendText?')) {
-            const localurl = options.formData.url;
-            // sysMethod.startOutLogs(localurl);
-            if (!localurl) {
-              const localoptions = options.formData.file.options;
-              const localpath = localoptions.filename;
-              // sysMethod.startOutLogs(localpath);
-              if (response.body === "success") {
-                sysMethod.startOutLogs('wechatbot发送文件成功：', localpath);
-              } else {
-                sysMethod.startOutLogs('wechatbot发送文件失败：', localpath);
-              }
-              if (localpath) {
-                if (localpath.includes('/wechatbot_filecache_')) {
-                  delfile(localpath, function(e) {
-                    sysMethod.startOutLogs(e, localpath);
-                  });
-                }
-              }
+    const response = await request(options);
+    try {
+      if (options.url) {
+        if (!options.url.includes('sendText?')) {
+          const localurl = options.formData.url;
+          // sysMethod.startOutLogs(localurl);
+          if (!localurl) {
+            const localoptions = options.formData.file.options;
+            const localpath = localoptions.filename;
+            // sysMethod.startOutLogs(localpath);
+            if (response.body === 'success') {
+              sysMethod.startOutLogs('wechatbot发送文件成功：', localpath);
             } else {
-              if (response.body === "success") {
-                sysMethod.startOutLogs('wechatbot通过原始url发送文件成功');
-              } else {
-                sysMethod.startOutLogs('wechatbot通过原始url发送文件失败');
+              sysMethod.startOutLogs('wechatbot发送文件失败：', localpath);
+            }
+            if (localpath) {
+              if (localpath.includes('/wechatbot_filecache_')) {
+                delfile(localpath, function(e) {
+                  sysMethod.startOutLogs(e, localpath);
+                });
               }
+            }
+          } else {
+            if (response.body === 'success') {
+              sysMethod.startOutLogs('wechatbot通过原始url发送文件成功');
+            } else {
+              sysMethod.startOutLogs('wechatbot通过原始url发送文件失败');
             }
           }
         }
-      } catch (error) {
-        sysMethod.startOutLogs('wechatbot发送文件出错:', error);
       }
-    });
+    } catch (error) {
+      sysMethod.startOutLogs('wechatbot发送文件出错:', error);
+    }
+    if (response.body !== 'success') {
+      response.body = 'failure';
+    }
+    return response.body;
   };
 
   // 下载文件
@@ -511,15 +505,14 @@ module.exports = async () => {
   }
 
   // 获取bot的名片
-  async function getbotself(cb) {
+  async function getbotself() {
     let contact = '';
     contact = {
       botid: '',
       botname: '',
     };
     if (!getcard) {
-      cb(contact);
-      return;
+      return contact;
     }
     const stype = 'getSelf';
     //  bot名片
@@ -530,26 +523,19 @@ module.exports = async () => {
       'headers': {
       }
     };
-    request(options, function (error, response) {
-      if (error) {
-        sysMethod.startOutLogs('wechatbot获取Bot名片请求出错:', error);
-        cb(contact);
-      } else {
-        try {
-          let sbody = JSON.parse(response.body);
-          contact.botid = sbody.UserName;
-          contact.botname = sbody.NickName;
-          cb(contact);
-        } catch (error) {
-          sysMethod.startOutLogs('wechatbot获取Bot名片信息出错:', `${response.body}\n${error}`);
-          cb(contact);
-        }
-      }
-    });
+    const response = await request(options);
+    try {
+      let sbody = JSON.parse(response.body);
+      contact.botid = sbody.UserName;
+      contact.botname = sbody.NickName;
+    } catch (error) {
+      sysMethod.startOutLogs('wechatbot获取Bot名片信息出错:', `${response.body}\n${error}`);
+    }
+    return contact;
   };
 
   // 获取联系人名片
-  async function getcontact(usernamebotid, groupname, cb) {
+  async function getcontact(usernamebotid, groupname) {
    let contact =null;
     let options = '';
     contact = {
@@ -559,8 +545,7 @@ module.exports = async () => {
       group: groupname,
     };
     if (!getcard) {
-      cb(contact);
-      return;
+      return contact;
     }
     const stype = 'getContact';
     // 联系人名片
@@ -590,28 +575,20 @@ module.exports = async () => {
         }
       };
     }
-    request(options, function (error, response) {
-      if (error) {
-        sysMethod.startOutLogs('wechatbot获取联系人名片请求出错:',  error);
-        cb(contact);
+    const response = await request(options);
+    try {
+      if (response.body === '未找到联系人信息') {
+        sysMethod.startOutLogs('wechatbot获取联系人名片信息出错:未找到联系人信息');
       } else {
-        try {
-          if (response.body === '未找到联系人信息') {
-            sysMethod.startOutLogs('wechatbot获取联系人名片信息出错:未找到联系人信息');
-            cb(contact);
-          } else {
-            let sbody = JSON.parse(response.body);
-            contact.nname = sbody.NickName;
-            contact.rname = sbody.RemarkName;
-            contact.dname = sbody.DisplayName;
-            cb(contact);
-          }
-        } catch (error) {
-          sysMethod.startOutLogs('wechatbot获取联系人名片信息出错:', `${response.body}\n${error}`);
-          cb(contact);
-        }
+        let sbody = JSON.parse(response.body);
+        contact.nname = sbody.NickName;
+        contact.rname = sbody.RemarkName;
+        contact.dname = sbody.DisplayName;
       }
-    });
+    } catch (error) {
+      sysMethod.startOutLogs('wechatbot获取联系人名片信息出错:', `${response.body}\n${error}`);
+    }
+    return contact;
   };
 
   return wechatbot;
