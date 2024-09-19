@@ -524,15 +524,17 @@ module.exports = async () => {
     request(options, function (error, response) {
       if (error) {
         sysMethod.startOutLogs('wechatbot获取Bot名片请求出错:', error);
-      }
-      try {
-        let sbody = JSON.parse(response.body);
-        contact.botid = sbody.UserName;
-        contact.botname = sbody.NickName;
         cb(contact);
-      } catch (error) {
-        sysMethod.startOutLogs('wechatbot获取Bot名片信息出错:', error);
-        cb(contact);
+      } else {
+        try {
+          let sbody = JSON.parse(response.body);
+          contact.botid = sbody.UserName;
+          contact.botname = sbody.NickName;
+          cb(contact);
+        } catch (error) {
+          sysMethod.startOutLogs('wechatbot获取Bot名片信息出错:', `${response.body}\n${error}`);
+          cb(contact);
+        }
       }
     });
   };
@@ -578,16 +580,23 @@ module.exports = async () => {
     request(options, function (error, response) {
       if (error) {
         sysMethod.startOutLogs('wechatbot获取联系人名片请求出错:',  error);
-      }
-      try {
-        let sbody = JSON.parse(response.body);
-        contact.nname = sbody.NickName;
-        contact.rname = sbody.RemarkName;
-        contact.dname = sbody.DisplayName;
         cb(contact);
-      } catch (error) {
-        sysMethod.startOutLogs('wechatbot获取联系人名片信息出错:', error);
-        cb(contact);
+      } else {
+        try {
+          if (response.body === '未找到联系人信息') {
+            sysMethod.startOutLogs('wechatbot获取联系人名片信息出错:未找到联系人信息');
+            cb(contact);
+          } else {
+            let sbody = JSON.parse(response.body);
+            contact.nname = sbody.NickName;
+            contact.rname = sbody.RemarkName;
+            contact.dname = sbody.DisplayName;
+            cb(contact);
+          }
+        } catch (error) {
+          sysMethod.startOutLogs('wechatbot获取联系人名片信息出错:', `${response.body}\n${error}`);
+          cb(contact);
+        }
       }
     });
   };
