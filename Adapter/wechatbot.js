@@ -18,6 +18,7 @@
 const jsonSchema = BncrCreateSchema.object({
   basic: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('是否开启适配器').setDescription(`设置为关则不加载该适配器`).setDefault(false),
+    getcards: BncrCreateSchema.boolean().setTitle('是否获取名片').setDescription(`设置为开则主动获取联系人名片辅助识别用户身份`).setDefault(true),
     sendUrl: BncrCreateSchema.string().setTitle('上报地址').setDescription(`wechatbot的地址`).setDefault('http://127.0.0.1:12345'),
     sendToken: BncrCreateSchema.string().setTitle('上报Token').setDescription(`wechatbot的地址Token`).setDefault('1AZ2WSX3EDC'),
   }).setTitle('基本设置').setDefault({}),
@@ -41,6 +42,10 @@ module.exports = async () => {
     return;
   }
   if (!ConfigDB.userConfig.basic?.enable) return sysMethod.startOutLogs('未启用wechatbot 退出.');
+  let getcard = ConfigDB.userConfig.basic.getcards;
+  if (getcard !== false) {
+    getcard = true;
+  }
   let wechatbotUrl = ConfigDB.userConfig.basic.sendUrl;
   if (!wechatbotUrl) return sysMethod.startOutLogs('wechatbot:配置文件未设置sendUrl');
   let wechatbotToken = ConfigDB.userConfig.basic.sendToken;
@@ -512,6 +517,10 @@ module.exports = async () => {
       botid: '',
       botname: '',
     };
+    if (!getcard) {
+      cb(contact);
+      return;
+    }
     const stype = 'getSelf';
     //  bot名片
     let options = '';
@@ -549,6 +558,10 @@ module.exports = async () => {
       dname: '',
       group: groupname,
     };
+    if (!getcard) {
+      cb(contact);
+      return;
+    }
     const stype = 'getContact';
     // 联系人名片
     if (groupname) {
