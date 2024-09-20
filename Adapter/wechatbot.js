@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.2.6
+ * @version 0.2.7
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -69,10 +69,12 @@ module.exports = async () => {
       const dbname = await wxDB.get("botname");
       if (dbname !== wxname) {
         wxDB.set("botname", wxname);
+        sysMethod.startOutLogs(`wechatbot：botname<${wxname}> 更新成功`);
       }
       const dbid = await wxDB.get("botid");
       if (dbid !== wxid) {
         wxDB.set("botid", wxid);
+        sysMethod.startOutLogs(`wechatbot：botid<${wxid}> 更新成功`);
       }
     }
   }
@@ -107,7 +109,7 @@ module.exports = async () => {
                   type: 'NICK_NAME',
                   message: `@${users.replaceAll('、', ' @')}\n${joinMsg.replaceAll('\\n', '\n')}`,
                 };
-                body && (requestwxBot(bodysys, 'sendText'));
+                body && (await requestwxBot(bodysys, 'sendText'));
               }
             }
           }
@@ -348,12 +350,7 @@ module.exports = async () => {
           return;
           break;
       }
-      body && (requestwxBot(body, stype));
-      if (bodytext) {
-        body = bodytext;
-        stype = 'sendText';
-        body && (requestwxBot(body, stype));
-      }
+      asyncrequestwxBot(body, bodytext, stype);
     });
     return '';
   };
@@ -362,6 +359,14 @@ module.exports = async () => {
   wechatbot.push = async function (replyInfo) { 
     return await this.reply(replyInfo);
   };
+
+  // 异步发送
+  async function asyncrequestwxBot(body, bodytext, stype) {
+    body && (await requestwxBot(body, stype));
+    if (bodytext) {
+      body && (await requestwxBot(bodytext, 'sendText'));
+    }
+  }
 
   // 发送消息请求体
   async function requestwxBot(body, stype) {
