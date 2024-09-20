@@ -3,7 +3,7 @@
  * @author 小寒寒
  * @name wechaty
  * @team xmo
- * @version 1.3.0
+ * @version 1.3.1
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -160,17 +160,21 @@ module.exports = async () => {
         }
     });
 
-    bot.on('login', async (user) => {
+    bot.on('login', (user) => {
         sysMethod.startOutLogs(`wechaty：${user} 登录成功`);
         tzco = 0;
         tzzz = 0;
         wxname = user.payload.name;
-        const wxDB = new BncrDB('wechaty');
-        const dbname = await wxDB.get("botname");
-        if (wxname) {
-          if (dbname !== wxname) {
-            wxDB.set("botname", wxname);
-          }
+        setname(wxname);
+        async function setname(wxname) {
+            const wxDB = new BncrDB('wechaty');
+            const dbname = await wxDB.get("botname");
+            if (wxname) {
+               if (dbname !== wxname) {
+                    wxDB.set("botname", wxname);
+                    sysMethod.startOutLogs(`wechaty：botname<${wxname}> 更新成功`);
+                }
+            }
         }
     });
 
