@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.2.7
+ * @version 0.2.8
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -552,39 +552,25 @@ module.exports = async () => {
     if (!getcard) {
       return contact;
     }
+    if (!groupname) {
+      return contact;
+    }
     const stype = 'getContact';
     // 联系人名片
-    if (groupname) {
-      options = {
-        'method': 'GET',
-        'url': `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
-        'headers': {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        form: {
-          'target': usernamebotid,
-          'type': 'USER_NAME',
-          'group': groupname,
-        }
-      };
-    } else {
-      options = {
-        'method': 'GET',
-        'url': `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
-        'headers': {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        form: {
-          'target': usernamebotid,
-          'type': 'USER_NAME',
-        }
-      };
-    }
+    options = {
+      'method': 'GET',
+      'url': `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
+      'headers': {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      form: {
+        'target': usernamebotid,
+        'type': 'USER_NAME',
+      }
+    };
     const response = await request(options);
     try {
-      if (response.body === '未找到联系人信息') {
-        sysMethod.startOutLogs('wechatbot获取联系人名片信息出错:未找到联系人信息');
-      } else {
+      if (response.body !== '未找到联系人信息') {
         let sbody = JSON.parse(response.body);
         contact.nname = sbody.NickName;
         contact.rname = sbody.RemarkName;
