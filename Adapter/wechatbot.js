@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.2.8
+ * @version 0.2.9
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -109,7 +109,7 @@ module.exports = async () => {
                   type: 'NICK_NAME',
                   message: `@${users.replaceAll('、', ' @')}\n${joinMsg.replaceAll('\\n', '\n')}`,
                 };
-                body && (await requestwxBot(bodysys, 'sendText'));
+                bodysys && (await requestwxBot(bodysys, 'sendText'));
               }
             }
           }
