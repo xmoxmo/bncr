@@ -3,7 +3,7 @@
  * @author 小寒寒
  * @name wechaty
  * @team xmo
- * @version 1.3.1
+ * @version 1.3.2
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -19,6 +19,7 @@ const jsonSchema = BncrCreateSchema.object({
     basic: BncrCreateSchema.object({
         enable: BncrCreateSchema.boolean().setTitle('是否开启适配器').setDescription(`设置为关则不加载该适配器`).setDefault(false),
         name: BncrCreateSchema.string().setTitle('机器人标识').setDescription(`设置后后续自动登录，更换微信时请更换标识`).setDefault('wechaty'),
+        route: BncrCreateSchema.string().setTitle('登录通知方式').setDescription(`填写机器人下线后通知的其他平台管理员，多个用,分割，留空则通知其他所有平台管理员`).setDefault(''),
         notify: BncrCreateSchema.number().setTitle('登录通知次数').setDescription(`设置机器人下线后通知其他平台管理员的通知次数`).setDefault(20),
     }).setTitle('基本设置').setDefault({}),
     friend: BncrCreateSchema.object({
@@ -54,6 +55,7 @@ module.exports = async () => {
     const hello = ConfigDB.userConfig.friend.hello || '';
     const autoReply = ConfigDB.userConfig.friend.autoReply || '';
     const notifyco = ConfigDB.userConfig.basic.notify || 20;
+    const notifyway = ConfigDB.userConfig.basic.route;
 
     /** 定时器 */
     let timeoutID = setTimeout(() => {
@@ -118,12 +120,17 @@ module.exports = async () => {
         if (!tzco) {
             tzco = 0;
         }
+        let notifyways = '';
+        if (!notifyways) {
+            notifyways = notifyway.split(",");
+        }
+        sysMethod.startOutLogs('wechaty扫码通知-平台：' + notifyways);
         if (status == 2) {
             tzco = tzco + 1;
             if (tzco <= notifyco) {
                 try {
                     sysMethod.pushAdmin({
-                        platform: [],
+                        platform: notifyways || [],
                         msg: `wechaty登录: https://wechaty.js.org/qrcode/${encodeURIComponent(qrcode)}`,
                     });
                     sysMethod.startOutLogs('wechaty扫码通知-计次：' + tzco);
@@ -135,7 +142,7 @@ module.exports = async () => {
                 if (tzzz == 0) {
                     try {
                         sysMethod.pushAdmin({
-                            platform: [],
+                            platform: notifyways || [],
                             msg: `wechaty登录消息发送超过指定次数，请进入ssh扫码登录或重启无界后等待重新发送扫码链接后登录`,
                         });
                         tzzz = 1;
@@ -151,7 +158,7 @@ module.exports = async () => {
           tzzz = 0;
             try {
                 sysMethod.pushAdmin({
-                    platform: [],
+                    platform: notifyways || [],
                     msg: `wechaty扫码成功，请在手机端确认登录`,
                 });
             } catch (e) {
