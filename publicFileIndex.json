@@ -49,7 +49,7 @@
     "name": "wechatbot",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.2.9",
+    "version": "0.3.0",
     "description": "wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot",
     "classification": [
       "适配器"
