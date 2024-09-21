@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.2.9
+ * @version 0.3.0
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -363,9 +363,7 @@ module.exports = async () => {
   // 异步发送
   async function asyncrequestwxBot(body, bodytext, stype) {
     body && (await requestwxBot(body, stype));
-    if (bodytext) {
-      body && (await requestwxBot(bodytext, 'sendText'));
-    }
+    bodytext && (await requestwxBot(bodytext, 'sendText'));
   }
 
   // 发送消息请求体
