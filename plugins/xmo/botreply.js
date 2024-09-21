@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.0.8
+ * @version 3.0.9
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -23,31 +23,55 @@ const jsonSchema = BncrCreateSchema.object({
     enablechat: BncrCreateSchema.boolean().setTitle('聊天模式开关').setDescription(`聊天模式总开关，当数据库中无匹配回复时自动调用聊天模式指令关键词所在ai插件回复。`).setDefault(false),
     forwardchat: BncrCreateSchema.string().setTitle('聊天模式指令关键词').setDescription(`为聊天模式单独设置其他插件匹配指令关键词，留空则使用"指令关键词"。`).setDefault(''),
   }).setTitle('基本设置').setDefault({}),
-  nobotname: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('Bot设置').setDescription(`填写未设置bot名称不提示引导操作的适配器名称，设置bot名称主要用来识别群组内是否被@。若bot所在适配器无群组功能则无需设置bot名称，并将此适配器名称填写到以下表单。`).setDefault(['web', 'ssh']),
-  noreplychat: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('聊天设置').setDescription(`禁用聊天模式的适配器，填写数据库中无匹配数据时不再调用"指令关键词"进行额外回复的适配器名称。当聊天模式开关开启时此处才会生效。`).setDefault([]),
+  forwards: BncrCreateSchema.array(BncrCreateSchema.object({
+    enable: BncrCreateSchema.boolean().setTitle('启用').setDescription('是否启用').setDefault(true),
+    rule: BncrCreateSchema.object({
+      csform: BncrCreateSchema.string().setTitle('平台').setDescription(`启用自定义指令关键词的平台名称`).setDefault(""),
+      cforward: BncrCreateSchema.string().setTitle('指令关键词').setDescription(`自定义的指令关键词，留空则使用基本设置的"指令关键词"`).setDefault(''),
+      cforwardchat: BncrCreateSchema.string().setTitle('聊天模式指令关键词').setDescription(`自定义的聊天模式指令关键词，留空则使用"自定义的指令关键词"`).setDefault(''),
+    }),
+  })).setTitle('指令相关').setDefault([]),
+  nobotname: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('Bot设置').setDescription(`填写未设置bot名称不提示引导操作的适配器名称，设置bot名称主要用来识别群组内是否被@。若bot所在适配器无群组功能则无需设置bot名称，并将此适配器名称填写到以下表单。`).setDefault(['web', 'ssh', 'wxMP']),
+  noreplychat: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('聊天设置').setDescription(`禁用聊天模式的适配器，填写数据库中无匹配数据时不再调用"指令关键词"进行额外回复的适配器名称。当聊天模式开关开启时此处才会生效。`).setDefault(['HumanTG']),
   debug: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '3.0.7';
+const ver = '3.0.9';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
     s.reply('请前往前端web"插件配置"来完成插件首次配置。');
     return 'next';
   }
-  
+
   const forward = ConfigDB.userConfig.basic.enable || true;
   const forwardchat = ConfigDB.userConfig.basic.enablechat || false;
+  const sfrom = s.getFrom();
+  const customforwards = ConfigDB.userConfig.forwards.filter(o => o.enable) || [];
+  let customforwardline = '';
+  let customforwardlinechat = '';
+  for (const customforward of customforwards) {
+    const csform = customforward.rule.csform || '';
+    const cforward = customforward.rule.cforward || '';
+    const cforwardchat = customforward.rule.cforwardchat || '';
+    if (csform === sfrom) {
+      customforwardline = cforward;
+      customforwardlinechat = cforwardchat;
+      break;
+    }
+  }
   let forwardline = '';
   let forwardlinechat = '';
   if (forward) {
-    forwardline = ConfigDB.userConfig.basic.forward || '';
-    forwardlinechat = ConfigDB.userConfig.basic.forwardchat || '';
+    forwardline = customforwardline || ConfigDB.userConfig.basic.forward || '';
+  }
+  if (forwardchat) {
+    forwardlinechat = customforwardlinechat || ConfigDB.userConfig.basic.forwardchat || '';
   }
   const nonamearr = ConfigDB.userConfig.nobotname || [];
   const noreplychatarr = ConfigDB.userConfig.noreplychat || [];
-  const sfrom = s.getFrom();
+  const debug = ConfigDB.userConfig.debug.enable;
   const groupId = s.getGroupId();
   const userId = s.getUserId();
   const msgSelf = s.getMsg();
@@ -55,7 +79,6 @@ module.exports = async (s) => {
   const userName = s.getUserName();
   const groupName = s.getGroupName();
   const getTime = sysMethod.getTime();
-  const debug = ConfigDB.userConfig.debug.enable;
   const sysDB = new BncrDB('BotReplyDB');
   const commandType = s.param(1);
   const keyword = s.param(2);
@@ -388,8 +411,9 @@ module.exports = async (s) => {
       }
       return null;
     }
-    if (forwardline) {
-      if (keyword.includes(`${forwardline} `)) {
+    let xforwardline = forwardlinechat || forwardline;
+    if (xforwardline) {
+      if (keyword.includes(`${xforwardline} `)) {
         sysMethod.pushAdmin({
           platform: [`${sfrom}`],
           msg: `管理员消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >指令:${forwardline}\n  >详情:指令未响应`,
