@@ -3,7 +3,7 @@
  * @author 小寒寒
  * @name wechaty
  * @team xmo
- * @version 1.3.2
+ * @version 1.3.3
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -121,10 +121,11 @@ module.exports = async () => {
             tzco = 0;
         }
         let notifyways = '';
-        if (!notifyways) {
+        if (notifyway) {
             notifyways = notifyway.split(",");
         }
-        sysMethod.startOutLogs('wechaty扫码通知-平台：' + notifyways);
+        const notify = notifyways || 'all';
+        sysMethod.startOutLogs('wechaty扫码通知-平台：' + notify);
         if (status == 2) {
             tzco = tzco + 1;
             if (tzco <= notifyco) {
