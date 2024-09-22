@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.3.0
+ * @version 0.3.1
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -68,12 +68,12 @@ module.exports = async () => {
       sysMethod.startOutLogs(`wechatbot：Contact<${wxname}> 调用成功`);
       const dbname = await wxDB.get("botname");
       if (dbname !== wxname) {
-        wxDB.set("botname", wxname);
+        await wxDB.set("botname", wxname);
         sysMethod.startOutLogs(`wechatbot：botname<${wxname}> 更新成功`);
       }
       const dbid = await wxDB.get("botid");
       if (dbid !== wxid) {
-        wxDB.set("botid", wxid);
+        await wxDB.set("botid", wxid);
         sysMethod.startOutLogs(`wechatbot：botid<${wxid}> 更新成功`);
       }
     }
@@ -84,6 +84,10 @@ module.exports = async () => {
     try {
       const body = req.body;
       // sysMethod.startOutLogs(body);
+      let tostr = '';
+      if (body.content) {
+        tostr = body.content.toString();
+      }
       if (body.type !== 'TEXT') {
         if (body.type === 'SYSTEM') {
           const tips = body.content;
@@ -113,14 +117,9 @@ module.exports = async () => {
               }
             }
           }
+          return;
         }
-        let tostr = '';
-        if (body.content) {
-          tostr = body.content.toString();
-        }
-        if (!tostr.includes('加入了群聊') && !tostr.includes('加入群聊')) {
-          sysMethod.startOutLogs(`wechatbot收到暂不支持的消息:type{${body.type}}|toString{${tostr}}`);
-        }
+        sysMethod.startOutLogs(`wechatbot收到暂不支持的消息:type{${body.type}}|toString{${tostr}}`);
         return;
       }
       let fromnameid = body.from.UserName;
@@ -148,17 +147,26 @@ module.exports = async () => {
         msgnname = fromnickname;
         msgrname = body.from.RemarkName;
       }
+      const userinfo = await getcontact(botuserid, botgroupname);
+      // sysMethod.startOutLogs(userinfo);
+      if (!userinfo.nname) {
+        const newbotinfo = await getbotself();
+        const newwxid = newbotinfo.botid;
+        const newdbid = await wxDB.get("botid");
+        if (newdbid !== newwxid) {
+          await wxDB.set("botid", newwxid);
+          sysMethod.startOutLogs(`wechatbot：botid<${newwxid}> 更新成功`);
+        }
+      }
       const botselfid = await wxDB.get("botid");
       if (botselfid === botuserid) {
-        let tostr = '';
-        if (body.content) {
-          tostr = body.content.toString();
-        }
         sysMethod.startOutLogs(`wechatbot屏蔽自己发的消息:type{${body.type}}|toString{${tostr}}`);
         return;
       }
-      const userinfo = await getcontact(botuserid, botgroupname);
-      // sysMethod.startOutLogs(userinfo);
+      if (!userinfo.nname) {
+        sysMethod.startOutLogs(`wechatbot屏蔽空用户名发的消息:type{${body.type}}|toString{${tostr}}`);
+        return;
+      }
       let msgInfo = null;
       let name = userinfo.nname || msgnname;
       let group = userinfo.group;
