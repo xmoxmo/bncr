@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.3.1
+ * @version 0.3.2
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -116,8 +116,8 @@ module.exports = async () => {
                 bodysys && (await requestwxBot(bodysys, 'sendText'));
               }
             }
+            return;
           }
-          return;
         }
         sysMethod.startOutLogs(`wechatbot收到暂不支持的消息:type{${body.type}}|toString{${tostr}}`);
         return;
