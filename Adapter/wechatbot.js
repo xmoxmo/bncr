@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.3.3
+ * @version 0.3.4
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -149,7 +149,7 @@ module.exports = async () => {
       }
       const userinfo = await getcontact(botuserid, botgroupname);
       // sysMethod.startOutLogs(userinfo);
-      if (!userinfo.nname) {
+      if (!userinfo.nname || !msgnname) {
         const newbotinfo = await getbotself();
         const newwxid = newbotinfo.botid;
         const newdbid = await wxDB.get("botid");
@@ -163,7 +163,7 @@ module.exports = async () => {
         sysMethod.startOutLogs(`wechatbot屏蔽自己发的消息:type{${body.type}}|toString{${tostr}}`);
         return;
       }
-      if (!userinfo.nname) {
+      if (!userinfo.nname || !msgnname) {
         sysMethod.startOutLogs(`wechatbot屏蔽空用户名发的消息:type{${body.type}}|toString{${tostr}}`);
         return;
       }
