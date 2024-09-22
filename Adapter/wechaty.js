@@ -3,7 +3,7 @@
  * @author 小寒寒
  * @name wechaty
  * @team xmo
- * @version 1.3.3
+ * @version 1.3.4
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -179,7 +179,7 @@ module.exports = async () => {
             const dbname = await wxDB.get("botname");
             if (wxname) {
                if (dbname !== wxname) {
-                    wxDB.set("botname", wxname);
+                    await wxDB.set("botname", wxname);
                     sysMethod.startOutLogs(`wechaty：botname<${wxname}> 更新成功`);
                 }
             }
