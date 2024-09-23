@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.3.6
+ * @version 0.3.7
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -32,7 +32,6 @@ const jsonSchema = BncrCreateSchema.object({
 });
 // 配置管理器
 const ConfigDB = new BncrPluginConfig(jsonSchema);
-let onstart = 0;
 module.exports = async () => {
   // 读取用户配置
   await ConfigDB.get();
@@ -59,24 +58,10 @@ module.exports = async () => {
   await sysMethod.testModule(['request', 'axios'], { install: true });
   const request = require('util').promisify(require('request'));
   const wxDB = new BncrDB('wechatbot');
-  if (onstart == 0) {
-    onstart = 1;
-    const botinfo = await getbotself();
-    const wxname = botinfo.botname;
-    const wxid = botinfo.botid;
-    if (wxname) {
-      sysMethod.startOutLogs(`wechatbot：Contact<${wxname}> 调用成功`);
-      const dbname = await wxDB.get("botname");
-      if (dbname !== wxname) {
-        await wxDB.set("botname", wxname);
-        sysMethod.startOutLogs(`wechatbot：botname<${wxname}> 更新成功`);
-      }
-      const dbid = await wxDB.get("botid");
-      if (dbid !== wxid) {
-        await wxDB.set("botid", wxid);
-        sysMethod.startOutLogs(`wechatbot：botid<${wxid}> 更新成功`);
-      }
-    }
+  const botinfo = await updatebotinfo();
+  const wxname = botinfo.botname;
+  if (wxname) {
+    sysMethod.startOutLogs(`wechatbot：Contact<${wxname}> 调用成功`);
   }
   // 接收消息API
   router.get('/api/bot/wechat', (req, res) => res.send('这是wechatbot Api接口，你的get请求测试正常~，请用post交互数据'));
@@ -123,6 +108,7 @@ module.exports = async () => {
         sysMethod.startOutLogs(`wechatbot收到暂不支持的消息:type{${body.type}}|toString{${tostr}}`);
         return;
       }
+      await updatebotinfo();
       let fromnameid = body.from.UserName;
       let fromnickname = body.from.NickName;
       let membernameid = '';
@@ -150,15 +136,6 @@ module.exports = async () => {
       }
       const userinfo = await getcontact(botuserid, botgroupname);
       // sysMethod.startOutLogs(userinfo);
-      if (!userinfo.nname && !msgnname) {
-        const newbotinfo = await getbotself();
-        const newwxid = newbotinfo.botid;
-        const newdbid = await wxDB.get("botid");
-        if (newdbid !== newwxid) {
-          await wxDB.set("botid", newwxid);
-          sysMethod.startOutLogs(`wechatbot：botid<${newwxid}> 更新成功`);
-        }
-      }
       const botselfid = await wxDB.get("botid");
       if (botselfid === botuserid) {
         sysMethod.startOutLogs(`wechatbot屏蔽自己发的消息:type{${body.type}}|toString{${tostr}}`);
@@ -583,6 +560,24 @@ module.exports = async () => {
     }
     return contact;
   };
+
+  // 更新bot信息
+  async function updatebotinfo() {
+    const botinfo = await getbotself();
+    const wxname = botinfo.botname;
+    const dbname = await wxDB.get("botname");
+    if (dbname !== wxname) {
+      await wxDB.set("botname", wxname);
+      sysMethod.startOutLogs(`wechatbot：botname<${wxname}> 更新成功`);
+    }
+    const wxid = botinfo.botid;
+    const dbid = await wxDB.get("botid");
+    if (dbid !== wxid) {
+      await wxDB.set("botid", wxid);
+      sysMethod.startOutLogs(`wechatbot：botid<${wxid}> 更新成功`);
+    }
+    return botinfo;
+  }
 
   return wechatbot;
 };
