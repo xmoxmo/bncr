@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.3.5
+ * @version 0.3.6
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -79,8 +79,9 @@ module.exports = async () => {
     }
   }
   // 接收消息API
-  router.get('/api/bot/wechat', (req, res) => res.send({ msg: '这是wechatbot Api接口，你的get请求测试正常~，请用post交互数据' }));
+  router.get('/api/bot/wechat', (req, res) => res.send('这是wechatbot Api接口，你的get请求测试正常~，请用post交互数据'));
   router.post('/api/bot/wechat', async (req, res) => {
+    res.send('success');
     try {
       const body = req.body;
       // sysMethod.startOutLogs(body);
@@ -185,10 +186,8 @@ module.exports = async () => {
       };
       // sysMethod.startOutLogs(msgInfo);
       msgInfo && wechatbot.receive(msgInfo);
-      res.send({ status: 200, data: '', msg: 'ok' });
     } catch (e) {
       sysMethod.startOutLogs('wechatbot接收信息出错:', e);
-      res.send({ status: 400, data: '', msg: e.toString() });
     }
   });
 
