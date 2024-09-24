@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.3.7
+ * @version 0.3.8
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -214,138 +214,131 @@ module.exports = async () => {
     }
     let way = replyInfo.path;
     // sysMethod.startOutLogs(way);
-    getfileinfo(way, function(fpath) {
-      // sysMethod.startOutLogs(fpath);
-      let sendway = '';
-      const fs = require('fs');
-      if (replyInfo.type !== 'text') {
-        if (replyInfo.msg) {
-          bodytext = {
-            target: newname,
-            type: ntype,
-            message: newmsg,
-          };
+    fpath = await getfileinfo(way);
+    // sysMethod.startOutLogs(fpath);
+    let sendway = '';
+    const fs = require('fs');
+    if (replyInfo.type !== 'text') {
+      if (replyInfo.msg) {
+        bodytext = {
+          target: newname,
+          type: ntype,
+          message: newmsg,
+        };
+      }
+      const fileinfo = fpath;
+      if (fileinfo.type === 'synctype') {
+        fileinfo.type = replyInfo.type;
+      }
+      if (replyInfo.type === fileinfo.type) {
+        if (fileinfo.path) {
+          sendway = 'file';
+          way = fileinfo.path;
         }
-        const fileinfo = fpath;
-        if (fileinfo.type === 'synctype') {
-          fileinfo.type = replyInfo.type;
+      } else {
+        sysMethod.startOutLogs('wechatbot检测到文件类型不匹配，尝试原始url发送');
+        const wayext = await getext(way);
+        if (wayext) {
+          sysMethod.startOutLogs(`wechatbot检测到url中的存在的扩展名：${wayext}`);
+        } else{
+          sysMethod.startOutLogs(`wechatbot未在url中检测到扩展名`);
         }
-        if (replyInfo.type === fileinfo.type) {
-          if (fileinfo.path) {
-            sendway = 'file';
-            way = fileinfo.path;
-          }
-        } else {
-          sysMethod.startOutLogs('wechatbot检测到文件类型不匹配，尝试原始url发送');
-          if (getext(way)) {
-            sysMethod.startOutLogs(`wechatbot检测到url中的存在的扩展名：${getext(way)}`);
-          } else{
-            sysMethod.startOutLogs(`wechatbot未在url中检测到扩展名`);
-          }
-          if (fileinfo.path) {
-            if (fileinfo.path.includes('/wechatbot_filecache_')) {
-              delfile(fileinfo.path, function(e) {
-                sysMethod.startOutLogs(e, fileinfo.path);
-              });
-            }
+        if (fileinfo.path) {
+          if (fileinfo.path.includes('/wechatbot_filecache_')) {
+            sysMethod.startOutLogs(await delfile(fileinfo.path), fileinfo.path);
           }
         }
       }
-      switch (replyInfo.type) {
-        case 'text':
-          // replyInfo.msg = replyInfo.msg.replace(/\n/g, '\r');
+    }
+    switch (replyInfo.type) {
+      case 'text':
+        // replyInfo.msg = replyInfo.msg.replace(/\n/g, '\r');
+        body = {
+          target: newname,
+          type: ntype,
+          message: newmsg,
+        };
+        stype = 'sendText';
+        break;
+      case 'image':
+        if (sendway === 'file') {
           body = {
             target: newname,
             type: ntype,
-            message: newmsg,
+            file: {
+              value: fs.createReadStream(way),
+              options: {
+                filename: way,
+                contentType: null,
+              }
+            }
           };
-          stype = 'sendText';
-          break;
-        case 'image':
-          if (sendway === 'file') {
-            body = {
-              target: newname,
-              type: ntype,
-              file: {
-                value: fs.createReadStream(way),
-                options: {
-                  filename: way,
-                  contentType: null,
-                }
+        } else {
+          body = {
+            target: newname,
+            type: ntype,
+            url: replyInfo.path,
+          };
+        }
+        stype = 'sendImage'
+        break;
+      case 'video':
+        if (sendway === 'file') {
+          body = {
+            target: newname,
+            type: ntype,
+            file: {
+              value: fs.createReadStream(way),
+              options: {
+                filename: way,
+                contentType: null,
               }
-            };
-          } else {
-            body = {
-              target: newname,
-              type: ntype,
-              url: replyInfo.path,
-            };
-          }
-          stype = 'sendImage'
-          break;
-        case 'video':
-          if (sendway === 'file') {
-            body = {
-              target: newname,
-              type: ntype,
-              file: {
-                value: fs.createReadStream(way),
-                options: {
-                  filename: way,
-                  contentType: null,
-                }
+            }
+          };
+        } else {
+          body = {
+            target: newname,
+            type: ntype,
+            url: replyInfo.path,
+          };
+        }
+        stype = 'sendVideo'
+        break;
+      case 'file':
+        if (sendway === 'file') {
+          body = {
+            target: newname,
+            type: ntype,
+            file: {
+              value: fs.createReadStream(way),
+              options: {
+                filename: way,
+                contentType: null,
               }
-            };
-          } else {
-            body = {
-              target: newname,
-              type: ntype,
-              url: replyInfo.path,
-            };
-          }
-          stype = 'sendVideo'
-          break;
-        case 'file':
-          if (sendway === 'file') {
-            body = {
-              target: newname,
-              type: ntype,
-              file: {
-                value: fs.createReadStream(way),
-                options: {
-                  filename: way,
-                  contentType: null,
-                }
-              }
-            };
-          } else {
-            body = {
-              target: newname,
-              type: ntype,
-              url: replyInfo.path,
-            };
-          }
-          stype = 'sendFile'
-          break;
-        default:
-          return;
-          break;
-      }
-      asyncrequestwxBot(body, bodytext, stype);
-    });
-    return '';
+            }
+          };
+        } else {
+          body = {
+            target: newname,
+            type: ntype,
+            url: replyInfo.path,
+          };
+        }
+        stype = 'sendFile'
+        break;
+      default:
+        return;
+        break;
+    }
+    body && (await requestwxBot(body, stype));
+    bodytext && (await requestwxBot(bodytext, 'sendText'));
+    return;
   };
 
   // 推送消息方法
   wechatbot.push = async function (replyInfo) { 
     return await this.reply(replyInfo);
   };
-
-  // 异步发送
-  async function asyncrequestwxBot(body, bodytext, stype) {
-    body && (await requestwxBot(body, stype));
-    bodytext && (await requestwxBot(bodytext, 'sendText'));
-  }
 
   // 发送消息请求体
   async function requestwxBot(body, stype) {
@@ -387,9 +380,7 @@ module.exports = async () => {
             }
             if (localpath) {
               if (localpath.includes('/wechatbot_filecache_')) {
-                delfile(localpath, function(e) {
-                  sysMethod.startOutLogs(e, localpath);
-                });
+                sysMethod.startOutLogs(await delfile(localpath), localpath);
               }
             }
           } else {
@@ -411,69 +402,73 @@ module.exports = async () => {
   };
 
   // 下载文件
-  async function getfileinfo(url, cb) {
-    if (!url) {
-      fileinfo = {
-        path: '',
-        type: '',
-        ext: '',
-      }
-      cb(fileinfo);
-      return '';
-    }
-    const axios = require('axios');
-    const path = require('path');
-    const fs = require('fs');
-    // sysMethod.startOutLogs(url + ' + ' + fs.existsSync(url));
-    if (fs.existsSync(url)) {
-      const spath = url;
-      fileinfo = {
-        path: spath,
-        type: 'synctype',
-        ext: getext(spath),
-      }
-      cb(fileinfo);
-      return '';
-    }
-    try {
-      const response = await axios.get(url, {
-        responseType: 'stream',
-      });
-      const info = response.headers['content-type'];
-      // sysMethod.startOutLogs(info);
-      let filetype = '';
-      let fileext = '';
-      if (info) {
-        if (info.includes('/')) {
-          let infos = info.split('/');  
-          filetype = infos[0];
-          fileext = infos[1];
+  async function getfileinfo(url) {
+    return new Promise(async (cb) => {
+      if (!url) {
+        fileinfo = {
+          path: '',
+          type: '',
+          ext: '',
         }
-      }
-      const filepath = path.join(process.cwd(), `BncrData/public/wechatbot_filecache_${Date.now()}.${fileext}`);
-      const writer = fs.createWriteStream(filepath);
-      response.data.pipe(writer);
-      let fileinfo = null;
-      fileinfo = {
-        path: filepath,
-        type: filetype,
-        ext: fileext,
-      }
-      writer.on('error', async (err) => {
-        sysMethod.startOutLogs('wechatbot下载文件时发生错误:', err);
-      });
-      writer.on('finish', async () => {
-        sysMethod.startOutLogs('wechatbot下载文件成功：', fileinfo.path);
         cb(fileinfo);
-      });
-    } catch (error) {
-      sysMethod.startOutLogs('wechatbot下载文件发生错误:', error);
-    }
+        return;
+      }
+      const axios = require('axios');
+      const path = require('path');
+      const fs = require('fs');
+      // sysMethod.startOutLogs(url + ' + ' + fs.existsSync(url));
+      if (fs.existsSync(url)) {
+        const spath = url;
+        const spathext = await getext(spath);
+        fileinfo = {
+          path: spath,
+          type: 'synctype',
+          ext: spathext,
+        }
+        cb(fileinfo);
+        return;
+      }
+      try {
+        const response = await axios.get(url, {
+          responseType: 'stream',
+        });
+        const info = response.headers['content-type'];
+        // sysMethod.startOutLogs(info);
+        let filetype = '';
+        let fileext = '';
+        if (info) {
+          if (info.includes('/')) {
+            let infos = info.split('/');  
+            filetype = infos[0];
+            fileext = infos[1];
+          }
+        }
+        const filepath = path.join(process.cwd(), `BncrData/public/wechatbot_filecache_${Date.now()}.${fileext}`);
+        const writer = fs.createWriteStream(filepath);
+        response.data.pipe(writer);
+        let fileinfo = null;
+        fileinfo = {
+          path: filepath,
+          type: filetype,
+          ext: fileext,
+        }
+        writer.on('error', async (err) => {
+          sysMethod.startOutLogs('wechatbot下载文件时发生错误:', err);
+        });
+        writer.on('finish', async () => {
+          sysMethod.startOutLogs('wechatbot下载文件成功：', fileinfo.path);
+          cb(fileinfo);
+        });
+      } catch (error) {
+        sysMethod.startOutLogs('wechatbot下载文件发生错误:', error);
+      }
+    });
   };
 
   // 删除文件
-  async function delfile(path, cb) {
-    const fs = require('fs');
+  async function delfile(path) {
+    return new Promise((cb) => {
+      const fs = require('fs');
       fs.unlink(path, (err) => {
         if (err) {
           sysMethod.startOutLogs('wechatbot删除文件失败：', err);
@@ -481,10 +476,11 @@ module.exports = async () => {
           cb('wechatbot删除文件成功：');
         }
       });
+    });
   };
 
   // 提取链接中的扩展名
-  function getext(path) {
+  async function getext(path) {
     return path.split('.').pop().toLocaleLowerCase();
   }
 
