@@ -49,7 +49,7 @@
     "name": "wechatbot",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.3.7",
+    "version": "0.3.8",
     "description": "wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot",
     "classification": [
       "适配器"
@@ -240,6 +240,28 @@
     "isAuthentication": false,
     "isEncPlugin": false,
     "id": "IuFBpG491/yysi+pK9jCKl2KcmU=",
+    "isChatPlugin": true
+  },
+  "Cu3ElR4+hPkLhZLjfzwb0O3E9ic=": {
+    "type": "github",
+    "name": "one",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.2",
+    "description": "一言 鸡汤 心灵鸡汤",
+    "classification": [
+      "插件"
+    ],
+    "filename": "one.js",
+    "fileDir": "/plugins/xmo/one.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "Cu3ElR4+hPkLhZLjfzwb0O3E9ic=",
     "isChatPlugin": true
   },
   "D382+g+5PQ5fjCvCNF0Ht6h968M=": {
