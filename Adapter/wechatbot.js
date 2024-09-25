@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.3.9
+ * @version 0.4.0
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -93,7 +93,7 @@ module.exports = async () => {
             }
             const notify = notifyways || 'all';
             if (sysmsg.includes('登录二维码链接')) {
-              sysMethod.startOutLogs('wechaty扫码通知-平台：' + notify);                
+              sysMethod.startOutLogs('wechatbot扫码通知-平台：' + notify);                
               tzco = tzco + 1;
               if (tzco <= notifyco) {
                 try {
@@ -101,7 +101,7 @@ module.exports = async () => {
                     platform: notifyways || [],
                     msg: `wechatbot通知: ${sysmsg}`,
                   });
-                  sysMethod.startOutLogs('wechaty扫码通知-计次：' + tzco);
+                  sysMethod.startOutLogs('wechatbot扫码通知-计次：' + tzco);
                 } catch (e) {
                   tzco = tzco - 1;
                   // 发送失败
