@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.3.8
+ * @version 0.3.9
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -21,6 +21,8 @@ const jsonSchema = BncrCreateSchema.object({
     getcards: BncrCreateSchema.boolean().setTitle('是否获取名片').setDescription(`设置为开则主动获取联系人名片辅助识别用户身份`).setDefault(true),
     sendUrl: BncrCreateSchema.string().setTitle('上报地址').setDescription(`wechatbot的地址`).setDefault('http://127.0.0.1:12345'),
     sendToken: BncrCreateSchema.string().setTitle('上报Token').setDescription(`wechatbot的地址Token`).setDefault('1AZ2WSX3EDC'),
+    route: BncrCreateSchema.string().setTitle('登录通知方式').setDescription(`填写机器人下线后通知的其他平台管理员，多个用,分割，留空则通知其他所有平台管理员`).setDefault(''),
+    notify: BncrCreateSchema.number().setTitle('登录通知次数').setDescription(`设置机器人下线后通知其他平台管理员的通知次数`).setDefault(20),
   }).setTitle('基本设置').setDefault({}),
   rooms: BncrCreateSchema.array(BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('启用').setDescription('是否启用').setDefault(true),
@@ -32,6 +34,9 @@ const jsonSchema = BncrCreateSchema.object({
 });
 // 配置管理器
 const ConfigDB = new BncrPluginConfig(jsonSchema);
+// 重置通知计次
+let tzco = 0;
+let tzzz = 0;
 module.exports = async () => {
   // 读取用户配置
   await ConfigDB.get();
@@ -53,6 +58,8 @@ module.exports = async () => {
       wechatbotUrl += '/';
     }
   }
+  const notifyway = ConfigDB.userConfig.basic.route;
+  const notifyco = ConfigDB.userConfig.basic.notify || 20;
   // 这里new的名字将来会作为 sender.getFrom() 的返回值
   const wechatbot = new Adapter('wechatbot');
   await sysMethod.testModule(['request', 'axios'], { install: true });
@@ -68,7 +75,78 @@ module.exports = async () => {
   router.post('/api/bot/wechat', async (req, res) => {
     res.send('success');
     try {
-      const body = req.body;
+      const rbody = req.body;
+      let body = '';
+      if (rbody.wtype) {
+        if (rbody.wtype === 'MessageEvent') {
+          body = JSON.parse(rbody.content);
+        } else {
+          const sysmsg = rbody.content;
+          sysMethod.startOutLogs(`wechatbot收到系统事件:type{${rbody.wtype}}|toString{${sysmsg}}`);
+          let notifyways = '';
+          if (notifyway) {
+            notifyways = notifyway.split(",");
+          }
+          if (sysmsg.includes('[login]')) {
+            if (!tzco) {
+              tzco = 0;
+            }
+            const notify = notifyways || 'all';
+            if (sysmsg.includes('登录二维码链接')) {
+              sysMethod.startOutLogs('wechaty扫码通知-平台：' + notify);                
+              tzco = tzco + 1;
+              if (tzco <= notifyco) {
+                try {
+                  sysMethod.pushAdmin({
+                    platform: notifyways || [],
+                    msg: `wechatbot通知: ${sysmsg}`,
+                  });
+                  sysMethod.startOutLogs('wechaty扫码通知-计次：' + tzco);
+                } catch (e) {
+                  tzco = tzco - 1;
+                  // 发送失败
+                }
+              } else {
+                if (tzzz == 0) {
+                  try {
+                    sysMethod.pushAdmin({
+                      platform: notifyways || [],
+                      msg: `wechatbot登录消息发送超过指定次数，请进入ssh扫码登录或重启无界后等待重新发送扫码链接后登录`,
+                    });
+                    tzzz = 1;
+                  } catch (e) {
+                    // 发送失败
+                  }
+                }
+              }
+            }
+            if (sysmsg.includes('成功登录')) {
+              tzco = 0;
+              tzzz = 0;
+              try {
+                sysMethod.pushAdmin({
+                  platform: notifyways || [],
+                  msg: `wechatbot通知: ${sysmsg}`,
+                });
+              } catch (e) {
+                // 发送失败
+              }
+            }
+          } else {
+            try {
+              sysMethod.pushAdmin({
+                platform: notifyways || [],
+                msg: `wechatbot通知: ${sysmsg}`,
+              });
+            } catch (e) {
+              // 发送失败
+            }
+          }
+          return;
+        }
+      } else {
+        body = rbody;
+      }
       // sysMethod.startOutLogs(body);
       let tostr = '';
       if (body.content) {
