@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.4.0
+ * @version 0.4.1
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -79,7 +79,15 @@ module.exports = async () => {
       let body = '';
       if (rbody.wtype) {
         if (rbody.wtype === 'MessageEvent') {
-          body = JSON.parse(rbody.content);
+          let newcontent = rbody.content;
+          newcontent = newcontent.replace(new RegExp('\n','g'), '\\n')
+          newcontent = newcontent.replace(new RegExp('\t','g'), '\\t')
+          newcontent = newcontent.replace(new RegExp('\r','g'), '\\r')
+          if (await isJSON(newcontent)) {
+            body = JSON.parse(newcontent);
+          } else {
+            sysMethod.startOutLogs('wechatbot处理数组出错:', `${newcontent}`);
+          }
         } else {
           const sysmsg = rbody.content;
           sysMethod.startOutLogs(`wechatbot收到系统事件:type{${rbody.wtype}}|toString{${sysmsg}}`);
@@ -583,9 +591,13 @@ module.exports = async () => {
     };
     const response = await request(options);
     try {
-      let sbody = JSON.parse(response.body);
-      contact.botid = sbody.UserName;
-      contact.botname = sbody.NickName;
+      if (await isJSON(response.body)) {
+        let sbody = JSON.parse(response.body);
+        contact.botid = sbody.UserName;
+        contact.botname = sbody.NickName;
+      } else {
+        sysMethod.startOutLogs('wechatbot处理数组出错:', `${response.body}`);
+      }
     } catch (error) {
       sysMethod.startOutLogs('wechatbot获取Bot名片信息出错:', `${response.body}\n${error}`);
     }
@@ -624,13 +636,17 @@ module.exports = async () => {
     const response = await request(options);
     try {
       if (response.body !== '未找到联系人信息') {
-        let sbody = JSON.parse(response.body);
-        contact.nname = sbody.NickName;
-        contact.rname = sbody.RemarkName;
-        contact.dname = sbody.DisplayName;
+        if (await isJSON(response.body)) {
+          let sbody = JSON.parse(response.body);
+          contact.nname = sbody.NickName;
+          contact.rname = sbody.RemarkName;
+          contact.dname = sbody.DisplayName;
+        } else {
+          sysMethod.startOutLogs('wechatbot处理数组出错:', `${response.body}`);
+        }
       }
     } catch (error) {
-      sysMethod.startOutLogs('wechatbot获取联系人名片信息出错:', `${response.body}\n${error}`);
+      sysMethod.startOutLogs('wechatbot获取联系人名片信息出错:', `${error}`);
     }
     return contact;
   };
@@ -640,17 +656,37 @@ module.exports = async () => {
     const botinfo = await getbotself();
     const wxname = botinfo.botname;
     const dbname = await wxDB.get("botname");
-    if (dbname !== wxname) {
-      await wxDB.set("botname", wxname);
-      sysMethod.startOutLogs(`wechatbot：botname<${wxname}> 更新成功`);
+    if (wxname) {
+      if (dbname !== wxname) {
+        await wxDB.set("botname", wxname);
+        sysMethod.startOutLogs(`wechatbot：botname<${wxname}> 更新成功`);
+      }
     }
     const wxid = botinfo.botid;
     const dbid = await wxDB.get("botid");
-    if (dbid !== wxid) {
-      await wxDB.set("botid", wxid);
-      sysMethod.startOutLogs(`wechatbot：botid<${wxid}> 更新成功`);
+    if (wxid) {
+      if (dbid !== wxid) {
+        await wxDB.set("botid", wxid);
+        sysMethod.startOutLogs(`wechatbot：botid<${wxid}> 更新成功`);
+      }
     }
     return botinfo;
+  }
+
+  // 判断字符串是否为json格式
+  async function isJSON(str) {
+    if (typeof str == 'string') {
+      try {
+        var obj = JSON.parse(str);
+        if (typeof obj == 'object' && obj ) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch(e) {
+        return false;
+      }
+    }
   }
 
   return wechatbot;
