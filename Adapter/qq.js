@@ -3,7 +3,7 @@
  * @author Aming
  * @name qq
  * @team xmo
- * @version 1.0.3
+ * @version 1.0.4
  * @description 外置qq机器人适配器
  * @adapter true
  * @public true
@@ -108,9 +108,9 @@ async function ws(qq) {
                       body.params.message = `[CQ:record,file=${replyInfo.path}]`;
                   }
                   if (replyInfo.msg) {
-                      bodytxt.params.message = replyInfo.msg;
                       bodytxt.params.user_id = replyInfo.userId;
-                      if (replyInfo.groupId) bodytxt.params.group_id = replyInfo.groupId;
+                      if (replyInfo.groupId && (replyInfo.groupId != 0)) bodytxt.params.group_id = replyInfo.groupId;
+                      bodytxt.params.message = replyInfo.msg;
                   }
               }
               // console.log('推送消息运行了', body);
@@ -233,9 +233,9 @@ async function http(qq) {
                   body.message = `[CQ:record,file=${replyInfo.path}]`;
               }
               if (replyInfo.msg) {
-                  bodytxt.message = replyInfo.msg;
                   bodytxt.user_id = replyInfo.userId;
-                  if (replyInfo.groupId) bodytxt.group_id = replyInfo.groupId;
+                  if (replyInfo.groupId && (replyInfo.groupId != 0)) bodytxt.group_id = replyInfo.groupId;
+                  bodytxt.message = replyInfo.msg;
               }
           }
           let sendRes = await requestPost(action, body);
