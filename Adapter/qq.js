@@ -3,7 +3,7 @@
  * @author Aming
  * @name qq
  * @team xmo
- * @version 1.0.2
+ * @version 1.0.3
  * @description 外置qq机器人适配器
  * @adapter true
  * @public true
@@ -107,7 +107,11 @@ async function ws(qq) {
                   } else if (replyInfo.type === 'audio') {
                       body.params.message = `[CQ:record,file=${replyInfo.path}]`;
                   }
-                  replyInfo.msg && bodytxt.params.message = replyInfo.msg;
+                  if (replyInfo.msg) {
+                      bodytxt.params.message = replyInfo.msg;
+                      bodytxt.params.user_id = replyInfo.userId;
+                      if (replyInfo.groupId) bodytxt.params.group_id = replyInfo.groupId;
+                  }
               }
               // console.log('推送消息运行了', body);
               ws.send(JSON.stringify(body));
@@ -228,7 +232,11 @@ async function http(qq) {
               } else if (replyInfo.type === 'audio') {
                   body.message = `[CQ:record,file=${replyInfo.path}]`;
               }
-              replyInfo.msg && bodytxt.message = replyInfo.msg;
+              if (replyInfo.msg) {
+                  bodytxt.message = replyInfo.msg;
+                  bodytxt.user_id = replyInfo.userId;
+                  if (replyInfo.groupId) bodytxt.group_id = replyInfo.groupId;
+              }
           }
           let sendRes = await requestPost(action, body);
           bodytxt.message && await requestPost(action, bodytxt);
