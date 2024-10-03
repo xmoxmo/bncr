@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.4.2
+ * @version 0.4.3
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -599,7 +599,7 @@ module.exports = async () => {
         sysMethod.startOutLogs('wechatbot处理数组出错:', `${response.body}`);
       }
     } catch (error) {
-      sysMethod.startOutLogs('wechatbot获取Bot名片信息出错:', `${response.body}\n${error}`);
+      sysMethod.startOutLogs('wechatbot获取Bot名片信息出错:', `${error}`);
     }
     return contact;
   };
