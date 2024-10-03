@@ -2,8 +2,8 @@
  * This file is part of the App project.
  * @author Aming
  * @name qq
- * @team Bncr团队
- * @version 1.0.1
+ * @team xmo
+ * @version 1.0.2
  * @description 外置qq机器人适配器
  * @adapter true
  * @public false
@@ -89,18 +89,29 @@ async function ws(qq) {
                   params: {},
                   echo: uuid,
               };
+              let bodytxt = {
+                  action: 'send_msg',
+                  params: {},
+                  echo: uuid,
+              };
               +replyInfo.groupId
                   ? (body.params.group_id = replyInfo.groupId)
                   : (body.params.user_id = replyInfo.userId);
               if (replyInfo.type === 'text') {
                   body.params.message = replyInfo.msg;
-              } else if (replyInfo.type === 'image') {
-                  body.params.message = `[CQ:image,file=${replyInfo.path}]`;
-              } else if (replyInfo.type === 'video') {
-                  body.params.message = `[CQ:video,file=${replyInfo.path}]`;
+              } else {
+                  if (replyInfo.type === 'image') {
+                      body.params.message = `[CQ:image,file=${replyInfo.path}]`;
+                  } else if (replyInfo.type === 'video') {
+                      body.params.message = `[CQ:video,file=${replyInfo.path}]`;
+                  } else if (replyInfo.type === 'audio') {
+                      body.params.message = `[CQ:record,file=${replyInfo.path}]`;
+                  }
+                  if (replyInfo.msg) bodytxt.params.message = replyInfo.msg;
               }
               // console.log('推送消息运行了', body);
               ws.send(JSON.stringify(body));
+              bodytxt.params.message && ws.send(JSON.stringify(bodytxt));
               return new Promise((resolve, reject) => {
                   listArr.push({ uuid, eventS });
                   let timeoutID = setTimeout(() => {
@@ -204,18 +215,23 @@ async function http(qq) {
   qq.reply = async function (replyInfo) {
       try {
           let action = '/send_msg',
-              body = {};
+              body = {},
+              bodytxt = {};
           +replyInfo.groupId ? (body['group_id'] = replyInfo.groupId) : (body['user_id'] = replyInfo.userId);
           if (replyInfo.type === 'text') {
               body.message = replyInfo.msg;
-          } else if (replyInfo.type === 'image') {
-              body.message = `[CQ:image,file=${replyInfo.msg}]`;
-          } else if (replyInfo.type === 'video') {
-              body.message = `[CQ:video,file=${replyInfo.msg}]`;
-          } else if (replyInfo.type === 'audio') {
-              body.params.message = `[CQ:record,file=${replyInfo.path}]`;
+          } else {
+              if (replyInfo.type === 'image') {
+                  body.message = `[CQ:image,file=${replyInfo.path}]`;
+              } else if (replyInfo.type === 'video') {
+                  body.message = `[CQ:video,file=${replyInfo.path}]`;
+              } else if (replyInfo.type === 'audio') {
+                  body.message = `[CQ:record,file=${replyInfo.path}]`;
+              }
+              if (replyInfo.msg) bodytxt.message = replyInfo.msg;
           }
           let sendRes = await requestPost(action, body);
+          bodytxt.message && await requestPost(action, bodytxt);
           return sendRes ? sendRes.message_id : '0';
       } catch (e) {
           console.error('qq:发送消息失败', e);
