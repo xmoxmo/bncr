@@ -3,10 +3,10 @@
  * @author Aming
  * @name qq
  * @team xmo
- * @version 1.0.3
+ * @version 1.0.2
  * @description 外置qq机器人适配器
  * @adapter true
- * @public false
+ * @public true
  * @disable false
  * @priority 10000
  * @classification ["官方适配器"]
