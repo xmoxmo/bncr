@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.4.1
+ * @version 0.4.2
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -80,9 +80,9 @@ module.exports = async () => {
       if (rbody.wtype) {
         if (rbody.wtype === 'MessageEvent') {
           let newcontent = rbody.content;
-          newcontent = newcontent.replace(new RegExp('\n','g'), '\\n')
-          newcontent = newcontent.replace(new RegExp('\t','g'), '\\t')
-          newcontent = newcontent.replace(new RegExp('\r','g'), '\\r')
+          newcontent = newcontent.replace(new RegExp('\n','g'), '\\n');
+          newcontent = newcontent.replace(new RegExp('\t','g'), '\\t');
+          newcontent = newcontent.replace(new RegExp('\r','g'), '\\r');
           if (await isJSON(newcontent)) {
             body = JSON.parse(newcontent);
           } else {
@@ -677,7 +677,7 @@ module.exports = async () => {
   async function isJSON(str) {
     if (typeof str == 'string') {
       try {
-        var obj = JSON.parse(str);
+        const obj = JSON.parse(str);
         if (typeof obj == 'object' && obj ) {
           return true;
         } else {
