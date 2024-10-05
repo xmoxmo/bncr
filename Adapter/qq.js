@@ -3,7 +3,7 @@
  * @author Aming
  * @name qq
  * @team xmo
- * @version 1.0.4
+ * @version 1.0.5
  * @description 外置qq机器人适配器
  * @adapter true
  * @public true
@@ -98,7 +98,11 @@ async function ws(qq) {
                   ? (body.params.group_id = replyInfo.groupId)
                   : (body.params.user_id = replyInfo.userId);
               if (replyInfo.type === 'text') {
-                  body.params.message = replyInfo.msg;
+                  if (replyInfo.groupId && (replyInfo.groupId != 0)) {
+                      body.params.message = `[CQ:at,qq=${replyInfo.userId}]\n${replyInfo.msg}`;
+                  } else {
+                      body.params.message = replyInfo.msg;
+                  }
               } else {
                   if (replyInfo.type === 'image') {
                       body.params.message = `[CQ:image,file=${replyInfo.path}]`;
@@ -109,8 +113,12 @@ async function ws(qq) {
                   }
                   if (replyInfo.msg) {
                       bodytxt.params.user_id = replyInfo.userId;
-                      if (replyInfo.groupId && (replyInfo.groupId != 0)) bodytxt.params.group_id = replyInfo.groupId;
-                      bodytxt.params.message = replyInfo.msg;
+                      if (replyInfo.groupId && (replyInfo.groupId != 0)) {
+                          bodytxt.params.group_id = replyInfo.groupId;
+                          bodytxt.params.message = `[CQ:at,qq=${replyInfo.userId}]\n${replyInfo.msg}`;
+                      } else {
+                          bodytxt.params.message = replyInfo.msg;
+                      }
                   }
               }
               // console.log('推送消息运行了', body);
@@ -223,7 +231,11 @@ async function http(qq) {
               bodytxt = {};
           +replyInfo.groupId ? (body['group_id'] = replyInfo.groupId) : (body['user_id'] = replyInfo.userId);
           if (replyInfo.type === 'text') {
-              body.message = replyInfo.msg;
+              if (replyInfo.groupId && (replyInfo.groupId != 0)) {
+                  body.message = `[CQ:at,qq=${replyInfo.userId}]\n${replyInfo.msg}`;
+              } else {
+                  body.message = replyInfo.msg;
+              }
           } else {
               if (replyInfo.type === 'image') {
                   body.message = `[CQ:image,file=${replyInfo.path}]`;
@@ -234,8 +246,12 @@ async function http(qq) {
               }
               if (replyInfo.msg) {
                   bodytxt.user_id = replyInfo.userId;
-                  if (replyInfo.groupId && (replyInfo.groupId != 0)) bodytxt.group_id = replyInfo.groupId;
-                  bodytxt.message = replyInfo.msg;
+                  if (replyInfo.groupId && (replyInfo.groupId != 0)) {
+                      bodytxt.group_id = replyInfo.groupId;
+                      bodytxt.message = `[CQ:at,qq=${replyInfo.userId}]\n${replyInfo.msg}`;
+                  } else {
+                      bodytxt.message = replyInfo.msg;
+                  }
               }
           }
           let sendRes = await requestPost(action, body);
