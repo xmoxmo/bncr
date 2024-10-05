@@ -3,7 +3,7 @@
  * @author Aming
  * @name qq
  * @team xmo
- * @version 1.0.5
+ * @version 1.0.6
  * @description 外置qq机器人适配器
  * @adapter true
  * @public true
@@ -99,7 +99,11 @@ async function ws(qq) {
                   : (body.params.user_id = replyInfo.userId);
               if (replyInfo.type === 'text') {
                   if (replyInfo.groupId && (replyInfo.groupId != 0)) {
-                      body.params.message = `[CQ:at,qq=${replyInfo.userId}]\n${replyInfo.msg}`;
+                      if (replyInfo.userId) {
+                          body.params.message = `[CQ:at,qq=${replyInfo.userId}]\n${replyInfo.msg}`;
+                      } else {
+                          body.params.message = replyInfo.msg;
+                      }
                   } else {
                       body.params.message = replyInfo.msg;
                   }
@@ -115,7 +119,11 @@ async function ws(qq) {
                       bodytxt.params.user_id = replyInfo.userId;
                       if (replyInfo.groupId && (replyInfo.groupId != 0)) {
                           bodytxt.params.group_id = replyInfo.groupId;
-                          bodytxt.params.message = `[CQ:at,qq=${replyInfo.userId}]\n${replyInfo.msg}`;
+                          if (replyInfo.userId) {
+                              bodytxt.params.message = `[CQ:at,qq=${replyInfo.userId}]\n${replyInfo.msg}`;
+                          } else {
+                              bodytxt.params.message = replyInfo.msg;
+                          }
                       } else {
                           bodytxt.params.message = replyInfo.msg;
                       }
@@ -232,7 +240,11 @@ async function http(qq) {
           +replyInfo.groupId ? (body['group_id'] = replyInfo.groupId) : (body['user_id'] = replyInfo.userId);
           if (replyInfo.type === 'text') {
               if (replyInfo.groupId && (replyInfo.groupId != 0)) {
-                  body.message = `[CQ:at,qq=${replyInfo.userId}]\n${replyInfo.msg}`;
+                  if (replyInfo.userId) {
+                      body.message = `[CQ:at,qq=${replyInfo.userId}]\n${replyInfo.msg}`;
+                  } else {
+                      body.message = replyInfo.msg;
+                  }
               } else {
                   body.message = replyInfo.msg;
               }
@@ -248,7 +260,11 @@ async function http(qq) {
                   bodytxt.user_id = replyInfo.userId;
                   if (replyInfo.groupId && (replyInfo.groupId != 0)) {
                       bodytxt.group_id = replyInfo.groupId;
-                      bodytxt.message = `[CQ:at,qq=${replyInfo.userId}]\n${replyInfo.msg}`;
+                      if (replyInfo.userId) {
+                          bodytxt.message = `[CQ:at,qq=${replyInfo.userId}]\n${replyInfo.msg}`;
+                      } else {
+                          bodytxt.message = replyInfo.msg;
+                      }
                   } else {
                       bodytxt.message = replyInfo.msg;
                   }
