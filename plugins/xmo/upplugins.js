@@ -2,7 +2,7 @@
  * @author Heyboi
  * @name upplugins
  * @team xmo
- * @version 2.0.5
+ * @version 2.0.6
  * @description 检测各个插件库并更新
  * @rule ^插件更新$
  * @admin true
@@ -11,6 +11,7 @@
  * @classification ["插件"]
  * 
  * 说明：
+    0、 基于Heyboi2.0.3版本适配市场
     1、 检测bncr插件更新
     2、 所有用户可用
     3、 使用前先去插件配置
