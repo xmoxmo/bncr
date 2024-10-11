@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.4.3
+ * @version 0.4.4
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -21,8 +21,9 @@ const jsonSchema = BncrCreateSchema.object({
     getcards: BncrCreateSchema.boolean().setTitle('是否获取名片').setDescription(`设置为开则主动获取联系人名片辅助识别用户身份`).setDefault(true),
     sendUrl: BncrCreateSchema.string().setTitle('上报地址').setDescription(`wechatbot的地址`).setDefault('http://127.0.0.1:12345'),
     sendToken: BncrCreateSchema.string().setTitle('上报Token').setDescription(`wechatbot的地址Token`).setDefault('1AZ2WSX3EDC'),
-    route: BncrCreateSchema.string().setTitle('登录通知方式').setDescription(`填写机器人下线后通知的其他平台管理员，多个用,分割，留空则通知其他所有平台管理员`).setDefault(''),
+    route: BncrCreateSchema.string().setTitle('登录通知方式').setDescription(`填写机器人下线后通知的其他平台管理员，多个用“,”分割，留空则通知其他所有平台管理员`).setDefault(''),
     notify: BncrCreateSchema.number().setTitle('登录通知次数').setDescription(`设置机器人下线后通知其他平台管理员的通知次数`).setDefault(20),
+    keyblack: BncrCreateSchema.string().setTitle('通知黑名单').setDescription(`填写无需通知的消息关键词，多个用“,”分割，留空则通知全部消息`).setDefault(''),
   }).setTitle('基本设置').setDefault({}),
   rooms: BncrCreateSchema.array(BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('启用').setDescription('是否启用').setDefault(true),
@@ -60,6 +61,7 @@ module.exports = async () => {
   }
   const notifyway = ConfigDB.userConfig.basic.route;
   const notifyco = ConfigDB.userConfig.basic.notify || 20;
+  const keyblacklist = ConfigDB.userConfig.basic.keyblack || '';
   // 这里new的名字将来会作为 sender.getFrom() 的返回值
   const wechatbot = new Adapter('wechatbot');
   await sysMethod.testModule(['request', 'axios'], { install: true });
@@ -91,6 +93,15 @@ module.exports = async () => {
         } else {
           const sysmsg = rbody.content;
           sysMethod.startOutLogs(`wechatbot收到系统事件:type{${rbody.wtype}}|toString{${sysmsg}}`);
+          if (keyblacklist) {
+            const keyblacklists = keyblacklist.split(',');
+            for (const keybl of keyblacklists) {
+              if (sysmsg.includes(keybl)) {
+                sysMethod.startOutLogs(`wechatbot根据关键词{${keybl}}屏蔽系统事件{${sysmsg}}`);
+                return;
+              }
+            }
+          }
           let notifyways = '';
           if (notifyway) {
             notifyways = notifyway.split(",");
