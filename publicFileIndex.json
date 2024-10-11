@@ -291,7 +291,7 @@
     "name": "upplugins",
     "author": "Heyboi",
     "team": "xmo",
-    "version": "2.0.4",
+    "version": "2.0.5",
     "description": "检测各个插件库并更新",
     "classification": [
       "插件"
