@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.1.0
+ * @version 3.1.1
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -37,7 +37,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '3.1.0';
+const ver = '3.1.1';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -432,6 +432,8 @@ module.exports = async (s) => {
     if (botname) {
       if (sfrom === 'qq') {
         atbotmsg = `CQ:at,qq=${botname}`;
+      } else if (sfrom === 'wxXyo') {
+        atbotmsg = `at=${botname}`;
       } else {
         atbotmsg = `@${botname}`;
       }
@@ -441,7 +443,7 @@ module.exports = async (s) => {
         if (nonamearr.indexOf(sfrom) == -1) {
           if (forwardchat) {
             if (noreplychatarr.indexOf(sfrom) == -1) {
-              await s.reply(`警告：未读取到bot名称或qq账号！\n    管理员发送[set ${sfrom} botname 机器人名称或机器人qq账号]设置bot的名称，否则@机器人的信息无法识别。`);
+              await s.reply(`警告：未读取到bot名称或qq账号！\n    管理员发送[set ${sfrom} botname 机器人名称或机器人账号]设置bot的名称，否则@机器人的信息无法识别。`);
             }
           }
         }
@@ -489,6 +491,9 @@ module.exports = async (s) => {
             if (sfrom === 'qq') {
               newkeyword = newkeyword.replace(new RegExp(/\[CQ:at,.*?\]/, 'g'), '');
             }
+            if (sfrom === 'wxXyo') {
+              newkeyword = newkeyword.replace(new RegExp(/\[at=.*?\]/, 'g'), '');
+            }
             newkeyword = newkeyword.replace(new RegExp(atbotmsg,'g'), '');
             newkeyword = newkeyword.replace(new RegExp(' ','g'), '');
             newkeyword = newkeyword.replace(new RegExp(' ','g'), '');
@@ -512,6 +517,9 @@ module.exports = async (s) => {
       }
       if (keyword.includes('CQ:at,qq=')) {
         keyword = keyword.replace(new RegExp(/CQ:at,qq=/, 'g'), '@');
+      }
+      if (keyword.includes('at=')) {
+        keyword = keyword.replace(new RegExp(/at=/, 'g'), '@');
       }
       if (!newkeyword) {
         newkeyword = keyword;
@@ -605,7 +613,7 @@ module.exports = async (s) => {
           try {
             userkeyword = userkeyword.replace(new RegExp(`${keyword}:`,'g'), '');
           } catch (e) {
-            console.error('正则替换失败:', e);
+            // console.error('正则替换失败:', e);
           }
         }
         let keys = await sysDB.keys();
