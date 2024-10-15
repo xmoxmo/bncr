@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.4.4
+ * @version 0.4.5
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -88,7 +88,11 @@ module.exports = async () => {
           if (await isJSON(newcontent)) {
             body = JSON.parse(newcontent);
           } else {
-            sysMethod.startOutLogs('wechatbot处理数组出错:', `${newcontent}`);
+            if (newcontent) {
+              sysMethod.startOutLogs('wechatbot处理数组出错:', `${newcontent}`);
+            } else {
+              sysMethod.startOutLogs('wechatbot接收数组出错');
+            }
           }
         } else {
           const sysmsg = rbody.content;
