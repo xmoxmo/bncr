@@ -7,7 +7,7 @@
  * @rule ^插件更新$
  * @admin true
  * @disable false
- * @public false
+ * @public true
  * @classification ["插件"]
  * 
  * 说明：
