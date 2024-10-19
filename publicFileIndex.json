@@ -286,6 +286,50 @@
     "id": "Cu3ElR4+hPkLhZLjfzwb0O3E9ic=",
     "isChatPlugin": true
   },
+  "lmTP/s+TMZm1ooycsE2t73cmA0c=": {
+    "type": "github",
+    "name": "pixiv",
+    "author": "啊屁",
+    "team": "xmo",
+    "version": "1.0.0",
+    "description": "随机获取一组涩涩纸片人",
+    "classification": [
+      "插件"
+    ],
+    "filename": "pixiv.js",
+    "fileDir": "/plugins/xmo/pixiv.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "lmTP/s+TMZm1ooycsE2t73cmA0c=",
+    "isChatPlugin": true
+  },
+  "22eDISZECbDAUVAzq4ubKKM4FYA=": {
+    "type": "github",
+    "name": "sysinfo",
+    "author": "啊屁",
+    "team": "xmo",
+    "version": "1.0.4",
+    "description": "获取系统信息",
+    "classification": [
+      "插件"
+    ],
+    "filename": "sysinfo.js",
+    "fileDir": "/plugins/xmo/sysinfo.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "22eDISZECbDAUVAzq4ubKKM4FYA=",
+    "isChatPlugin": true
+  },
   "D382+g+5PQ5fjCvCNF0Ht6h968M=": {
     "type": "github",
     "name": "upplugins",
