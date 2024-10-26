@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.4.6
+ * @version 0.4.7
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -205,6 +205,14 @@ module.exports = async () => {
             }
             return;
           }
+        }
+        if (body.type === 'VERIFY') {
+          sysMethod.startOutLogs(`wechatbot：收到好友添加请求：type{${body.type}}|toString{${tostr}}`);
+          sysMethod.pushAdmin({
+            platform: ['wechatbot'],
+            msg: `wechatbot收到好友添加请求：\n  >昵称:${body.recommend.NickName}\n  >来自:${body.recommend.Province}${body.recommend.City}\n  >验证:${body.recommend.Content}\n  >签名:${body.recommend.Signature}`,
+          });
+          return;
         }
         sysMethod.startOutLogs(`wechatbot收到暂不支持的消息:type{${body.type}}|toString{${tostr}}`);
         return;
