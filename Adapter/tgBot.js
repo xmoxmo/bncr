@@ -3,7 +3,7 @@
  * @author Aming
  * @name tgBot
  * @team xmo
- * @version 1.1.0
+ * @version 1.1.1
  * @description tgBot适配器
  * @adapter true
  * @public true
@@ -122,6 +122,12 @@ module.exports = async () => {
           console.log('tgBot接收器错误:', e);
       }
   });
+
+  // 伪装消息
+  tg.inlinemask = async function (msgInfo) {
+    return tg.receive(msgInfo);
+  };
+
   tgBot.on('polling_error', msg => console.log('tgBot轮询错误:', msg.message));
   async function gettgname() {
     let baseApiUrl = ConfigDB.userConfig.proxyHost;
