@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.4.7
+ * @version 0.4.8
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -276,6 +276,11 @@ module.exports = async () => {
       sysMethod.startOutLogs('wechatbot接收信息出错:', e);
     }
   });
+
+  // 伪装消息
+  wechatbot.inlinemask = async function (msgInfo) {
+    return wechatbot.receive(msgInfo);
+  };
 
   // 回复消息
   wechatbot.reply = async function (replyInfo) {
