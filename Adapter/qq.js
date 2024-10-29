@@ -3,7 +3,7 @@
  * @author Aming
  * @name qq
  * @team xmo
- * @version 1.0.6
+ * @version 1.0.7
  * @description 外置qq机器人适配器
  * @adapter true
  * @public true
@@ -77,6 +77,11 @@ async function ws(qq) {
           // console.log('最终消息：', msgInfo);
           qq.receive(msgInfo);
       });
+
+      // 伪装消息
+      qq.inlinemask = async function (msgInfo) {
+          return qq.receive(msgInfo);
+      };
 
       // console.log('qq适配器..', qq);
 
@@ -222,6 +227,11 @@ async function http(qq) {
       };
       qq.receive(msgInfo);
   });
+
+  // 伪装消息
+  qq.inlinemask = async function (msgInfo) {
+      return qq.receive(msgInfo);
+  };
 
   /**向/api/系统路由中添加路由 */
   router.get('/api/bot/qqHttp', (req, res) =>
