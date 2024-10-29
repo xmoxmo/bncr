@@ -2,7 +2,7 @@
  * @author xmo
  * @name cronjobplus
  * @team xmo
- * @version 0.0.3
+ * @version 0.0.4
  * @description 定时任务Plus。
  * @rule ^(初始化定时任务)$
  * @admin true
@@ -129,7 +129,7 @@ module.exports = async s => {
       continue;
     }
     const sfrom = job.rule.form;
-    const sfroms = '';
+    let sfroms = '';
     if (sfrom) {
       sfroms = sfrom.split(",");
     }
@@ -154,7 +154,7 @@ module.exports = async s => {
       continue;
     }
     const sfrom = job.rule.form;
-    const sfroms = '';
+    let sfroms = '';
     if (sfrom) {
       sfroms = sfrom.split(",");
     }
