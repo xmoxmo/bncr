@@ -3,7 +3,7 @@
  * @author 小寒寒
  * @name wechaty
  * @team xmo
- * @version 1.3.4
+ * @version 1.3.5
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -300,6 +300,11 @@ module.exports = async () => {
             log.error('wechaty接收器报错:', e);
         }
     });
+
+    // 伪装消息
+    wx.inlinemask = async function (msgInfo) {
+        return wx.receive(msgInfo);
+    };
 
     bot.use(QRCodeTerminal({ small: true }))
     bot.start().catch(e => sysMethod.startOutLogs(e));
