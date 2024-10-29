@@ -2,7 +2,7 @@
  * @author xmo
  * @name cronjobplus
  * @team xmo
- * @version 0.0.2
+ * @version 0.0.3
  * @description 定时任务Plus。
  * @rule ^(初始化定时任务)$
  * @admin true
@@ -88,7 +88,7 @@ module.exports = async s => {
     const name = job.rule.name || msg;
     const cron = job.rule.cron;
     if (!sysMethod.cron.isCron(cron)) {
-      sysMethod.startOutLogs(`伪装消息{${name}}定时{${cron}}失败`);
+      sysMethod.startOutLogs(`定时任务Plus:伪装消息{${name}}定时{${cron}}失败`);
       continue;
     }
     const msgInfo = {
@@ -101,7 +101,7 @@ module.exports = async s => {
     sysMethod.cron.newCron(cron, async () => {
       sysMethod.Adapters(msgInfo, sfrom, 'inlinemask', msgInfo);
     });
-    sysMethod.startOutLogs(`注册伪装消息{${name}}定时{${cron}}完成`);
+    sysMethod.startOutLogs(`定时任务Plus:注册伪装消息{${name}}定时{${cron}}完成`);
   }
   // 管理命令
   const admins = Config.admin.filter(o => o.enable) || [];
@@ -110,13 +110,13 @@ module.exports = async s => {
     const msg = job.rule.msg || '';
     const name = job.rule.name || msg;
     if (!sysMethod.cron.isCron(cron)) {
-      sysMethod.startOutLogs(`注册管理命令{${name}}定时{${cron}}失败`);
+      sysMethod.startOutLogs(`定时任务Plus:注册管理命令{${name}}定时{${cron}}失败`);
       continue;
     }
     sysMethod.cron.newCron(cron, async () => {
       sysMethod.inline(msg);
     });
-    sysMethod.startOutLogs(`注册管理命令{${name}}定时{${cron}}完成`);
+    sysMethod.startOutLogs(`定时任务Plus:注册管理命令{${name}}定时{${cron}}完成`);
   }
   // 管理推送
   const adminpushs = Config.adminpush.filter(o => o.enable) || [];
@@ -125,10 +125,11 @@ module.exports = async s => {
     const msg = job.rule.msg;
     const name = job.rule.name || msg;
     if (!sysMethod.cron.isCron(cron)) {
-      sysMethod.startOutLogs(`注册管理消息{${name}}定时{${cron}}失败`);
+      sysMethod.startOutLogs(`定时任务Plus:注册管理消息{${name}}定时{${cron}}失败`);
       continue;
     }
     const sfrom = job.rule.form;
+    const sfroms = '';
     if (sfrom) {
       sfroms = sfrom.split(",");
     }
@@ -140,7 +141,7 @@ module.exports = async s => {
         path: job.rule.path || '',
       });
     });
-    sysMethod.startOutLogs(`注册管理消息{${name}}定时{${cron}}完成`);
+    sysMethod.startOutLogs(`定时任务Plus:注册管理消息{${name}}定时{${cron}}完成`);
   }
   // 用户推送
   const userpushs = Config.userpush.filter(o => o.enable) || [];
@@ -149,10 +150,11 @@ module.exports = async s => {
     const name = job.rule.name || msg;
     const cron = job.rule.cron;
     if (!sysMethod.cron.isCron(cron)) {
-      sysMethod.startOutLogs(`注册用户消息{${name}}定时{${cron}}失败`);
+      sysMethod.startOutLogs(`定时任务Plus:注册用户消息{${name}}定时{${cron}}失败`);
       continue;
     }
     const sfrom = job.rule.form;
+    const sfroms = '';
     if (sfrom) {
       sfroms = sfrom.split(",");
     }
@@ -166,6 +168,6 @@ module.exports = async s => {
         path: job.rule.path || '',
       });
     });
-    sysMethod.startOutLogs(`注册用户消息{${name}}定时{${cron}}完成`);
+    sysMethod.startOutLogs(`定时任务Plus:注册用户消息{${name}}定时{${cron}}完成`);
   }
 }
