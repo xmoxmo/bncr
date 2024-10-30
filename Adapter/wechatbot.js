@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.4.9
+ * @version 0.5.0
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -95,13 +95,14 @@ module.exports = async () => {
             }
           }
         } else {
+          const systype = rbody.wtype;
           const sysmsg = rbody.content;
-          sysMethod.startOutLogs(`wechatbot收到系统事件:type{${rbody.wtype}}|toString{${sysmsg}}`);
+          sysMethod.startOutLogs(`wechatbot收到系统事件:type{${rbody.wtype}}|toString{${systype} | ${sysmsg}}`);
           if (keyblacklist) {
             const keyblacklists = keyblacklist.split(',');
             for (const keybl of keyblacklists) {
               if (sysmsg.includes(keybl)) {
-                sysMethod.startOutLogs(`wechatbot根据关键词{${keybl}}屏蔽系统事件{${sysmsg}}`);
+                sysMethod.startOutLogs(`wechatbot根据关键词{${keybl}}屏蔽系统事件{${systype} | ${sysmsg}}`);
                 return;
               }
             }
@@ -122,7 +123,7 @@ module.exports = async () => {
                 try {
                   sysMethod.pushAdmin({
                     platform: notifyways || [],
-                    msg: `wechatbot通知: ${sysmsg}`,
+                    msg: `wechatbot通知: ${systype} | ${sysmsg}`,
                   });
                   sysMethod.startOutLogs('wechatbot扫码通知-计次：' + tzco);
                 } catch (e) {
@@ -149,7 +150,7 @@ module.exports = async () => {
               try {
                 sysMethod.pushAdmin({
                   platform: notifyways || [],
-                  msg: `wechatbot通知: ${sysmsg}`,
+                  msg: `wechatbot通知: ${systype} | ${sysmsg}`,
                 });
               } catch (e) {
                 // 发送失败
@@ -159,7 +160,7 @@ module.exports = async () => {
             try {
               sysMethod.pushAdmin({
                 platform: notifyways || [],
-                msg: `wechatbot通知: ${sysmsg}`,
+                msg: `wechatbot通知: ${systype} | ${sysmsg}`,
               });
             } catch (e) {
               // 发送失败
@@ -209,13 +210,13 @@ module.exports = async () => {
         if (body.type === 'VERIFY') {
           sysMethod.startOutLogs(`wechatbot：收到好友添加请求：type{${body.type}}|toString{${tostr}}`);
           let addway = '扫码添加好友';
-          let addwaytip = '支持自动同意好友，若未同意请升级容器';
+          let addwaytip = '自动同意好友，未同意则升级容器';
           if (!tostr.includes(` chatroomusername="" `)) {
             addway = '群内成员添加好友';
           }
           if (!tostr.includes(` sourcenickname="" `)) {
             addway = '分享名片添加好友';
-            addwaytip = '分享名片方式不支持自动同意好友';
+            addwaytip = '名片添加无法自动同意好友';
           }
           sysMethod.pushAdmin({
             platform: ['wechatbot'],
