@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.4.8
+ * @version 0.4.9
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -208,9 +208,18 @@ module.exports = async () => {
         }
         if (body.type === 'VERIFY') {
           sysMethod.startOutLogs(`wechatbot：收到好友添加请求：type{${body.type}}|toString{${tostr}}`);
+          let addway = '扫码添加好友';
+          let addwaytip = '支持自动同意好友，若未同意请升级容器';
+          if (!tostr.includes(` chatroomusername="" `)) {
+            addway = '群内成员添加好友';
+          }
+          if (!tostr.includes(` sourcenickname="" `)) {
+            addway = '分享名片添加好友';
+            addwaytip = '分享名片方式不支持自动同意好友';
+          }
           sysMethod.pushAdmin({
             platform: ['wechatbot'],
-            msg: `wechatbot收到好友添加请求：\n  >昵称:${body.recommend.NickName}\n  >来自:${body.recommend.Province}${body.recommend.City}\n  >验证:${body.recommend.Content}\n  >签名:${body.recommend.Signature}`,
+            msg: `wechatbot收到好友添加请求：\n  >昵称:${body.recommend.NickName}\n  >来自:${body.recommend.Province}${body.recommend.City}\n  >验证:${body.recommend.Content}\n  >签名:${body.recommend.Signature}\n  >方式:${addway}\n  >处理:${addwaytip}`,
           });
           return;
         }
