@@ -2,7 +2,7 @@
  * @author xmo
  * @name cronjobplus
  * @team xmo
- * @version 0.0.5
+ * @version 0.0.6
  * @description 定时任务Plus。
  * @rule ^(初始化定时任务)$
  * @admin true
@@ -42,7 +42,7 @@ const jsonSchema = BncrCreateSchema.object({
       cron: BncrCreateSchema.string().setTitle('定时规则').setDescription(`输入定时规则，例如：“0 0 8 * * *”`).setDefault("0 0 8 * * *"),
       form: BncrCreateSchema.string().setTitle('发送平台').setDescription(`输入要发送的平台，多个用“,”分割，留空推送所有平台`).setDefault(""),
       type: BncrCreateSchema.string().setTitle('发送类型').setDescription(`输入要发送类型`).setDefault(""),
-      msg: BncrCreateSchema.string().setTitle('发送内容').setDescription(`输入要发送内容`).setDefault(""),
+      msg: BncrCreateSchema.string().setTitle('发送内容').setDescription(`输入要发送内容，使用“\\n”换行`).setDefault(""),
       path: BncrCreateSchema.string().setTitle('发送路径').setDescription(`输入要发送路径`).setDefault(""),
     }),
   })).setTitle('管理推送').setDefault([]),
@@ -55,7 +55,7 @@ const jsonSchema = BncrCreateSchema.object({
       userid: BncrCreateSchema.string().setTitle('发送用户').setDescription(`输入要发送的用户ID`).setDefault(''),
       groupid: BncrCreateSchema.string().setTitle('发送群组').setDescription(`输入要发送的群组ID`).setDefault(''),
       type: BncrCreateSchema.string().setTitle('发送类型').setDescription(`输入要发送类型`).setDefault(""),
-      msg: BncrCreateSchema.string().setTitle('发送内容').setDescription(`输入要发送内容`).setDefault(""),
+      msg: BncrCreateSchema.string().setTitle('发送内容').setDescription(`输入要发送内容，使用“\\n”换行`).setDefault(""),
       path: BncrCreateSchema.string().setTitle('发送路径').setDescription(`输入要发送路径`).setDefault(""),
     }),
   })).setTitle('用户推送').setDefault([])
@@ -122,7 +122,7 @@ module.exports = async s => {
   const adminpushs = Config.adminpush.filter(o => o.enable) || [];
   for (const job of adminpushs) {
     const cron = job.rule.cron;
-    const msg = job.rule.msg;
+    let msg = job.rule.msg;
     const name = job.rule.name || msg;
     if (!sysMethod.cron.isCron(cron)) {
       sysMethod.startOutLogs(`定时任务Plus:注册管理消息{${name}}定时{${cron}}失败`);
@@ -134,6 +134,11 @@ module.exports = async s => {
       sfroms = sfrom.split(",");
     }
     sysMethod.cron.newCron(cron, async () => {
+      const ndate = sysMethod.getTime('yyyy-MM-dd');
+      const ntime = sysMethod.getTime('hh:mm:ss');
+      msg = msg.replaceAll('\\n', '\n');
+      msg = msg.replaceAll('@date@', ndate);
+      msg = msg.replaceAll('@time@', ntime);
       sysMethod.pushAdmin({
         platform: sfroms || [],
         msg: msg,
@@ -146,7 +151,7 @@ module.exports = async s => {
   // 用户推送
   const userpushs = Config.userpush.filter(o => o.enable) || [];
   for (const job of userpushs) {
-    const msg = job.rule.msg || '';
+    let msg = job.rule.msg || '';
     const name = job.rule.name || msg;
     const cron = job.rule.cron;
     if (!sysMethod.cron.isCron(cron)) {
@@ -159,10 +164,15 @@ module.exports = async s => {
       sfroms = sfrom.split(",");
     }
     sysMethod.cron.newCron(cron, async () => {
+      const ndate = sysMethod.getTime('yyyy-MM-dd');
+      const ntime = sysMethod.getTime('hh:mm:ss');
+      msg = msg.replaceAll('\\n', '\n');
+      msg = msg.replaceAll('@date@', ndate);
+      msg = msg.replaceAll('@time@', ntime);
       sysMethod.push({
         platform: sfroms || [],
-        groupId: job.rule.groupid || '0',
-        userId: job.rule.userid || '0',
+        groupId: job.rule.groupid,
+        userId: job.rule.userid,
         msg: msg,
         type: job.rule.type || 'text',
         path: job.rule.path || '',
