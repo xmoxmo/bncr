@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.1.1
+ * @version 3.1.2
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -22,6 +22,7 @@ const jsonSchema = BncrCreateSchema.object({
     forward: BncrCreateSchema.string().setTitle('指令关键词').setDescription(`请输入其他插件匹配指令关键词，留空则不启用调用，仅读取数据库内容。`).setDefault('aigptv2'),
     enablechat: BncrCreateSchema.boolean().setTitle('聊天模式开关').setDescription(`聊天模式总开关，当数据库中无匹配回复时自动调用聊天模式指令关键词所在ai插件回复。`).setDefault(false),
     forwardchat: BncrCreateSchema.string().setTitle('聊天模式指令关键词').setDescription(`为聊天模式单独设置其他插件匹配指令关键词，留空则使用"指令关键词"。`).setDefault(''),
+    maxword: BncrCreateSchema.number().setTitle('聊天模式限制字数').setDescription(`设置私聊时忽略超过指定字数的问题应答`).setDefault(80),
   }).setTitle('基本设置').setDefault({}),
   forwards: BncrCreateSchema.array(BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('启用').setDescription('是否启用').setDefault(true),
@@ -29,6 +30,7 @@ const jsonSchema = BncrCreateSchema.object({
       csform: BncrCreateSchema.string().setTitle('平台').setDescription(`启用自定义指令关键词的平台名称`).setDefault(""),
       cforward: BncrCreateSchema.string().setTitle('指令关键词').setDescription(`自定义的指令关键词，留空则使用基本设置的"指令关键词"`).setDefault(''),
       cforwardchat: BncrCreateSchema.string().setTitle('聊天模式指令关键词').setDescription(`自定义的聊天模式指令关键词，留空则使用"自定义的指令关键词"`).setDefault(''),
+      cmaxword: BncrCreateSchema.number().setTitle('聊天模式限制字数').setDescription(`设置私聊时忽略超过指定字数的问题应答`).setDefault(80),
     }),
   })).setTitle('指令相关').setDefault([]),
   nobotname: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('Bot设置').setDescription(`填写未设置bot名称不提示引导操作的适配器名称，设置bot名称主要用来识别群组内是否被@。若bot所在适配器无群组功能则无需设置bot名称，并将此适配器名称填写到以下表单。`).setDefault(['web', 'ssh', 'wxMP']),
@@ -51,13 +53,16 @@ module.exports = async (s) => {
   const customforwards = ConfigDB.userConfig.forwards.filter(o => o.enable) || [];
   let customforwardline = '';
   let customforwardlinechat = '';
+  let custommaxword = '';
   for (const customforward of customforwards) {
     const csform = customforward.rule.csform || '';
     const cforward = customforward.rule.cforward || '';
     const cforwardchat = customforward.rule.cforwardchat || '';
+    const cmaxword = customforward.rule.cmaxword || '';
     if (csform === sfrom) {
       customforwardline = cforward;
       customforwardlinechat = cforwardchat;
+      custommaxword = cmaxword
       break;
     }
   }
@@ -69,6 +74,7 @@ module.exports = async (s) => {
   if (forwardchat) {
     forwardlinechat = customforwardlinechat || ConfigDB.userConfig.basic.forwardchat || '';
   }
+  const maxword = custommaxword || ConfigDB.userConfig.basic.maxword || 80;
   const nonamearr = ConfigDB.userConfig.nobotname || [];
   const noreplychatarr = ConfigDB.userConfig.noreplychat || [];
   const debug = ConfigDB.userConfig.debug.enable;
@@ -479,10 +485,14 @@ module.exports = async (s) => {
       let newkeyword = '';
       let sreturn = '';
       if (!groupId || groupId === '0') {
-        if (forwardline) {
-          s.inlineSugar(`${forwardline} ${keyword}`);
-        } else {
+        if (keyword.length > maxword) {
           sreturn = 'next';
+        } else {
+          if (forwardline) {
+            s.inlineSugar(`${forwardline} ${keyword}`);
+          } else {
+            sreturn = 'next';
+          }
         }
       } else {
         if (atbotmsg) {
