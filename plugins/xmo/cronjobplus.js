@@ -2,7 +2,7 @@
  * @author xmo
  * @name cronjobplus
  * @team xmo
- * @version 0.0.4
+ * @version 0.0.5
  * @description 定时任务Plus。
  * @rule ^(初始化定时任务)$
  * @admin true
@@ -23,7 +23,7 @@ const jsonSchema = BncrCreateSchema.object({
       cron: BncrCreateSchema.string().setTitle('定时规则').setDescription(`输入定时规则，例如：“0 0 8 * * *”`).setDefault("0 0 8 * * *"),
       form: BncrCreateSchema.string().setTitle('伪装平台').setDescription(`输入要伪装的平台`).setDefault(""),
       userid: BncrCreateSchema.string().setTitle('伪装用户').setDescription(`输入要伪装的用户ID`).setDefault(''),
-      goupid: BncrCreateSchema.string().setTitle('伪装群组').setDescription(`输入要伪装的群组ID`).setDefault(''),
+      groupid: BncrCreateSchema.string().setTitle('伪装群组').setDescription(`输入要伪装的群组ID`).setDefault(''),
       msg: BncrCreateSchema.string().setTitle('命令内容').setDescription(`输入命令或内容`).setDefault(""),
     }),
   })).setTitle('伪装消息').setDefault([]),
@@ -53,7 +53,7 @@ const jsonSchema = BncrCreateSchema.object({
       cron: BncrCreateSchema.string().setTitle('定时规则').setDescription(`输入定时规则，例如：“0 0 8 * * *”`).setDefault("0 0 8 * * *"),
       form: BncrCreateSchema.string().setTitle('发送平台').setDescription(`输入要发送的平台`).setDefault(""),
       userid: BncrCreateSchema.string().setTitle('发送用户').setDescription(`输入要发送的用户ID`).setDefault(''),
-      goupid: BncrCreateSchema.string().setTitle('发送群组').setDescription(`输入要发送的群组ID`).setDefault(''),
+      groupid: BncrCreateSchema.string().setTitle('发送群组').setDescription(`输入要发送的群组ID`).setDefault(''),
       type: BncrCreateSchema.string().setTitle('发送类型').setDescription(`输入要发送类型`).setDefault(""),
       msg: BncrCreateSchema.string().setTitle('发送内容').setDescription(`输入要发送内容`).setDefault(""),
       path: BncrCreateSchema.string().setTitle('发送路径').setDescription(`输入要发送路径`).setDefault(""),
