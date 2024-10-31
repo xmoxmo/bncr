@@ -2,7 +2,7 @@
  * @author xmo
  * @name skits
  * @team xmo
- * @version 0.0.2
+ * @version 0.0.3
  * @description 全网短剧查询
  * @rule ^短剧查询 ([\s\S]+)$
  * @admin false
@@ -13,9 +13,8 @@
  */
 module.exports = async s => {
   const userword = s.param(1);
-
   const apiurl = 'https://api.kuleu.com/api/action?text=';
-  console.log(`${apiurl}${userword}`);
+  // console.log(`${apiurl}${userword}`);
   const request = require('request');
   const options = {
     'method': 'GET',
