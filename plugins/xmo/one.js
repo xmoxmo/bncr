@@ -5,6 +5,7 @@
  * @version 0.0.3
  * @description 一言 鸡汤 心灵鸡汤
  * @rule ^(一言|鸡汤|心灵鸡汤)$
+ * @rule ^(新一言)$
  * @rule ^(爱情公寓语录)$
  * @rule ^(随机人设)$
  * @rule ^(温馨提示语)$
@@ -41,6 +42,25 @@ module.exports = async s => {
       });
       break;
     
+      case '新一言':
+        apiurl = 'https://api.kuleu.com/api/yiyan';
+        options = {
+          'method': 'GET',
+          'url': `${apiurl}`,
+          'headers': {
+          }
+        };
+        request(options, function (error, response) {
+          if (error) {
+            console.log(error);
+          } else {
+            sbody = response.body;
+            // console.log(sbody);
+            s.reply(sbody);
+          }
+        });
+        break;
+        
     case '爱情公寓语录':
       apiurl = 'https://api.kuleu.com/api/aiqinggongyu';
       options = {
@@ -104,7 +124,7 @@ module.exports = async s => {
           nstrss = nstrss.slice(1);
           // console.log(nstrs);
           // console.log(nstrss);
-          let sfromats = `>>随机人设<<\n`;
+          let sfromats = `>>>随机人设<<<\n`;
           let i = 0;
           for (const sstart of nstrs) {
             sfromats = `${sfromats}\n${sbody.slice(sstart, nstrss[i])}`;
