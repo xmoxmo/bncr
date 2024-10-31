@@ -2,7 +2,7 @@
  * @author xmo
  * @name one
  * @team xmo
- * @version 0.0.3
+ * @version 0.0.4
  * @description 一言 鸡汤 心灵鸡汤
  * @rule ^(一言|鸡汤|心灵鸡汤)$
  * @rule ^(新一言)$
@@ -107,7 +107,7 @@ module.exports = async s => {
             strs.push('人物性格：');
             strs.push('人物性格:');
           }
-          console.log(strs);
+          // console.log(strs);
           let nstrs = [];
           let nstr = 0;
           for (const str of strs) {
