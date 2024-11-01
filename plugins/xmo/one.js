@@ -2,7 +2,7 @@
  * @author xmo
  * @name one
  * @team xmo
- * @version 0.0.9
+ * @version 0.1.0
  * @description 一言 鸡汤 心灵鸡汤
  * @rule ^(一言|鸡汤|心灵鸡汤)$
  * @rule ^(新一言)$
@@ -115,7 +115,7 @@ module.exports = async s => {
           } else {
             strs.push('关于幸运物的关联故事：');
             strs.push('关于幸运物的关联故事:');
-            strs.push('幸运物关联故事:');
+            strs.push('幸运物关联故事：');
             strs.push('幸运物关联故事:');
           }
           // console.log(strs);
