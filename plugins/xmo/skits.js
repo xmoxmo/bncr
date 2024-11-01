@@ -2,7 +2,7 @@
  * @author xmo
  * @name skits
  * @team xmo
- * @version 0.0.3
+ * @version 0.0.4
  * @description 全网短剧查询
  * @rule ^短剧查询 ([\s\S]+)$
  * @admin false
@@ -36,7 +36,7 @@ module.exports = async s => {
       const infos = sbody.data || [];
       let videoinfo = `>>>短剧查询<<<`;
       for (const info of infos) {
-        videoinfo = `${videoinfo}\n\n名称: ${info.name}\n事件: ${info.viewlink}\n事件: ${info.addtime}`
+        videoinfo = `${videoinfo}\n\n名称: ${info.name}\n事件: ${info.viewlink}\n时间: ${info.addtime}`
       }
       // console.log(hiday);
       s.reply(videoinfo);
