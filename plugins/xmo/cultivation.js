@@ -7,10 +7,10 @@
  * @description 🐒这个人很懒什么都没有留下。
  * @author onz3v
  * @version v1.0.1
- * @public false
+ * @public true
  * @name cultivation
  * @admin true
- * @team x
+ * @team xmo
  */
 
 module.exports = async s => {
