@@ -2,7 +2,7 @@
  * @author xmo
  * @name one
  * @team xmo
- * @version 0.1.1
+ * @version 0.1.2
  * @description 一言 鸡汤 心灵鸡汤
  * @rule ^(一言|鸡汤|心灵鸡汤)$
  * @rule ^(新一言)$
@@ -97,7 +97,7 @@ module.exports = async s => {
         if (error) {
           console.log(error);
         } else {
-          sbody = response.body;
+          sbody = response.body.replaceAll('*', '');
           // console.log(sbody);
           let strs = ['姓名：','性别：','身高：','年龄：','体重：','爱好：','幸运物：','生日：','职业：','外貌：','对象的名字：','讨厌的东西：','爱吃的东西：','个人的故事背景：','关于幸运物的故事：','对未来的看法：','未来展望：',
                       '姓名:','性别:','身高:','年龄:','体重:','爱好:','幸运物:','生日:','职业:','外貌:','对象的名字:','讨厌的东西:','爱吃的东西:','个人的故事背景:','关于幸运物的故事:','对未来的看法:','未来展望:',
@@ -128,16 +128,30 @@ module.exports = async s => {
             }
           }
           nstrs.sort((x, y) => {
-            return x-y;
+            return x - y;
           });
-          let nstrss = nstrs.slice();
+          const nnstrs = nstrs.length;
+          let x = 0;
+          let nstrsn = [];
+          for (const xnstr of nstrs) {
+            if (x == nnstrs) {
+              nstrsn.push(xnstr);
+            } else {
+              x = x + 1;
+              if (nstrs[x] != xnstr) {
+                nstrsn.push(xnstr);
+              }
+            }
+          }
+          let nstrss = nstrsn.slice();
           nstrss.push(sbody.length);
           nstrss = nstrss.slice(1);
           // console.log(nstrs);
+          // console.log(nstrsn);
           // console.log(nstrss);
           let sfromats = `>>>随机人设<<<\n`;
           let i = 0;
-          for (const sstart of nstrs) {
+          for (const sstart of nstrsn) {
             sfromats = `${sfromats}\n${sbody.slice(sstart, nstrss[i])}`;
             i = i + 1;
           }
