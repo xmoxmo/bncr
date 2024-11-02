@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.5.0
+ * @version 0.5.1
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -560,7 +560,16 @@ module.exports = async () => {
         const response = await axios.get(url, {
           responseType: 'stream',
         });
-        const info = response.headers['content-type'];
+        let info = response.headers['content-type'];
+        if (info.includes(';')) {
+          let infos = info.split(';'); 
+          for (const types of infos) {
+            if (types.includes('/')) {
+              info = types.trim();
+              break;
+            }
+          }
+        }
         // sysMethod.startOutLogs(info);
         let filetype = '';
         let fileext = '';
