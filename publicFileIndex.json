@@ -71,7 +71,7 @@
     "name": "wechatbot",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "description": "wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot",
     "classification": [
       "适配器"
@@ -218,6 +218,28 @@
     "isAuthentication": false,
     "isEncPlugin": false,
     "id": "/W4l/qb4zyXNTzckmUadDO+FTq0=",
+    "isChatPlugin": true
+  },
+  "E6/ugNhOUnaaqIHOFYeKNQaJDwU=": {
+    "type": "github",
+    "name": "cloudyweather",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.2",
+    "description": "彩云查天气",
+    "classification": [
+      "插件"
+    ],
+    "filename": "cloudyweather.js",
+    "fileDir": "/plugins/xmo/cloudyweather.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "E6/ugNhOUnaaqIHOFYeKNQaJDwU=",
     "isChatPlugin": true
   },
   "2jNYXLZhhOJb1eZWOPvIVZJ34d4=": {
@@ -423,7 +445,7 @@
     "name": "wnl",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "万年历 或 万年历 2024-09-16",
     "classification": [
       "插件"
