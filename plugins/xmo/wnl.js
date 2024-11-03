@@ -2,7 +2,7 @@
  * @author xmo
  * @name wnl
  * @team xmo
- * @version 0.0.3
+ * @version 0.0.4
  * @description 万年历 或 万年历 2024-09-16
  * @rule ^(万年历)$
  * @rule ^(万年历) ([^ \n]+)$
@@ -47,7 +47,7 @@ module.exports = async s => {
       // console.log(data);
       const gldate = moment(data.GregorianDateTime, 'YYYY-M-D').format('YYYY-MM-DD');
       const nldate = moment(data.LunarDateTime, 'YYYY-M-D').format('YYYY-MM-DD');
-      const sformat =`>>>>>>>>>万年历<<<<<<<<<
+      const sformat = `>>>>>>>>>万年历<<<<<<<<<
 
 公历日期：${gldate}
 农历日期：${nldate}
