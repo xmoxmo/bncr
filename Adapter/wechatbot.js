@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.5.1
+ * @version 0.5.2
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -657,7 +657,7 @@ module.exports = async () => {
 
   // 获取联系人名片
   async function getcontact(usernamebotid, groupname) {
-   let contact =null;
+    let contact =null;
     let options = '';
     contact = {
       nname: '',
