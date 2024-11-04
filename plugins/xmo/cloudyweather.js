@@ -2,7 +2,7 @@
  * @author xmo
  * @name cloudyweather
  * @team xmo
- * @version 0.0.6
+ * @version 0.0.7
  * @description 彩云查天气
  * @rule ^彩云天气 ([\s\S]+)$
  * @admin false
@@ -52,7 +52,7 @@ module.exports = async s => {
   let sbody = '';
 
   // 高德API
-  let locinfos = [];
+  let locinfon = [];
   let locinfo = {
     formatted_address: '',
     adcode: '',
@@ -65,18 +65,30 @@ module.exports = async s => {
   } else {
     let geocodes = sbody.geocodes || [];
     for (const geocode of geocodes) {
-      let locinfos_geo = {
+      let locinfon_geo = {
         formatted_address: '',
         adcode: '',
         location: '',
       };
-      locinfos_geo.formatted_address = geocode.formatted_address;
-      locinfos_geo.adcode = geocode.adcode;
-      locinfos_geo.location = geocode.location;
-      locinfos.push(locinfos_geo);
+      locinfon_geo.formatted_address = geocode.formatted_address;
+      locinfon_geo.adcode = geocode.adcode;
+      locinfon_geo.location = geocode.location;
+      locinfon.push(locinfon_geo);
     }
   }
+
+  let locinfos_add = [];
+  let locinfos = [];
+  for (const locinfox of locinfon) {
+    let isnot = locinfos_add.indexOf(locinfox.formatted_address);
+    if (isnot == -1) {
+      locinfos_add.push(locinfox.formatted_address);
+      locinfos.push(locinfox);
+    }
+  }
+  // console.log(locinfos_add);
   // console.log(locinfos);
+
   if (locinfos.length == 1) {
     locinfo = locinfos[0];
   } else {
