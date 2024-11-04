@@ -2,7 +2,7 @@
  * @author xmo
  * @name cloudyweather
  * @team xmo
- * @version 0.0.3
+ * @version 0.0.4
  * @description 彩云查天气
  * @rule ^彩云天气 ([\s\S]+)$
  * @admin false
@@ -120,8 +120,11 @@ PM2.5：${sbody.result.realtime.air_quality.pm25}
 舒适度：${sbody.result.realtime.life_index.comfort.desc}
 预报：${sbody.result.forecast_keypoint}`;
     if (sbody.result.alert) {
-      sformat = `${sformat}
-预警：[${sbody.result.alert.content.status}]${sbody.result.alert.content.description}`;
+      const contents = sbody.result.alert.content || [];
+      for (const content of contents) {
+        sformat = `${sformat}
+预警：[${content.status}]${content.description}`;
+      }
     }
     // console.log(sformat);
     s.reply(sformat);
