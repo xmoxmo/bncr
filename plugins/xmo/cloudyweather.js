@@ -2,7 +2,7 @@
  * @author xmo
  * @name cloudyweather
  * @team xmo
- * @version 0.0.2
+ * @version 0.0.3
  * @description 彩云查天气
  * @rule ^彩云天气 ([\s\S]+)$
  * @admin false
@@ -139,7 +139,12 @@ PM2.5：${sbody.result.realtime.air_quality.pm25}
     return new Promise(async (cb) => {
       request(options, function (error, response) {
         if (error) throw new Error(error);
-        const sbody = JSON.parse(response.body);
+        let sbody = '';
+        try {
+          sbody = JSON.parse(response.body);
+        } catch (e) {
+          // 不处理
+        }
         cb(sbody);
       });
     });
