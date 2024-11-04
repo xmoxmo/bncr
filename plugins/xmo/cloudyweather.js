@@ -2,7 +2,7 @@
  * @author xmo
  * @name cloudyweather
  * @team xmo
- * @version 0.0.7
+ * @version 0.0.8
  * @description 彩云查天气
  * @rule ^彩云天气 ([\s\S]+)$
  * @admin false
@@ -158,7 +158,7 @@ module.exports = async s => {
 温度：${sbody.result.realtime.temperature}℃
 体感：${sbody.result.realtime.apparent_temperature}℃
 湿度：${(sbody.result.realtime.humidity * 100).toFixed(0)}%
-气压：${sbody.result.realtime.pressure}帕
+气压：${(sbody.result.realtime.pressure / 1000).toFixed(2)}kPa
 风向：${fxdesc[fxi]}
 风力：${fldesc[fli]}
 能见度：${sbody.result.realtime.visibility}千米
