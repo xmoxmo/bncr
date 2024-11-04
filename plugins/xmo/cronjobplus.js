@@ -2,7 +2,7 @@
  * @author xmo
  * @name cronjobplus
  * @team xmo
- * @version 0.0.6
+ * @version 0.0.7
  * @description 定时任务Plus。
  * @rule ^(初始化定时任务)$
  * @admin true
@@ -68,13 +68,14 @@ sysMethod.createStartupCompletionHook('outStartOK', async () => {
 });
 
 module.exports = async s => {
+  if (!Object.keys(ConfigDB.userConfig).length) {
+    sysMethod.startOutLogs('请先发送"修改无界配置",或者前往前端web"插件配置"来完成插件首次配置');
+    return;
+  }
   if (!ConfigDB.userConfig.basic.enable) {
-	  return;
-	}
-	if (!Object.keys(ConfigDB.userConfig).length) {
-		sysMethod.startOutLogs('请先发送"修改无界配置",或者前往前端web"插件配置"来完成插件首次配置');
-		return;
-	}
+    sysMethod.startOutLogs('未启用插件，退出');
+    return;
+  }
   if (s.msgInfo.from !== 'system') {
     sysMethod.startOutLogs('设置完成，为了避免定时任务重复注册，重启后生效');
     s.reply('设置完成，为了避免定时任务重复注册，重启后生效');
