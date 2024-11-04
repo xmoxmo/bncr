@@ -2,7 +2,7 @@
  * @author xmo
  * @name cloudyweather
  * @team xmo
- * @version 0.0.8
+ * @version 0.0.9
  * @description 彩云查天气
  * @rule ^彩云天气 ([\s\S]+)$
  * @admin false
@@ -161,7 +161,7 @@ module.exports = async s => {
 气压：${(sbody.result.realtime.pressure / 1000).toFixed(2)}kPa
 风向：${fxdesc[fxi]}
 风力：${fldesc[fli]}
-能见度：${sbody.result.realtime.visibility}千米
+能见度：${sbody.result.realtime.visibility}km
 空气指数：${sbody.result.realtime.air_quality.aqi.chn}
 空气质量：${sbody.result.realtime.air_quality.description.chn}
 PM2.5：${sbody.result.realtime.air_quality.pm25}
