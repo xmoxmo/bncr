@@ -2,7 +2,7 @@
  * @author xmo
  * @name cloudyweather
  * @team xmo
- * @version 0.0.5
+ * @version 0.0.6
  * @description 彩云查天气
  * @rule ^彩云天气 ([\s\S]+)$
  * @admin false
@@ -52,6 +52,7 @@ module.exports = async s => {
   let sbody = '';
 
   // 高德API
+  let locinfos = [];
   let locinfo = {
     formatted_address: '',
     adcode: '',
@@ -62,12 +63,48 @@ module.exports = async s => {
   if (sbody.infocode != "10000") {
     console.log(`高德API接口异常：\n${sbody}`);
   } else {
-    locinfo.formatted_address = sbody.geocodes[0].formatted_address;
-    locinfo.adcode = sbody.geocodes[0].adcode;
-    locinfo.location = sbody.geocodes[0].location;
+    let geocodes = sbody.geocodes || [];
+    for (const geocode of geocodes) {
+      let locinfos_geo = {
+        formatted_address: '',
+        adcode: '',
+        location: '',
+      };
+      locinfos_geo.formatted_address = geocode.formatted_address;
+      locinfos_geo.adcode = geocode.adcode;
+      locinfos_geo.location = geocode.location;
+      locinfos.push(locinfos_geo);
+    }
+  }
+  // console.log(locinfos);
+  if (locinfos.length == 1) {
+    locinfo = locinfos[0];
+  } else {
+    let adds = '多地址请选择序号继续(q退出)：';
+    let nadd = 0;
+    for (const add of locinfos) {
+      nadd = nadd + 1;
+      adds = `${adds}\n${nadd}. ${add.formatted_address}`
+    }
+    // console.log(adds);
+    s.reply(adds);
+    const addscon = adds.length;
+    let selectcode = await s.waitInput(async (s)=> {
+      let scode = s.getMsg();
+      if (scode === 'q') {
+      } else if (scode - 1 !== scode - 1) {
+          return await s.again('无效选择,重新输出');
+      } else if (scode > addscon + 1) {
+          return await s.again('无效选择,重新输出');
+      }
+    }, 30);
+    if (selectcode === null) return s.reply('超时退出');
+    if (selectcode.getMsg() === 'q') return s.reply('已退出');
+    // console.log(selectcode.getMsg());
+    locinfo = locinfos[selectcode.getMsg() - 1];
   }
   // console.log(locinfo);
-
+  
   if (!locinfo.location) {
     console.log(`转换地址为经纬度失败，插件即将退出`);
     return;
