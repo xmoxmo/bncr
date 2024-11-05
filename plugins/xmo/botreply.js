@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.1.2
+ * @version 3.1.3
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -39,7 +39,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '3.1.1';
+const ver = '3.1.3';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -614,16 +614,29 @@ module.exports = async (s) => {
     try {
       let newkeyword = '';
       let userkeyword = keyword;
+      let oldkeyword = keyword;
       if (keyword.slice(0, 7) === '@remsg@') {
         return '@noreply@';
       } else {
+        let fgf = '';
         if (keyword.includes(':')) {
-          let keywords = keyword.split(':');
-          keyword = keywords[0];
-          try {
-            userkeyword = userkeyword.replace(new RegExp(`${keyword}:`,'g'), '');
-          } catch (e) {
-            // console.error('正则替换失败:', e);
+          fgf = ':';
+        } else if (keyword.includes(' ')) {
+          fgf = ' ';
+        } else if (keyword.includes('　')) {
+          fgf = '　';
+        } else {
+          fgf = '';
+        }
+        if (fgf) {
+          if (keyword.includes(fgf)) {
+            let keywords = keyword.split(fgf);
+            keyword = keywords[0];
+            try {
+              userkeyword = userkeyword.replace(new RegExp(`${keyword}${fgf}`,'g'), '');
+            } catch (e) {
+              // console.error('正则替换失败:', e);
+            }
           }
         }
         let keys = await sysDB.keys();
@@ -649,7 +662,7 @@ module.exports = async (s) => {
                   keygjc = keygjc.replace(new RegExp(/\*/,'g'), '');
                   smatch = keyword.includes(keygjc);
                 } else {
-                  smatch = keyword === keygjc;
+                  smatch = oldkeyword === keygjc;
                 }
                 if (smatch) {
                   if (!keydyy) {
@@ -675,10 +688,15 @@ module.exports = async (s) => {
               } else {
                 if (keygjc.includes('*')) {
                   keygjc = keygjc.replace(new RegExp(/\*/,'g'), '');
-                }
-                if (keyword === keygjc) {
-                  newkeyword += `|@@|${keys[i]}`;
-                  // break;
+                  if (keyword === keygjc) {
+                    newkeyword += `|@@|${keys[i]}`;
+                    // break;
+                  }
+                } else {
+                  if (oldkeyword === keygjc) {
+                    newkeyword += `|@@|${keys[i]}`;
+                    // break;
+                  }
                 }
               }
             }
