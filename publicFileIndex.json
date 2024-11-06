@@ -330,6 +330,28 @@
     "id": "HbJzC1jhqinNtnbT/bEwwixnZ+4=",
     "isChatPlugin": true
   },
+  "xJXlthVjCVam7wbvPQ06ilfZSFU=": {
+    "type": "github",
+    "name": "maskinfo",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.2",
+    "description": "伪装消息 (平台) (群组) (用户) (内容) ",
+    "classification": [
+      "插件"
+    ],
+    "filename": "maskinfo.js",
+    "fileDir": "/plugins/xmo/maskinfo.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "xJXlthVjCVam7wbvPQ06ilfZSFU=",
+    "isChatPlugin": true
+  },
   "Cu3ElR4+hPkLhZLjfzwb0O3E9ic=": {
     "type": "github",
     "name": "one",
