@@ -247,7 +247,7 @@
     "name": "cronjobplus",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "定时任务Plus。",
     "classification": [
       "cronjobplus"
