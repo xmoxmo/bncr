@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.1.5
+ * @version 3.1.6
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -39,7 +39,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '3.1.5';
+const ver = '3.1.6';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -612,16 +612,16 @@ module.exports = async (s) => {
 
   async function getReply(keyword) {
     try {
-      let newkeyword = '';
-      let userkeyword = keyword;
+      if (keyword.includes('　')) {
+        keyword = keyword.replace(new RegExp('　','g'), ' ');
+      }
       let oldkeyword = keyword;
+      let userkeyword = keyword;
+      let newkeyword = '';
       if (keyword.slice(0, 7) === '@remsg@') {
         return '@noreply@';
       } else {
         let fgf = '';
-        if (keyword.includes('　')) {
-          keyword = keyword.replace(new RegExp('　','g'), ' ');
-        }
         if (keyword.includes(':')) {
           fgf = ':';
         } else if (keyword.includes(' ')) {
