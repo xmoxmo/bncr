@@ -2,7 +2,7 @@
  * @author xmo
  * @name cronjobplus
  * @team xmo
- * @version 0.0.7
+ * @version 0.0.8
  * @description 定时任务Plus。
  * @rule ^(初始化定时任务)$
  * @admin true
@@ -100,7 +100,11 @@ module.exports = async s => {
     }
     const sfrom = job.rule.form;
     sysMethod.cron.newCron(cron, async () => {
+      const ndate = sysMethod.getTime('yyyy-MM-dd');
+      const ntime = sysMethod.getTime('hh:mm:ss');
+      msgInfo.msg = msgInfo.msg.replaceAll('\\n', '\n').replaceAll('@date@', ndate).replaceAll('@time@', ntime);
       sysMethod.Adapters(msgInfo, sfrom, 'inlinemask', msgInfo);
+      sysMethod.startOutLogs(`定时任务Plus:执行伪装消息{${name}}消息{${msgInfo.msg}}完成`);
     });
     sysMethod.startOutLogs(`定时任务Plus:注册伪装消息{${name}}定时{${cron}}完成`);
   }
@@ -115,7 +119,10 @@ module.exports = async s => {
       continue;
     }
     sysMethod.cron.newCron(cron, async () => {
-      sysMethod.inline(msg);
+      const ndate = sysMethod.getTime('yyyy-MM-dd');
+      const ntime = sysMethod.getTime('hh:mm:ss');
+      sysMethod.inline(msg.replaceAll('\\n', '\n').replaceAll('@date@', ndate).replaceAll('@time@', ntime));
+      sysMethod.startOutLogs(`定时任务Plus:执行管理命令{${name}}命令{${msg.replaceAll('\\n', '\n').replaceAll('@date@', ndate).replaceAll('@time@', ntime)}}完成`);
     });
     sysMethod.startOutLogs(`定时任务Plus:注册管理命令{${name}}定时{${cron}}完成`);
   }
@@ -137,15 +144,13 @@ module.exports = async s => {
     sysMethod.cron.newCron(cron, async () => {
       const ndate = sysMethod.getTime('yyyy-MM-dd');
       const ntime = sysMethod.getTime('hh:mm:ss');
-      msg = msg.replaceAll('\\n', '\n');
-      msg = msg.replaceAll('@date@', ndate);
-      msg = msg.replaceAll('@time@', ntime);
       sysMethod.pushAdmin({
         platform: sfroms || [],
-        msg: msg,
+        msg: msg.replaceAll('\\n', '\n').replaceAll('@date@', ndate).replaceAll('@time@', ntime),
         type: job.rule.type || 'text',
         path: job.rule.path || '',
       });
+      sysMethod.startOutLogs(`定时任务Plus:执行管理消息{${name}}消息{${msg}}完成`);
     });
     sysMethod.startOutLogs(`定时任务Plus:注册管理消息{${name}}定时{${cron}}完成`);
   }
@@ -167,17 +172,15 @@ module.exports = async s => {
     sysMethod.cron.newCron(cron, async () => {
       const ndate = sysMethod.getTime('yyyy-MM-dd');
       const ntime = sysMethod.getTime('hh:mm:ss');
-      msg = msg.replaceAll('\\n', '\n');
-      msg = msg.replaceAll('@date@', ndate);
-      msg = msg.replaceAll('@time@', ntime);
       sysMethod.push({
         platform: sfroms || [],
         groupId: job.rule.groupid,
         userId: job.rule.userid,
-        msg: msg,
+        msg: msg.replaceAll('\\n', '\n').replaceAll('@date@', ndate).replaceAll('@time@', ntime),
         type: job.rule.type || 'text',
         path: job.rule.path || '',
       });
+      sysMethod.startOutLogs(`定时任务Plus:执行用户消息{${name}}消息{${msg}}完成`);
     });
     sysMethod.startOutLogs(`定时任务Plus:注册用户消息{${name}}定时{${cron}}完成`);
   }
