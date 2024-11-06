@@ -65,10 +65,10 @@
      > botreply 绿萝|@|群id|群id2 @remsg@aigitv2 用简短的语言介绍下家里养绿萝有什么好处
 
      管理员获取wechaty用户或群组id
-     > botreply wxid * @remsg@eval Buffer.from('@userkeyword@', 'utf-8').toString('hex')@admin@
-       使用：wxid 文件传输助手 //发送“wxid:微信名或群组名”，中间用英文“:”隔开
-     > botreply wxna * @remsg@eval Buffer.from('@userkeyword@', 'hex').toString('utf-8')@admin@
-       使用：wxna e69687e4bbb6e4bca0e8be93e58aa9e6898b //发送“wxid:微信id”，中间用英文“:”隔开
+     > botreply wxid:* @remsg@eval Buffer.from('@userkeyword@', 'utf-8').toString('hex')@admin@
+       使用：wxid:文件传输助手 //发送“wxid:微信名或群组名”，中间用英文“:”隔开
+     > botreply wxna:* @remsg@eval Buffer.from('@userkeyword@', 'hex').toString('utf-8')@admin@
+       使用：wxna:e69687e4bbb6e4bca0e8be93e58aa9e6898b //发送“wxid:微信id”，中间用英文“:”隔开
 
      获取当前消息相关id信息
      > botreply ids @sfrom@/@groupid@@@userid@
