@@ -2,13 +2,13 @@
  * @author xmo
  * @name delmsg
  * @team xmo
- * @version 0.0.2
- * @description 拓展人行tg功能
+ * @version 0.0.3
+ * @description 拓展人行tg撤回消息功能
  * @create_at 2024-11-08 19:27:24
  * @rule ^(\.tgde) ([0-9]+) ([0-9]+)$
  * @priority 1000
  * @admin true
- * @public false
+ * @public true
  * @disable false
  * @classification []
  */
