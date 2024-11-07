@@ -1,5 +1,27 @@
 {
   "annotation": "该文件由系统自动生成. 用于插件市场索引,请勿编辑该文件中的任何内容",
+  "ZwSz4Mu/X368yCa+Qu1i5tPDQj0=": {
+    "type": "github",
+    "name": "HumanTG",
+    "author": "Aming",
+    "team": "xmo",
+    "version": "1.0.7",
+    "description": "Telegarm人行适配器",
+    "classification": [
+      "官方适配器"
+    ],
+    "filename": "HumanTG.js",
+    "fileDir": "/Adapter/HumanTG.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": true,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "ZwSz4Mu/X368yCa+Qu1i5tPDQj0=",
+    "isChatPlugin": false
+  },
   "kS9x/tzoqy0zzdFs6EeBmzMzVZg=": {
     "type": "github",
     "name": "qq",
@@ -181,7 +203,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "3.1.8",
+    "version": "3.1.9",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
