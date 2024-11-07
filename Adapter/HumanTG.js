@@ -6,7 +6,7 @@
  * @version 1.0.7
  * @description Telegarm人行适配器
  * @adapter true
- * @public false
+ * @public true
  * @disable false
  * @priority 101
  * @Copyright ©2023 Aming and Anmours. All rights reserved
