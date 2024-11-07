@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.1.7
+ * @version 3.1.8
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -39,7 +39,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '3.1.7';
+const ver = '3.1.8';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -744,6 +744,18 @@ module.exports = async (s) => {
               } else {
                 s.reply('你没有权限执行此操作');
                 return '@noreply@';
+              }
+            }
+            const delay = replydb.match(/@delay([^ \n]+)@/g);
+            let delay0 = 0;
+            if (delay) {
+              delay0 = delay[0];
+              replydb = replydb.replace(new RegExp(delay0,'g'), '');
+              const delayn = delay0.replace(new RegExp('@delay','g'), '').replace(new RegExp('@','g'), '');
+              if (!isNaN(delayn)) {
+                await sysMethod.sleep(Math.round(delayn));
+              } else {
+                await sysMethod.sleep(5);
               }
             }
             if (replydb.includes('@userkeyword@')) {
