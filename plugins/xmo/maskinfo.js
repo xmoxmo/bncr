@@ -2,16 +2,20 @@
  * @author xmo
  * @name maskinfo
  * @team xmo
- * @version 0.0.2
+ * @version 0.0.3
  * @description 伪装消息 (平台) (群组) (用户) (内容) 
  * @rule ^伪装消息\s+(\S+)\s+(\S+)\s+(\S+)\s+([\s\S]+)$
- * @admin false
+ * @admin true
  * @priority 0
  * @classification ["插件"]
  * @public true
  * @disable false
  */
 module.exports = async s => {
+  if (!await s.isAdmin()) {
+    s.reply('你没有权限执行此操作');
+    return;
+  }
   const sfromme = s.getFrom();
   let sfrom = s.param(1);
   if (sfrom == 0) {
@@ -40,6 +44,6 @@ module.exports = async s => {
     userId: userid || '0',
     groupId: groupid || '0',
   }
-  console.log(msgInfo);
+  // console.log(msgInfo);
   sysMethod.Adapters(msgInfo, sfrom, 'inlinemask', msgInfo);
 };
