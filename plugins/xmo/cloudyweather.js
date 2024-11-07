@@ -2,7 +2,7 @@
  * @author xmo
  * @name cloudyweather
  * @team xmo
- * @version 0.0.9
+ * @version 0.1.0
  * @description 彩云查天气
  * @rule ^彩云天气 ([\s\S]+)$
  * @admin false
@@ -123,7 +123,7 @@ module.exports = async s => {
   }
 
   // 彩云天气API
-  apiurl = `https://api.caiyunapp.com/v2.6/${caiyuntoken}/${locinfo.location}/weather?alert=true&dailysteps=1&hourlysteps=24`
+  apiurl = `https://api.caiyunapp.com/v2.6/${caiyuntoken}/${locinfo.location}/weather?alert=true&dailysteps=1&hourlysteps=24`;
   sbody = await get(apiurl);
   // console.log(sbody);
   if (sbody.status != "ok") {
@@ -150,7 +150,7 @@ module.exports = async s => {
       fli = fli + 1;
     }
     let sformat = `>>>彩云天气<<<
-  
+
 位置：${locinfo.formatted_address}
 坐标：${locinfo.location}
 日期：${ndate}
