@@ -866,7 +866,7 @@ module.exports = async (s) => {
   async function autoreply(info) {
     await s.reply(info);
     if (sfrom === "HumanTG") {
-      if (autodelmsg === 'y') 
+      if (autodelmsg === 'y') {
         if (botid) {
           const userId = botid;
           const groupId = +s.getGroupId();
