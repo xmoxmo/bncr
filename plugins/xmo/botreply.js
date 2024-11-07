@@ -101,6 +101,9 @@ module.exports = async (s) => {
   const commandType = s.param(1);
   const keyword = decodeURIComponent(s.param(2));
   const replyContent = s.param(3);
+  const fromDB = new BncrDB(sfrom);
+  let botname = await fromDB.get('botname') || '';
+  let botid = await fromDB.get('botid') || '';
   let autodelmsg = 'n';
   if (autodel) {
     if (mode === 'white') {
@@ -464,8 +467,6 @@ module.exports = async (s) => {
         keyword = keyword.replace(new RegExp('@group@','g'), '');
       }
     }
-    const naDB = new BncrDB(sfrom);
-    botname = await naDB.get('botname');
     let atbotmsg = '';
     if (botname) {
       if (sfrom === 'qq') {
@@ -504,8 +505,15 @@ module.exports = async (s) => {
       return null;
     } else {
       if (sfrom == 'HumanTG') {
-        if (userName == botname) {
-          return;
+        if (botid) {
+          if (userId == botid) {
+            return;
+          }
+        }
+        if (botname) {
+          if (userName == botname) {
+            return;
+          }
         }
       }
       if (forwardlinechat) {
@@ -869,8 +877,6 @@ module.exports = async (s) => {
       const humanfroms = humanfrom.split(',');
       if (humanfroms.indexOf(sfrom) != -1) {
         if (autodelmsg === 'y') {
-          const​ ​idDB​ ​=​ ​new​ ​BncrDB​(​sfrom​)​;
-          const​ ​botid​ ​=​ ​await​ ​idDB​.​get​(​'botid'​)​;
           if (botid) {
             const msgInfo = {
               type: 'text',
