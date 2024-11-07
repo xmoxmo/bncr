@@ -181,7 +181,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "3.1.7",
+    "version": "3.1.8",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
@@ -335,7 +335,7 @@
     "name": "maskinfo",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "伪装消息 (平台) (群组) (用户) (内容) ",
     "classification": [
       "插件"
