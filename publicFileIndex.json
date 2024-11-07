@@ -291,7 +291,7 @@
     "name": "delmsg",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "拓展人行tg撤回消息功能",
     "classification": [],
     "filename": "delmsg.js",
