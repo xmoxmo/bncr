@@ -35,6 +35,12 @@ const jsonSchema = BncrCreateSchema.object({
   })).setTitle('指令相关').setDefault([]),
   nobotname: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('Bot设置').setDescription(`填写未设置bot名称不提示引导操作的适配器名称，设置bot名称主要用来识别群组内是否被@。若bot所在适配器无群组功能则无需设置bot名称，并将此适配器名称填写到以下表单。`).setDefault(['web', 'ssh', 'wxMP']),
   noreplychat: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('聊天设置').setDescription(`禁用聊天模式的适配器，填写数据库中无匹配数据时不再调用"指令关键词"进行额外回复的适配器名称。当聊天模式开关开启时此处才会生效。`).setDefault(['HumanTG']),
+  humantg: BncrCreateSchema.object({
+    enable: BncrCreateSchema.boolean().setTitle('自动撤回').setDescription(`开启将启用自动撤回功能`).setDefault(false),
+    mode: BncrCreateSchema.string().setTitle('模式设置').setDescription('选择合适自己的模式').setEnum(['white', 'black']).setEnumNames(['白名单模式', '黑名单模式']).setDefault('white'),
+    modestr: BncrCreateSchema.string().setTitle('生效设置').setDescription(`填写应用上述模式的群id使用英文“,”分割。`).setDefault(''),
+    chcmd: BncrCreateSchema.string().setTitle('删除指令').setDescription(`填写删除消息的指令"。`).setDefault('.tgde 2 60'),
+  }).setTitle('人形设置').setDefault({}),
   debug: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
@@ -43,7 +49,7 @@ const ver = '3.1.9';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
-    s.reply('请前往前端web"插件配置"来完成插件首次配置。');
+    autoreply('请前往前端web"插件配置"来完成插件首次配置。');
     return 'next';
   }
 
@@ -77,6 +83,10 @@ module.exports = async (s) => {
   const maxword = custommaxword || ConfigDB.userConfig.basic.maxword || 80;
   const nonamearr = ConfigDB.userConfig.nobotname || [];
   const noreplychatarr = ConfigDB.userConfig.noreplychat || [];
+  const autodel = ConfigDB.userConfig.humantg.enable || false;
+  const mode = ConfigDB.userConfig.humantg.mode || 'white';
+  const modestr = ConfigDB.userConfig.humantg.modestr || '';
+  const chcmd = ConfigDB.userConfig.humantg.chcmd || '.tgde 2 60';
   const debug = ConfigDB.userConfig.debug.enable;
   const groupId = s.getGroupId();
   const userId = s.getUserId();
@@ -89,6 +99,26 @@ module.exports = async (s) => {
   const commandType = s.param(1);
   const keyword = decodeURIComponent(s.param(2));
   const replyContent = s.param(3);
+  let autodelmsg = 'n';
+  if (autodel) {
+    if (mode === 'white') {
+      if (modestr) {
+        modestrs = modestr.split(',');
+        if (modestrs.indexOf(groupId) != -1) {
+          autodelmsg = 'y';
+        }
+      }
+    }
+    if (mode === 'black') {
+      if (modestr) {
+        modestrs = modestr.split(',');
+        if (modestrs.indexOf(groupId) == -1) {
+          autodelmsg = 'y';
+        }
+      }
+    }
+  }
+  console.log(autodelmsg);
 
   // console.log(`Received command: ${commandType}, Keyword: ${keyword}, ReplyContent: ${replyContent}`);
 
@@ -116,7 +146,7 @@ module.exports = async (s) => {
   async function handleAddReply(s, keyword, reply) {
     if (!(await s.isAdmin())) {
       // console.log('User does not have admin privileges');
-      return s.reply('你没有权限执行此操作');
+      return autoreply('你没有权限执行此操作');
     }
 
     let str = keyword;
@@ -130,34 +160,34 @@ module.exports = async (s) => {
       keygjc = str;
     }
     if (!keygjc) {
-      s.reply('设置失败：无关键词');
+      autoreply('设置失败：无关键词');
     } else {
       const result = await setReply(keyword, reply);
       // console.log(`Set reply result for keyword ${keyword}: ${result}`);
-      s.reply(result ? '设置成功' : '设置失败');
+      autoreply(result ? '设置成功' : '设置失败');
     }
   }
 
   async function handleDelReply(s, keyword) {
     if (!(await s.isAdmin())) {
       // console.log('User does not have admin privileges');
-      return s.reply('你没有权限执行此操作');
+      return autoreply('你没有权限执行此操作');
     }
 
     let keys = await sysDB.keys();
     if (keys.indexOf(keyword) == -1) {
-      s.reply(`删除失败：数据库中无[${keyword}]`);
+      autoreply(`删除失败：数据库中无[${keyword}]`);
       return null;
     }
     const result = await deleteReply(keyword);
     // console.log(`Delete reply result for keyword ${keyword}: ${result}`);
-    s.reply(result ? '删除成功' : '删除失败');
+    autoreply(result ? '删除成功' : '删除失败');
   }
 
   async function handleModifykey(s, keyword) {
     if (!(await s.isAdmin())) {
       // console.log('User does not have admin privileges');
-      return s.reply('你没有权限执行此操作');
+      return autoreply('你没有权限执行此操作');
     }
     
     let str = keyword;
@@ -180,25 +210,25 @@ module.exports = async (s) => {
         }
       }
       if (replymsg) {
-        s.reply('更改失败：' + replymsg);
+        autoreply('更改失败：' + replymsg);
       } else {
         const delresult = await deleteReply(oldkey);
         replymsg = (delresult ? '' : '删除oldkey失败');
         if (replymsg) {
-          s.reply('更改失败：' + replymsg);
+          autoreply('更改失败：' + replymsg);
         } else {
-          s.reply('更改成功');
+          autoreply('更改成功');
         }
       }
     } else {
-      s.reply('更改失败：无标识符[|>>|]');
+      autoreply('更改失败：无标识符[|>>|]');
     }
   }
 
   async function handlereplacekeyword(s, keyword) {
     if (!(await s.isAdmin())) {
       // console.log('User does not have admin privileges');
-      return s.reply('你没有权限执行此操作');
+      return autoreply('你没有权限执行此操作');
     }
 
     if (keyword.includes('|tt|')) {
@@ -231,12 +261,12 @@ module.exports = async (s) => {
         }
       }
       if (replymsg) {
-        s.reply('替换失败：' + replymsg);
+        autoreply('替换失败：' + replymsg);
       } else {
-        s.reply('替换成功');
+        autoreply('替换成功');
       }
     } else {
-      s.reply('替换失败：无标识符[|tt|]');
+      autoreply('替换失败：无标识符[|tt|]');
     }
   }
 
@@ -266,19 +296,19 @@ module.exports = async (s) => {
       if (await s.isAdmin()) {
         let list = await sysDB.get(keyword);
         if (list) {
-          await s.reply(list);
+          await autoreply(list);
         } else {
-          await s.reply('未设置');
+          await autoreply('未设置');
         }
         return null;
       } else {
-        s.reply('你没有权限执行此操作');
+        autoreply('你没有权限执行此操作');
         return null;
       }
     }
     await sysDB.set('@botreplylastmsg@', nowmsg);
     if (keyword === 'botreply_ver') {
-      await s.reply(ver);
+      await autoreply(ver);
       return null;
     }
     let keyblacklist = await sysDB.get('@keyblacklist@');
@@ -399,21 +429,21 @@ module.exports = async (s) => {
       if (await s.isAdmin()) {
         let list = await sysDB.get(keyword);
         if (list) {
-          await s.reply(list);
+          await autoreply(list);
         } else {
-          await s.reply('未设置');
+          await autoreply('未设置');
         }
         return null;
       } else {
-        s.reply('你没有权限执行此操作');
+        autoreply('你没有权限执行此操作');
         return null;
       }
     }
     if (keyword.includes('@keyblacklist@') || keyword.includes('@userblacklist@') || keyword.includes('@groupblacklist@') || keyword.includes('@botreplylastmsg@') || keyword.includes('@userwhitelist@') || keyword.includes('@groupwhitelist@') || keyword.includes('@oneblacklist@') || keyword.includes('@onewhitelist@')) {
       if (await s.isAdmin()) {
-        s.reply('指令有误');
+        autoreply('指令有误');
       } else {
-        s.reply('你没有权限执行此操作');
+        autoreply('你没有权限执行此操作');
       }
       return null;
     }
@@ -449,7 +479,7 @@ module.exports = async (s) => {
         if (nonamearr.indexOf(sfrom) == -1) {
           if (forwardchat) {
             if (noreplychatarr.indexOf(sfrom) == -1) {
-              await s.reply(`警告：未读取到bot名称或qq账号！\n    管理员发送[set ${sfrom} botname 机器人名称或机器人账号]设置bot的名称，否则@机器人的信息无法识别。`);
+              await autoreply(`警告：未读取到bot名称或qq账号！\n    管理员发送[set ${sfrom} botname 机器人名称或机器人账号]设置bot的名称，否则@机器人的信息无法识别。`);
             }
           }
         }
@@ -467,7 +497,7 @@ module.exports = async (s) => {
     if (reply) {
       // console.log(`Replying with: ${reply}`);
       if (reply !== '@noreply@') {
-        await s.reply(reply);
+        await autoreply(reply);
       }
       return null;
     } else {
@@ -559,22 +589,22 @@ module.exports = async (s) => {
   async function handleListKeywords(s) {
     if (!(await s.isAdmin())) {
       // console.log('User does not have admin privileges');
-      return s.reply('你没有权限执行此操作');
+      return autoreply('你没有权限执行此操作');
     }
     
     const keys = await sysDB.keys();
     // console.log(`Listing keywords: ${keys}`);
     if (keys.length > 0) {
-      s.reply(`当前关键词列表:\n${keys.join('\n')}`);
+      autoreply(`当前关键词列表:\n${keys.join('\n')}`);
     } else {
-      s.reply('当前没有关键词');
+      autoreply('当前没有关键词');
     }
   }
 
   async function handleEmptyKeywords(s) {
     if (!(await s.isAdmin())) {
       // console.log('User does not have admin privileges');
-      return s.reply('你没有权限执行此操作');
+      return autoreply('你没有权限执行此操作');
     }
 
     try {
@@ -583,10 +613,10 @@ module.exports = async (s) => {
         await sysDB.del(key);
       }
       // console.log('All keywords cleared');
-      s.reply('所有关键词已清空');
+      autoreply('所有关键词已清空');
     } catch (e) {
       // console.error('清空失败:', e);
-      s.reply('清空失败');
+      autoreply('清空失败');
     }
   }
 
@@ -747,7 +777,7 @@ module.exports = async (s) => {
               if (await s.isAdmin()) {
                 replydb = replydb.replace(new RegExp('@admin@','g'), '');
               } else {
-                s.reply('你没有权限执行此操作');
+                autoreply('你没有权限执行此操作');
                 return '@noreply@';
               }
             }
@@ -806,7 +836,7 @@ module.exports = async (s) => {
               } else {
                 replymsg = replydb;
               }
-              await s.reply({
+              await autoreply({
                 type: replydbtype[0] || 'text',
                 path: replydbtype[1] || '',
                 msg: replymsg,
@@ -829,6 +859,26 @@ module.exports = async (s) => {
     } catch (e) {
       console.error('获取失败:', e);
       return '@noreply@';
+    }
+  }
+  async function autoreply(info) {
+    await s.reply(info);
+    if (sfrom === "HumanTG") {
+      if (autodelmsg === 'y') {
+        const naDB = new BncrDB(sfrom);
+        const botid = await naDB.get('botid');
+        if (botid) {
+          const userId = botid;
+          const groupId = +s.getGroupId();
+          const msgInfo = {
+            type: 'text',
+            msg: chcmd,
+            userId: userId || '0',
+            groupId: groupId || '0',
+          }
+          sysMethod.Adapters(msgInfo, 'HumanTG', 'inlinemask', msgInfo);
+        }
+      }
     }
   }
 };
