@@ -286,6 +286,26 @@
     "id": "2jNYXLZhhOJb1eZWOPvIVZJ34d4=",
     "isChatPlugin": true
   },
+  "l/znp9hXhwOXBEIqMAWTKCmNeGQ=": {
+    "type": "github",
+    "name": "delmsg",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.3",
+    "description": "拓展人行tg撤回消息功能",
+    "classification": [],
+    "filename": "delmsg.js",
+    "fileDir": "/plugins/xmo/delmsg.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "l/znp9hXhwOXBEIqMAWTKCmNeGQ=",
+    "isChatPlugin": true
+  },
   "vWtgXt/brP5ywNfYyHb4KNS72dA=": {
     "type": "github",
     "name": "gemini",
