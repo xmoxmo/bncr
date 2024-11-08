@@ -663,19 +663,17 @@ module.exports = async (s) => {
       if (keyword.slice(0, 7) === '@remsg@') {
         return '@noreply@';
       } else {
-        let fgf = '';
         if (keyword.includes(':')) {
-          fgf = ':';
-          await getkey(fgf, keyword);
+          await getkey(':', keyword);
         }
         if (keyword.includes(' ')) {
-          fgf = ' ';
-          await getkey(fgf, keyword);
+          await getkey(' ', keyword);
         }
-        await getkey(fgf, keyword);
+        await getkey('', keyword);
 
         async function getkey(fgf, keyword) {
           let userkeyword = keyword;
+          let oldkeyword = keyword;
           if (fgf) {
             if (keyword.includes(fgf)) {
               let keywords = keyword.split(fgf);
@@ -687,13 +685,14 @@ module.exports = async (s) => {
               // console.error('正则替换失败:', e);
             }
           }
+          // console.log('key' + '{' + keyword + '}');
+          // console.log('user' + userkeyword);
           let keys = await sysDB.keys();
           keys = await sortArray(keys);
-          await newkeyword(keys, keyword, userkeyword)
+          await newkeyword(keys, keyword, userkeyword, oldkeyword, fgf)
         }
 
-        async function newkeyword(keys, keyword, userkeyword) {
-          let oldkeyword = keyword;
+        async function newkeyword(keys, keyword, userkeyword, oldkeyword, fgf) {
           let newkeyword = '';
           if (keys.length > 0) {
             for (var i = 0; i < keys.length; i++) {
@@ -713,7 +712,13 @@ module.exports = async (s) => {
                   let smatch = '';
                   if (keygjc.includes('*')) {
                     keygjc = keygjc.replace(new RegExp(/\*/,'g'), '');
-                    smatch = keyword.includes(keygjc);
+                    if (fgf) {
+                      smatch = keyword === keygjc;
+                    } else {
+                      if (!keyword.includes(keygjc)) {
+                        smatch = keyword.includes(keygjc);
+                      }
+                    }
                   } else {
                     smatch = oldkeyword === keygjc;
                   }
