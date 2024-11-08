@@ -4,7 +4,7 @@
  * @team xmo
  * @version 0.0.5
  * @description 拓展人行tg撤回消息功能
- * @create_at 2024-11-08 19:27:24
+ * @create_at 2024-11-08 17:36:24
  * @rule ^(\.tgde) ([0-9]+) ([0-9]+)$
  * @rule ^(\.tgde) ([0-9]+)$
  * @priority 1000
