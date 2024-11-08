@@ -507,12 +507,12 @@ module.exports = async (s) => {
       if (sfrom == 'HumanTG') {
         if (botid) {
           if (userId == botid) {
-            return;
+            return null；
           }
         }
         if (botname) {
           if (userName == botname) {
-            return;
+            return null；
           }
         }
       }
@@ -667,19 +667,19 @@ module.exports = async (s) => {
         if (keyword.includes(':')) {
           newreturn = await getkey(':', keyword);
         }
-        console.log(':' + newreturn);
+        console.log('“:”>' + newreturn);
         if (newreturn) {
           return '@noreply@'
         }
         if (keyword.includes(' ')) {
           newreturn = await getkey(' ', keyword);
         }
-        console.log(' ' + newreturn);
+        console.log('“ ”>' + newreturn);
         if (newreturn) {
           return '@noreply@'
         }
         newreturn = await getkey('', keyword);
-        console.log('n' + newreturn);
+        console.log('“n”>' + newreturn);
         if (newreturn) {
           return '@noreply@'
         } else {
@@ -906,7 +906,7 @@ module.exports = async (s) => {
   async function autoreply(info) {
     await s.reply(info);
     if (info.nodelmsg) {
-      return;
+      return null；
     }
     if (humanfrom) {
       const humanfroms = humanfrom.split(',');
