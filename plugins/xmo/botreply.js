@@ -805,7 +805,7 @@ module.exports = async (s) => {
             }
             let nodelmsgs = false;
             if (replydb.includes('@nodel@')) {
-              replydb = replydb.replace(new RegExp('@nodel@','g'), userkeyword);
+              replydb = replydb.replace(new RegExp('@nodel@','g'), '');
               nodelmsgs = true;
             }
             if (replydb.includes('@userkeyword@')) {
