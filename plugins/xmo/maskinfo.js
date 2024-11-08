@@ -2,8 +2,9 @@
  * @author xmo
  * @name maskinfo
  * @team xmo
- * @version 0.0.3
- * @description 伪装消息 (平台) (群组) (用户) (内容) 
+ * @version 0.0.4
+ * @description 伪装消息 (平台) (群组) (好友) (用户) (内容) 
+ * @rule ^伪装消息\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+([\s\S]+)$
  * @rule ^伪装消息\s+(\S+)\s+(\S+)\s+(\S+)\s+([\s\S]+)$
  * @admin true
  * @priority 0
@@ -25,13 +26,26 @@ module.exports = async s => {
   if (groupid == 0) {
     groupid = '0';
   }
-  let userid = s.param(3);
+  let friendid = s.param(3);
+  if (friendid == 0) {
+    friendid = '0';
+  }
+  let userid = s.param(4);
+  let msg = s.param(5);
+  if (!s.param(5)) {
+    friendid = '0';
+    userid = s.param(3);
+    msg = s.param(4);
+  }
   if (userid == 0) {
     userid = '0';
   }
-  let msg = s.param(4);
-  if (groupid == 0 && userid == 0) {
-    s.reply('伪装消息群组和用户不能同时为空');
+  if (groupid == 0 && friendid == 0) {
+    s.reply('伪装消息群组和好友不能同时为空');
+    return;
+  }
+  if (userid == 0) {
+    s.reply('伪装消息用户不能为空');
     return;
   }
   if (!msg) {
@@ -43,6 +57,7 @@ module.exports = async s => {
     msg: msg,
     userId: userid || '0',
     groupId: groupid || '0',
+    friendId: friendid || '0',
   }
   // console.log(msgInfo);
   sysMethod.Adapters(msgInfo, sfrom, 'inlinemask', msgInfo);
