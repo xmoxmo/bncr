@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.2.3
+ * @version 3.2.6
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -37,6 +37,7 @@ const jsonSchema = BncrCreateSchema.object({
   noreplychat: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('聊天设置').setDescription(`禁用聊天模式的适配器，填写数据库中无匹配数据时不再调用"指令关键词"进行额外回复的适配器名称。当聊天模式开关开启时此处才会生效。`).setDefault(['HumanTG']),
   humantg: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('自动撤回').setDescription(`开启将启用自动撤回功能，此功能依赖插件“delmsg.js”请提前下载`).setDefault(false),
+    humanfrom: BncrCreateSchema.string().setTitle('人形平台').setDescription(`填写人形平台名称并设置该平台的botid[set 平台名 botid 人形id]，使用英文“,”分割。`).setDefault('HumanTG'),
     mode: BncrCreateSchema.string().setTitle('模式设置').setDescription('选择合适自己的模式').setEnum(['white', 'black']).setEnumNames(['白名单模式', '黑名单模式']).setDefault('white'),
     modestr: BncrCreateSchema.string().setTitle('生效设置').setDescription(`填写应用上述模式的群id使用英文“,”分割。`).setDefault(''),
     chcmd: BncrCreateSchema.string().setTitle('删除指令').setDescription(`填写删除消息的指令"。`).setDefault('.tgde 2 60'),
@@ -45,7 +46,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '3.2.3';
+const ver = '3.2.6';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -84,6 +85,7 @@ module.exports = async (s) => {
   const nonamearr = ConfigDB.userConfig.nobotname || [];
   const noreplychatarr = ConfigDB.userConfig.noreplychat || [];
   const autodel = ConfigDB.userConfig.humantg.enable || false;
+  const humanfrom = ConfigDB.userConfig.humantg.humanfrom || '';
   const mode = ConfigDB.userConfig.humantg.mode || 'white';
   const modestr = ConfigDB.userConfig.humantg.modestr || '';
   const chcmd = ConfigDB.userConfig.humantg.chcmd || '.tgde 2 60';
@@ -99,6 +101,9 @@ module.exports = async (s) => {
   const commandType = s.param(1);
   const keyword = decodeURIComponent(s.param(2));
   const replyContent = s.param(3);
+  const fromDB = new BncrDB(sfrom);
+  let botname = await fromDB.get('botname') || '';
+  let botid = await fromDB.get('botid') || '';
   let autodelmsg = 'n';
   if (autodel) {
     if (mode === 'white') {
@@ -462,8 +467,6 @@ module.exports = async (s) => {
         keyword = keyword.replace(new RegExp('@group@','g'), '');
       }
     }
-    const naDB = new BncrDB(sfrom);
-    botname = await naDB.get('botname');
     let atbotmsg = '';
     if (botname) {
       if (sfrom === 'qq') {
@@ -502,8 +505,15 @@ module.exports = async (s) => {
       return null;
     } else {
       if (sfrom == 'HumanTG') {
-        if (userName == botname) {
-          return;
+        if (botid) {
+          if (userId == botid) {
+            return;
+          }
+        }
+        if (botname) {
+          if (userName == botname) {
+            return;
+          }
         }
       }
       if (forwardlinechat) {
@@ -793,11 +803,6 @@ module.exports = async (s) => {
                 await sysMethod.sleep(5);
               }
             }
-            let nodelmsgs = false;
-            if (replydb.includes('@nodel@')) {
-              replydb = replydb.replace(new RegExp('@nodel@','g'), '');
-              nodelmsgs = true;
-            }
             if (replydb.includes('@userkeyword@')) {
               replydb = replydb.replace(new RegExp('@userkeyword@','g'), userkeyword);
             }
@@ -845,7 +850,6 @@ module.exports = async (s) => {
                 type: replydbtype[0] || 'text',
                 path: replydbtype[1] || '',
                 msg: replymsg,
-                nodelmsg: nodelmsgs,
               });
             }
             if (await s.isAdmin()) {
@@ -869,24 +873,19 @@ module.exports = async (s) => {
   }
   async function autoreply(info) {
     await s.reply(info);
-    // console.log(info.nodelmsg);
-    if (info.nodelmsg) {
-      return;
-    }
-    if (sfrom === "HumanTG") {
-      if (autodelmsg === 'y') {
-        const naDB = new BncrDB(sfrom);
-        const botid = await naDB.get('botid');
-        if (botid) {
-          const userId = botid;
-          const groupId = +s.getGroupId();
-          const msgInfo = {
-            type: 'text',
-            msg: chcmd,
-            userId: userId || '0',
-            groupId: groupId || '0',
+    if (humanfrom) {
+      const humanfroms = humanfrom.split(',');
+      if (humanfroms.indexOf(sfrom) != -1) {
+        if (autodelmsg === 'y') {
+          if (botid) {
+            const msgInfo = {
+              type: 'text',
+              msg: chcmd,
+              userId: botid || '0',
+              groupId: groupId || '0',
+            }
+            sysMethod.Adapters(msgInfo, sfrom, 'inlinemask', msgInfo);
           }
-          sysMethod.Adapters(msgInfo, 'HumanTG', 'inlinemask', msgInfo);
         }
       }
     }
