@@ -2,7 +2,7 @@
  * @author xmo
  * @name cronjobplus
  * @team xmo
- * @version 0.0.8
+ * @version 0.0.9
  * @description 定时任务Plus。
  * @rule ^(初始化定时任务)$
  * @admin true
@@ -14,7 +14,7 @@
 
 const jsonSchema = BncrCreateSchema.object({
   basic: BncrCreateSchema.object({
-    enable: BncrCreateSchema.boolean().setTitle('总开关').setDescription(`是否启用`).setDefault(false),
+    enable: BncrCreateSchema.boolean().setTitle('总开关').setDescription(`是否启用定时任务Plus`).setDefault(false),
   }).setTitle('基本设置').setDefault({}),
   maskmsg: BncrCreateSchema.array(BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('启用').setDescription('是否启用').setDefault(true),
@@ -24,6 +24,7 @@ const jsonSchema = BncrCreateSchema.object({
       form: BncrCreateSchema.string().setTitle('伪装平台').setDescription(`输入要伪装的平台`).setDefault(""),
       userid: BncrCreateSchema.string().setTitle('伪装用户').setDescription(`输入要伪装的用户ID`).setDefault(''),
       groupid: BncrCreateSchema.string().setTitle('伪装群组').setDescription(`输入要伪装的群组ID`).setDefault(''),
+      friendid: BncrCreateSchema.string().setTitle('伪装好友').setDescription(`输入要伪装的好友ID(Bot私聊的对方)`).setDefault(''),
       msg: BncrCreateSchema.string().setTitle('命令内容').setDescription(`输入命令或内容`).setDefault(""),
     }),
   })).setTitle('伪装消息').setDefault([]),
@@ -97,6 +98,7 @@ module.exports = async s => {
       msg: msg,
       userId: job.rule.userid || '0',
       groupId: job.rule.groupid || '0',
+      friendId: job.rule.friendid || '0',
     }
     const sfrom = job.rule.form;
     sysMethod.cron.newCron(cron, async () => {
