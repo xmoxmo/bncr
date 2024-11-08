@@ -663,13 +663,28 @@ module.exports = async (s) => {
       if (keyword.slice(0, 7) === '@remsg@') {
         return '@noreply@';
       } else {
+        let newreturn = '';
         if (keyword.includes(':')) {
-          await getkey(':', keyword);
+          newreturn = await getkey(':', keyword);
+        }
+        console.log(':' + newreturn);
+        if (newreturn) {
+          return '@noreply@'
         }
         if (keyword.includes(' ')) {
-          await getkey(' ', keyword);
+          newreturn = await getkey(' ', keyword);
         }
-        await getkey('', keyword);
+        console.log(' ' + newreturn);
+        if (newreturn) {
+          return '@noreply@'
+        }
+        newreturn = await getkey('', keyword);
+        console.log('n' + newreturn);
+        if (newreturn) {
+          return '@noreply@'
+        } else {
+          return null;
+        }
 
         async function getkey(fgf, keyword) {
           let userkeyword = keyword;
@@ -689,7 +704,7 @@ module.exports = async (s) => {
           // console.log('user' + userkeyword);
           let keys = await sysDB.keys();
           keys = await sortArray(keys);
-          await newkeyword(keys, keyword, userkeyword, oldkeyword, fgf)
+          return await newkeyword(keys, keyword, userkeyword, oldkeyword, fgf);
         }
 
         async function newkeyword(keys, keyword, userkeyword, oldkeyword, fgf) {
@@ -715,9 +730,7 @@ module.exports = async (s) => {
                     if (fgf) {
                       smatch = keyword === keygjc;
                     } else {
-                      if (!keyword.includes(keygjc)) {
-                        smatch = keyword.includes(keygjc);
-                      }
+                      smatch = keyword.includes(keygjc);
                     }
                   } else {
                     smatch = oldkeyword === keygjc;
