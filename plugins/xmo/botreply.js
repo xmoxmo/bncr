@@ -667,19 +667,19 @@ module.exports = async (s) => {
         if (keyword.includes(':')) {
           newreturn = await getkey(':', keyword);
         }
-        console.log('“:”>' + newreturn);
+        // console.log('“:”>' + newreturn);
         if (newreturn) {
           return '@noreply@'
         }
         if (keyword.includes(' ')) {
           newreturn = await getkey(' ', keyword);
         }
-        console.log('“ ”>' + newreturn);
+        // console.log('“ ”>' + newreturn);
         if (newreturn) {
           return '@noreply@'
         }
         newreturn = await getkey('', keyword);
-        console.log('“n”>' + newreturn);
+        // console.log('“n”>' + newreturn);
         if (newreturn) {
           return '@noreply@'
         } else {
