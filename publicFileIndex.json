@@ -203,7 +203,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "3.2.2",
+    "version": "3.2.6",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
@@ -291,7 +291,7 @@
     "name": "delmsg",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "拓展人行tg撤回消息功能",
     "classification": [],
     "filename": "delmsg.js",
