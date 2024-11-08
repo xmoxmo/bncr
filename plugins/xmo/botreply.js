@@ -660,105 +660,113 @@ module.exports = async (s) => {
       if (keyword.includes('　')) {
         keyword = keyword.replace(new RegExp('　','g'), ' ');
       }
-      let oldkeyword = keyword;
-      let userkeyword = keyword;
-      let newkeyword = '';
       if (keyword.slice(0, 7) === '@remsg@') {
         return '@noreply@';
       } else {
         let fgf = '';
         if (keyword.includes(':')) {
           fgf = ':';
-        } else if (keyword.includes(' ')) {
-          fgf = ' ';
-        } else {
-          fgf = '';
+          await getkey(fgf, keyword);
         }
-        if (fgf) {
-          if (keyword.includes(fgf)) {
-            let keywords = keyword.split(fgf);
-            keyword = keywords[0] + fgf;
+        if (keyword.includes(' ')) {
+          fgf = ' ';
+          await getkey(fgf, keyword);
+        }
+        await getkey(fgf, keyword);
+
+        async function getkey(fgf, keyword) {
+          let userkeyword = keyword;
+          if (fgf) {
+            if (keyword.includes(fgf)) {
+              let keywords = keyword.split(fgf);
+              keyword = keywords[0] + fgf;
+            }
             try {
               userkeyword = userkeyword.replace(new RegExp(`${keyword}`,'g'), '');
             } catch (e) {
               // console.error('正则替换失败:', e);
             }
           }
+          let keys = await sysDB.keys();
+          keys = await sortArray(keys);
+          await newkeyword(keys, keyword, userkeyword)
         }
-        let keys = await sysDB.keys();
-        keys = await sortArray(keys);
-        if (keys.length > 0) {
-          for (var i = 0; i < keys.length; i++) {
-            let str = keys[i];
-            let keygjc = '';
-            let keydyy = '';
-            if (str.includes('|@|')) {
-              let strarr = str.split('|@|');
-              keygjc = strarr[0];
-              keydyy = strarr[1];
-            } else {
-              keygjc = str;
-              keydyy = '';
-            }
-            let userkeyword = '';
-            if (keygjc) {
-              if (groupId && groupId !== '0') {
-                let smatch = '';
-                if (keygjc.includes('*')) {
-                  keygjc = keygjc.replace(new RegExp(/\*/,'g'), '');
-                  smatch = keyword.includes(keygjc);
-                } else {
-                  smatch = oldkeyword === keygjc;
-                }
-                if (smatch) {
-                  if (!keydyy) {
-                    keydyy = groupId;
-                  }
-                  if (keydyy.includes(groupId)) {
-                    let keydyyarr = keydyy.split('|');
-                    if (keydyyarr.indexOf(groupId) != -1) {
-                      keyword = keys[i];
-                      break;
-                    }
+
+        async function newkeyword(keys, keyword, userkeyword) {
+          let oldkeyword = keyword;
+          let newkeyword = '';
+          if (keys.length > 0) {
+            for (var i = 0; i < keys.length; i++) {
+              let str = keys[i];
+              let keygjc = '';
+              let keydyy = '';
+              if (str.includes('|@|')) {
+                let strarr = str.split('|@|');
+                keygjc = strarr[0];
+                keydyy = strarr[1];
+              } else {
+                keygjc = str;
+                keydyy = '';
+              }
+              if (keygjc) {
+                if (groupId && groupId !== '0') {
+                  let smatch = '';
+                  if (keygjc.includes('*')) {
+                    keygjc = keygjc.replace(new RegExp(/\*/,'g'), '');
+                    smatch = keyword.includes(keygjc);
                   } else {
-                    let getgroup = await sysDB.get(`${keydyy}@group@|@|0`);
-                    if (getgroup) {
-                      let getgrouparr = getgroup.split('|');
-                      if (getgrouparr.indexOf(groupId) != -1) {
+                    smatch = oldkeyword === keygjc;
+                  }
+                  if (smatch) {
+                    if (!keydyy) {
+                      keydyy = groupId;
+                    }
+                    if (keydyy.includes(groupId)) {
+                      let keydyyarr = keydyy.split('|');
+                      if (keydyyarr.indexOf(groupId) != -1) {
                         keyword = keys[i];
                         break;
                       }
+                    } else {
+                      let getgroup = await sysDB.get(`${keydyy}@group@|@|0`);
+                      if (getgroup) {
+                        let getgrouparr = getgroup.split('|');
+                        if (getgrouparr.indexOf(groupId) != -1) {
+                          keyword = keys[i];
+                          break;
+                        }
+                      }
                     }
                   }
-                }
-              } else {
-                if (keygjc.includes('*')) {
-                  keygjc = keygjc.replace(new RegExp(/\*/,'g'), '');
-                  if (keyword === keygjc) {
-                    newkeyword += `|@@|${keys[i]}`;
-                    // break;
-                  }
                 } else {
-                  if (oldkeyword === keygjc) {
-                    newkeyword += `|@@|${keys[i]}`;
-                    // break;
+                  if (keygjc.includes('*')) {
+                    keygjc = keygjc.replace(new RegExp(/\*/,'g'), '');
+                    if (keyword === keygjc) {
+                      newkeyword += `|@@|${keys[i]}`;
+                      // break;
+                    }
+                  } else {
+                    if (oldkeyword === keygjc) {
+                      newkeyword += `|@@|${keys[i]}`;
+                      // break;
+                    }
                   }
                 }
               }
             }
           }
-        }
-        if (newkeyword) {
-          keyword = newkeyword.slice(4);
-        }
-        if (keyword.includes('|@@|')) {
-          let keywords = keyword.split('|@@|');
-          for (var k = 0; k < keywords.length; k++) {
-            await funreplydb(keywords[k], userkeyword);
+          if (newkeyword) {
+            keyword = newkeyword.slice(4);
           }
-          return '@noreply@';
-        } else {
-          return await funreplydb(keyword, userkeyword);
+          if (keyword.includes('|@@|')) {
+            let keywords = keyword.split('|@@|');
+            for (var k = 0; k < keywords.length; k++) {
+              await funreplydb(keywords[k], userkeyword);
+            }
+            return '@noreply@';
+          } else {
+            return await funreplydb(keyword, userkeyword);
+          }
         }
 
         async function funreplydb(keyword, userkeyword) {
