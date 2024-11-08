@@ -803,6 +803,11 @@ module.exports = async (s) => {
                 await sysMethod.sleep(5);
               }
             }
+            let nodelmsgs = false;
+            if (replydb.includes('@nodel@')) {
+              replydb = replydb.replace(new RegExp('@nodel@','g'), userkeyword);
+              nodelmsgs = true;
+            }
             if (replydb.includes('@userkeyword@')) {
               replydb = replydb.replace(new RegExp('@userkeyword@','g'), userkeyword);
             }
@@ -850,6 +855,7 @@ module.exports = async (s) => {
                 type: replydbtype[0] || 'text',
                 path: replydbtype[1] || '',
                 msg: replymsg,
+                nodelmsg: nodelmsgs || false,
               });
             }
             if (await s.isAdmin()) {
@@ -873,6 +879,9 @@ module.exports = async (s) => {
   }
   async function autoreply(info) {
     await s.reply(info);
+    if (info.nodelmsg) {
+      return;
+    }
     if (humanfrom) {
       const humanfroms = humanfrom.split(',');
       if (humanfroms.indexOf(sfrom) != -1) {
