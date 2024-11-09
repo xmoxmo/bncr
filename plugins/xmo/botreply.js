@@ -912,7 +912,7 @@ module.exports = async (s) => {
                 dbmsg = replydbones[4];
                 const msgInfo = {
                   type: 'text',
-                  msg: dbmsg,
+                  msg: dbmsg.replaceAll('\\n', '\n'),
                   userId: dbuserid || '0',
                   groupId: dbgroupid || '0',
                   friendId: dbfriendid || '0',
@@ -921,7 +921,7 @@ module.exports = async (s) => {
               } 
             } else if (replydb.slice(0, 10) === '@admincmd@') { //管理命令
               replydb = replydb.slice(10);
-              sysMethod.inline(replydb);
+              sysMethod.inline(replydb.replaceAll('\\n', '\n'));
             } else if (replydb.slice(0, 11) === '@adminpush@') { //管理推送
               replydbones = '';
               dbsfrom ='';
@@ -941,7 +941,7 @@ module.exports = async (s) => {
                 }
                 sysMethod.pushAdmin({
                   platform: dbsfroms || [],
-                  msg: dbmsg,
+                  msg: dbmsg.replaceAll('\\n', '\n'),
                   type: dbtype || 'text',
                   path: dbpath || '',
                 });
@@ -971,7 +971,7 @@ module.exports = async (s) => {
                   platform: dbsfroms || [],
                   groupId: dbgroupid,
                   userId: dbuserid,
-                  msg: dbmsg,
+                  msg: dbmsg.replaceAll('\\n', '\n'),
                   type: dbtype || 'text',
                   path: dbpath || '',
                 });
