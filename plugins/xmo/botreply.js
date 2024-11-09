@@ -102,6 +102,7 @@ module.exports = async (s) => {
   const keyword = decodeURIComponent(s.param(2));
   const replyContent = s.param(3);
   const fromDB = new BncrDB(sfrom);
+  const ones = '@ones@';
   let botname = await fromDB.get('botname') || '';
   let botid = await fromDB.get('botid') || '';
   let autodelmsg = 'n';
@@ -279,10 +280,10 @@ module.exports = async (s) => {
     if (!keyword) return 'next';
     let getlastmsg = await sysDB.get('@botreplylastmsg@');
     let nowmsginfo = `${sfrom}/${groupId}@${userId}:${keyword}`;
-    let nowmsg = `${getTime}|${nowmsginfo}`;
+    let nowmsg = `${getTime}${ones}${nowmsginfo}`;
     if (getlastmsg) {
-      if (getlastmsg.includes('|')) {
-        let getlastmsgs = getlastmsg.split('|');
+      if (getlastmsg.includes(ones)) {
+        let getlastmsgs = getlastmsg.split(ones);
         msgstamp = getlastmsgs[0];
         msginfo = getlastmsgs[1];
         let lag = Number(getTime) - Number(msgstamp);
@@ -318,8 +319,8 @@ module.exports = async (s) => {
     }
     let keyblacklist = await sysDB.get('@keyblacklist@');
     if (keyblacklist) {
-      if (keyblacklist.includes('|')) {
-        let keyblacklists = keyblacklist.split('|');
+      if (keyblacklist.includes(ones)) {
+        let keyblacklists = keyblacklist.split(ones);
         for (var k = 0; k < keyblacklists.length; k++) {
           let str = keyblacklists[k];
           if (str === '*') {
@@ -348,8 +349,8 @@ module.exports = async (s) => {
     }
     let userblacklist = await sysDB.get('@userblacklist@');
     if (userblacklist) {
-      if (userblacklist.includes('|')) {
-        let userblacklists = userblacklist.split('|');
+      if (userblacklist.includes(ones)) {
+        let userblacklists = userblacklist.split(ones);
         if (userblacklists.indexOf(userId) != -1) {
           return 'next';
         }
@@ -361,8 +362,8 @@ module.exports = async (s) => {
     } else {
       let userwhitelist = await sysDB.get('@userwhitelist@');
       if (userwhitelist) {
-        if (userwhitelist.includes('|')) {
-          let userwhitelists = userwhitelist.split('|');
+        if (userwhitelist.includes(ones)) {
+          let userwhitelists = userwhitelist.split(ones);
           if (userwhitelists.indexOf(userId) == -1) {
             return 'next';
           }
@@ -376,8 +377,8 @@ module.exports = async (s) => {
     if (!groupId || groupId === '0') {
       let oneblacklist = await sysDB.get('@oneblacklist@');
       if (oneblacklist) {
-        if (oneblacklist.includes('|')) {
-          let oneblacklists = oneblacklist.split('|');
+        if (oneblacklist.includes(ones)) {
+          let oneblacklists = oneblacklist.split(ones);
           if (oneblacklists.indexOf(userId) != -1) {
             return 'next';
           }
@@ -389,8 +390,8 @@ module.exports = async (s) => {
       } else {
         let onewhitelist = await sysDB.get('@onewhitelist@');
         if (onewhitelist) {
-          if (onewhitelist.includes('|')) {
-            let onewhitelists = onewhitelist.split('|');
+          if (onewhitelist.includes(ones)) {
+            let onewhitelists = onewhitelist.split(ones);
             if (onewhitelists.indexOf(userId) == -1) {
               return 'next';
             }
@@ -404,8 +405,8 @@ module.exports = async (s) => {
     } else {
       let groupblacklist = await sysDB.get('@groupblacklist@');
       if (groupblacklist) {
-        if (groupblacklist.includes('|')) {
-          let groupblacklists = groupblacklist.split('|');
+        if (groupblacklist.includes(ones)) {
+          let groupblacklists = groupblacklist.split(ones);
           if (groupblacklists.indexOf(groupId) != -1) {
             return 'next';
           }
@@ -417,8 +418,8 @@ module.exports = async (s) => {
       } else {
         let groupwhitelist = await sysDB.get('@groupwhitelist@');
         if (groupwhitelist) {
-          if (groupwhitelist.includes('|')) {
-            let groupwhitelists = groupwhitelist.split('|');
+          if (groupwhitelist.includes(ones)) {
+            let groupwhitelists = groupwhitelist.split(ones);
             if (groupwhitelists.indexOf(groupId) == -1) {
               return 'next';
             }
@@ -740,7 +741,7 @@ module.exports = async (s) => {
                       keydyy = groupId;
                     }
                     if (keydyy.includes(groupId)) {
-                      let keydyyarr = keydyy.split('|');
+                      let keydyyarr = keydyy.split(ones);
                       if (keydyyarr.indexOf(groupId) != -1) {
                         keyword = keys[i];
                         break;
@@ -748,7 +749,7 @@ module.exports = async (s) => {
                     } else {
                       let getgroup = await sysDB.get(`${keydyy}@group@|@|0`);
                       if (getgroup) {
-                        let getgrouparr = getgroup.split('|');
+                        let getgrouparr = getgroup.split(ones);
                         if (getgrouparr.indexOf(groupId) != -1) {
                           keyword = keys[i];
                           break;
