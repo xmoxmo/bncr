@@ -16,6 +16,13 @@
  * @disable false
  */
 
+ /*
+ 伪装消息参数格式：平台@ones@群组ID@ones@好友ID@ones@用户ID@ones@消息
+ 管理命令参数格式：平台@ones@命令
+ 管理推送参数格式：平台@ones@消息@ones@类型@ones@路径
+ 用户推送参数格式：平台@ones@群组ID@ones@用户ID@ones@消息@ones@类型@ones@路径
+ */
+
 const jsonSchema = BncrCreateSchema.object({
   basic: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('指令开关').setDescription(`开启将启用匹配其他插件指令，开启并填写指令关键词后生效。`).setDefault(true),
@@ -102,6 +109,8 @@ module.exports = async (s) => {
   const keyword = decodeURIComponent(s.param(2));
   const replyContent = s.param(3);
   const fromDB = new BncrDB(sfrom);
+  const nowDate = sysMethod.getTime('yyyy-MM-dd');
+  const nowTime = sysMethod.getTime('hh:mm:ss');
   const ones = '@ones@';
   let botname = await fromDB.get('botname') || '';
   let botid = await fromDB.get('botid') || '';
@@ -859,6 +868,20 @@ module.exports = async (s) => {
             if (replydb.includes('@groupname@')) {
               replydb = replydb.replace(new RegExp('@groupname@','g'), groupName);
             }
+            if (replydb.includes('@nowdate@')) {
+              replydb = replydb.replace(new RegExp('@nowdate@','g'), nowDate);
+            }
+            if (replydb.includes('@nowtime@')) {
+              replydb = replydb.replace(new RegExp('@nowtime@','g'), nowTime);
+            }
+            let replydbones = '';
+            let dbsfrom ='';
+            let dbgroupid = '';
+            let dbfriendid = '';
+            let dbuserid = '';
+            let dbmsg = '';
+            let dbtype = '';
+            let dbpath = '';
             if (replydb.slice(0, 7) === '@remsg@') {
               replydb = replydb.slice(7);
               if (replydb.includes('@chatcom@')) {
@@ -869,6 +892,90 @@ module.exports = async (s) => {
               } else {
                 s.inlineSugar(replydb);
               }
+            } else if (replydb.slice(0, 6) === '@mask@') { //伪装消息
+              replydbones = '';
+              dbsfrom ='';
+              dbgroupid = '';
+              dbfriendid = '';
+              dbuserid = '';
+              dbmsg = '';
+              replydb = replydb.slice(6);
+              if (replydb.includes('@ones@')) {
+                replydbones = replydb.split('@ones@');
+                dbsfrom = replydbones[0];
+                if (dbsfrom == 0) {
+                  dbsfrom = sfrom;
+                }
+                dbgroupid = replydbones[1];
+                dbfriendid = replydbones[2];
+                dbuserid = replydbones[3];
+                dbmsg = replydbones[4];
+                const msgInfo = {
+                  type: 'text',
+                  msg: dbmsg,
+                  userId: dbuserid || '0',
+                  groupId: dbgroupid || '0',
+                  friendId: dbfriendid || '0',
+                }
+                sysMethod.Adapters(msgInfo, sfrom, 'inlinemask', msgInfo);
+              } 
+            } else if (replydb.slice(0, 10) === '@admincmd@') { //管理命令
+              replydb = replydb.slice(10);
+              sysMethod.inline(replydb);
+            } else if (replydb.slice(0, 11) === '@adminpush@') { //管理推送
+              replydbones = '';
+              dbsfrom ='';
+              dbmsg = '';
+              dbtype = '';
+              dbpath = '';
+              replydb = replydb.slice(11);
+              if (replydb.includes('@ones@')) {
+                replydbones = replydb.split('@ones@');
+                dbsfrom = replydbones[0];
+                dbmsg = replydbones[1];
+                dbtype = replydbones[2];
+                dbpath = replydbones[3];
+                let dbsfroms = '';
+                if (dbsfrom) {
+                  dbsfroms = dbsfrom.split(",");
+                }
+                sysMethod.pushAdmin({
+                  platform: dbsfroms || [],
+                  msg: dbmsg,
+                  type: dbtype || 'text',
+                  path: dbpath || '',
+                });
+              }
+            } else if (replydb.slice(0, 10) === '@userpush@') { //用户推送
+              replydbones = '';
+              dbsfrom ='';
+              dbgroupid = '';
+              dbuserid = '';
+              dbmsg = '';
+              dbtype = '';
+              dbpath = '';
+              replydb = replydb.slice(10);
+              if (replydb.includes('@ones@')) {
+                replydbones = replydb.split('@ones@');
+                dbsfrom = replydbones[0];
+                dbgroupid = replydbones[1];
+                dbuserid = replydbones[2];
+                dbmsg = replydbones[3];
+                dbtype = replydbones[4];
+                dbpath = replydbones[5];
+                let dbsfroms = '';
+                if (dbsfrom) {
+                  dbsfroms = dbsfrom.split(",");
+                }
+                sysMethod.push({
+                  platform: dbsfroms || [],
+                  groupId: dbgroupid,
+                  userId: dbuserid,
+                  msg: dbmsg,
+                  type: dbtype || 'text',
+                  path: dbpath || '',
+                });
+              } 
             } else {
               let replydbtype = '';
               let replymsg = '';
