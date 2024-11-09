@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.3.1
+ * @version 3.3.2
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -17,10 +17,10 @@
  */
 
  /*
- 伪装消息参数格式：平台@ones@群组ID@ones@好友ID@ones@用户ID@ones@消息
- 管理命令参数格式：平台@ones@命令
- 管理推送参数格式：平台@ones@消息@ones@类型@ones@路径
- 用户推送参数格式：平台@ones@群组ID@ones@用户ID@ones@消息@ones@类型@ones@路径
+ 伪装消息参数格式：@mask@平台@ones@群组ID@ones@好友ID@ones@用户ID@ones@消息
+ 管理命令参数格式：@admincmd@平台@ones@命令
+ 管理推送参数格式：@adminpush@平台@ones@消息@ones@类型@ones@路径
+ 用户推送参数格式：@userpush@平台@ones@群组ID@ones@用户ID@ones@消息@ones@类型@ones@路径
  */
 
 const jsonSchema = BncrCreateSchema.object({
@@ -53,7 +53,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '3.3.1';
+const ver = '3.3.2';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
