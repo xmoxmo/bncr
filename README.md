@@ -18,7 +18,7 @@
 
     1、群组内任何人发言包含关键词，调用关键词信息回复，如果@机器人则Ai回复
     2、关键词可设置仅特定群组生效。
-        botreply 关键词|@|群id[多个用|连接，可省略、省略将所有有权限群响应] 回复内容
+        botreply 关键词|@|群id[多个用@ones@连接，可省略、省略将所有有权限群响应] 回复内容
         botreply @keyblacklist@ 关键词 //关键词黑名单
         botreply @groupblacklist@ 群id //群黑名单
         botreply @groupwhitelist@ 群id //群白名单
@@ -68,10 +68,10 @@
      > botreply 测试 这是一条测试消息
      
      关键词回复并重定向调用任意插件内容回复（示例中调用60s插件），响应|@|之后的指定群，其他群不响应
-     > botreply 新闻|@|群id|群id2 @remsg@60s
+     > botreply 新闻|@|群id@ones@群id2 @remsg@60s
      
      关键词回复并重定向调用Ai回复，响应|@|之后的指定群，其他群不响应
-     > botreply 绿萝|@|群id|群id2 @remsg@aigitv2 用简短的语言介绍下家里养绿萝有什么好处
+     > botreply 绿萝|@|群id@ones@群id2 @remsg@aigitv2 用简短的语言介绍下家里养绿萝有什么好处
 
      管理员获取wechaty用户或群组id
      > botreply wxid:* @remsg@eval Buffer.from('@userkeyword@', 'utf-8').toString('hex')@admin@
