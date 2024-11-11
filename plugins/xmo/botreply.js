@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.3.2
+ * @version 3.3.3
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -17,10 +17,44 @@
  */
 
  /*
- 伪装消息参数格式：@mask@平台@ones@群组ID@ones@好友ID@ones@用户ID@ones@消息
- 管理命令参数格式：@admincmd@平台@ones@命令
- 管理推送参数格式：@adminpush@平台@ones@消息@ones@类型@ones@路径
- 用户推送参数格式：@userpush@平台@ones@群组ID@ones@用户ID@ones@消息@ones@类型@ones@路径
+ 功能介绍：
+   关键词重定向参数格式：@remsg@重定向后的关键词
+   伪装消息参数格式：@mask@平台@ones@群组ID@ones@好友ID@ones@用户ID@ones@消息
+   管理命令参数格式：@admincmd@平台@ones@命令
+   管理推送参数格式：@adminpush@平台@ones@消息@ones@类型@ones@路径
+   用户推送参数格式：@userpush@平台@ones@群组ID@ones@用户ID@ones@消息@ones@类型@ones@路径
+ 基本指令：
+   botreply 关键词 回复内容         //向数据库中添加新的回复[关键词内不应该有空格，若必须设置半角空格用“%20”全角空格用“%E3%80%80”代替进行设置]
+   botreply list                   //数据库中关键词列表
+   botreply empty                  //清空所有关键词
+   botreply upkey 旧key|>>|新key   //更新key，回复内容不变
+ 黑白名单：
+   @keyblacklist@                       //key黑名单
+   @groupblacklist@ @groupwhitelist@    //群组黑白名单，选择一个使用，两个同时存在只生效黑名单
+   @userblacklist@ @userwhitelist@      //用户黑白名单，选择一个使用，两个同时存在只生效黑名单
+   @oneblacklist@ @onewhitelist@        //私聊黑白名单，选择一个使用，两个同时存在只生效黑名单
+ 传参指令：
+   @remsg@        //重定向标识符
+   @mask@         //伪装消息标识符
+   @admincmd@     //管理命令标识符
+   @adminpush@    //管理推送标识符
+   @userpush@     //用户推送标识符
+   @chatcom@      //关键词标识符
+   @ones@         //通用分隔符
+   @type@         //文件类型分隔符，发送文件类型不为text时使用此标识符分割
+   |@@|           //多条回复内容分割标识符
+   @sfrom@        //平台
+   @groupid@      //群组id
+   @userid@       //用户id
+   @admin@        //管理员权限
+   @msgself@      //消息内容
+   @msgid@        //消息id
+   @groupname@    //群组名称
+   @username@     //用户名称
+   @nowdate@      //当前日期
+   @nowtime@      //当前时间
+ 示例：
+   参照：https://github.com/xmoxmo/bncr
  */
 
 const jsonSchema = BncrCreateSchema.object({
@@ -53,7 +87,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '3.3.2';
+const ver = '3.3.3';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
