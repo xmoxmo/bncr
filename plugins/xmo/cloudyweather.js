@@ -62,6 +62,8 @@ module.exports = async s => {
   sbody = await get(apiurl);
   if (sbody.infocode != "10000") {
     console.log(`高德API接口异常：\n${sbody}`);
+    s.reply(`高德API接口异常,检查key是否有效或key的“绑定服务”是否为“web服务”`);
+    return;
   } else {
     let geocodes = sbody.geocodes || [];
     for (const geocode of geocodes) {
@@ -88,6 +90,12 @@ module.exports = async s => {
   }
   // console.log(locinfos_add);
   // console.log(locinfos);
+    
+  if (!locinfo.location) {
+    console.log(`转换地址为经纬度失败，插件即将退出`);
+    s.reply(`高德转换地址为经纬度失败，插件即将退出`);
+    return;
+  }
 
   if (locinfos.length == 1) {
     locinfo = locinfos[0];
@@ -116,11 +124,6 @@ module.exports = async s => {
     locinfo = locinfos[selectcode.getMsg() - 1];
   }
   // console.log(locinfo);
-  
-  if (!locinfo.location || locinfo.location == '多地址请选择序号继续(q退出)：') {
-    console.log(`转换地址为经纬度失败，插件即将退出`);
-    return;
-  }
 
   // 彩云天气API
   apiurl = `https://api.caiyunapp.com/v2.6/${caiyuntoken}/${locinfo.location}/weather?alert=true&dailysteps=1&hourlysteps=24`;
@@ -128,6 +131,8 @@ module.exports = async s => {
   // console.log(sbody);
   if (sbody.status != "ok") {
     console.log(`彩云天气API接口异常：\n${sbody}`);
+    s.reply(`彩云天气API接口异常,请检查key是否正确”`);
+    return;
   } else {
     const wcode = ['CLEAR_DAY','CLEAR_NIGHT','PARTLY_CLOUDY_DAY','PARTLY_CLOUDY_NIGHT','CLOUDY','LIGHT_HAZE','MODERATE_HAZE','HEAVY_HAZE','LIGHT_RAIN','MODERATE_RAIN','HEAVY_RAIN','STORM_RAIN','FOG','LIGHT_SNOW','MODERATE_SNOW','HEAVY_SNOW','STORM_SNOW','DUST','SAND','WIND'];
     const wdesc = ['晴（白天）','晴（夜间）','多云（白天）','多云（夜间）','阴','轻度雾霾','中度雾霾','重度雾霾','小雨','中雨','大雨','暴雨','雾','小雪','中雪','大雪','暴雪','浮尘','沙尘','大风'];
