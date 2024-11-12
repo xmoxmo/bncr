@@ -2,7 +2,7 @@
  * @author xmo
  * @name delmsg
  * @team xmo
- * @version 0.0.5
+ * @version 0.0.6
  * @description 拓展人行tg撤回消息功能
  * @create_at 2024-11-08 17:36:24
  * @rule ^(\.tgde) ([0-9]+) ([0-9]+)$
@@ -23,7 +23,9 @@ module.exports = async s => {
   let num = +s.param(2);
   let delay = +s.param(3) || 1;
   let info = '';
-  info= await s.Bridge.getUserMsgId(ChatID, s.getUserId(), num);
-  info.length && s.delMsg(...info, { wait: delay });
+  info = await s.Bridge.getUserMsgId(ChatID, s.getUserId(), num);
+  if (info) {
+    info.length && s.delMsg(...info, { wait: delay });
+  }
   return;
 };
