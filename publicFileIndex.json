@@ -5,7 +5,7 @@
     "name": "HumanTG",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Telegarm人行适配器",
     "classification": [
       "官方适配器"
@@ -203,7 +203,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "3.3.5",
+    "version": "3.3.6",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
