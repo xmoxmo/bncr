@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.3.5
+ * @version 3.3.6
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -56,6 +56,7 @@
    @userkeyword@  //消息内容(剔除模糊匹配词)
    @nodel@        //持久消息(不受自动删除的约束)
    @delayN@       //延时发送秒数(N改为整数)
+   @nochat@       //禁止创建回复路径
  示例：
    参照：https://github.com/xmoxmo/bncr
  */
@@ -91,7 +92,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.3.5';
+const ver = '3.3.6';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -912,6 +913,11 @@ module.exports = async (s) => {
             if (replydb.includes('@nowtime@')) {
               replydb = replydb.replace(new RegExp('@nowtime@','g'), nowTime);
             }
+            let onchat = 1;
+            if (replydb.includes('@nochat@')) {
+              replydb = replydb.replace(new RegExp('@nochat@','g'), '');
+              onchat = 0;
+            }
             let replydbones = '';
             let dbsfrom ='';
             let dbgroupid = '';
@@ -920,6 +926,9 @@ module.exports = async (s) => {
             let dbmsg = '';
             let dbtype = '';
             let dbpath = '';
+            let chatdb = '';
+            let setdbmsg = '';
+            let olddbmsg = '';
             if (replydb.slice(0, 7) === '@remsg@') {
               replydb = replydb.slice(7);
               if (replydb.includes('@chatcom@')) {
@@ -983,6 +992,24 @@ module.exports = async (s) => {
                   type: dbtype || 'text',
                   path: dbpath || '',
                 });
+                if (msgSelf.slice(0, 2) !== '对话') {
+                  if (onchat) {
+                    chatdb = await sysDB.get(`对话${userId} *`);
+                    if (groupId && groupId !== '0') {
+                      setdbmsg = `@userpush@${sfrom}@ones@${groupId}@ones@0@ones@于时间{@nowdate@ @nowtime@}收到来自管理员发给{${userName}}的消息:\n@userkeyword@|@@|消息{@userkeyword@}推送给用户{${userName}}成功@delay2@`;
+                    } else {
+                      setdbmsg = `@userpush@${sfrom}@ones@0@ones@${userId}@ones@于时间{@nowdate@ @nowtime@}收到来自管理员发给{${userName}}的消息:\n@userkeyword@|@@|消息{@userkeyword@}推送给用户{${userName}}成功@delay2@`;
+                    }
+                    if (!chatdb) {
+                      await sysDB.set(`对话${userId} *`, setdbmsg);
+                    } else {
+                      const olddbmsg = await sysDB.get(`对话${userId} *`);
+                      if (setdbmsg !== olddbmsg) {
+                        await sysDB.set(`对话${userId} *`, setdbmsg);
+                      }
+                    }
+                  }
+                }
               }
             } else if (replydb.slice(0, 10) === '@userpush@') { //用户推送
               replydbones = '';
@@ -1013,7 +1040,25 @@ module.exports = async (s) => {
                   type: dbtype || 'text',
                   path: dbpath || '',
                 });
-              } 
+                if (msgSelf.slice(0, 2) !== '对话') {
+                  if (onchat) {
+                    chatdb = await sysDB.get(`对话${userId} *`);
+                    if (groupId && groupId !== '0') {
+                      setdbmsg = `@userpush@${sfrom}@ones@${groupId}@ones@0@ones@于时间{@nowdate@ @nowtime@}收到发给{${userName}}的消息:\n@userkeyword@|@@|消息{@userkeyword@}推送给用户{${userName}}成功@delay2@`;
+                    } else {
+                      setdbmsg = `@userpush@${sfrom}@ones@0@ones@${userId}@ones@于时间{@nowdate@ @nowtime@}收到发给{${userName}}的消息:\n@userkeyword@|@@|消息{@userkeyword@}推送给用户{${userName}}成功@delay2@`;
+                    }
+                    if (!chatdb) {
+                      await sysDB.set(`对话${userId} *`, setdbmsg);
+                    } else {
+                      const olddbmsg = await sysDB.get(`对话${userId} *`);
+                      if (setdbmsg !== olddbmsg) {
+                        await sysDB.set(`对话${userId} *`, setdbmsg);
+                      }
+                    }
+                  }
+                }
+              }
             } else {
               let replydbtype = '';
               let replymsg = '';
