@@ -60,6 +60,9 @@
        @username@ 用户名称
        @nowdate@ 当前日期
        @nowtime@ 当前时间
+       @userkeyword@ 消息内容(剔除模糊匹配词)
+       @nodel@ 持久消息(不受自动删除的约束)
+       @delayN@ 延时发送秒数(N改为整数)
        
 
 **示例**
