@@ -2,7 +2,7 @@
  * @author xmo
  * @name botaudit
  * @team xmo
- * @version 1.4.4
+ * @version 1.4.5
  * @description 黑名单模式按平台、群组、用户屏蔽关键词响应。
  * @rule ^(botaudit)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botaudit)\s+(\S+)\s+(del)$
@@ -25,7 +25,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '1.4.4';
+const ver = '1.4.5';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -203,7 +203,7 @@ module.exports = async (s) => {
         msgstamp = getlastmsgs[0];
         msginfo = getlastmsgs[1];
         let lag = Number(getTime) - Number(msgstamp);
-        if (Number(lag) < 200) {
+        if (Number(lag) < 30) {
           if (nowmsginfo === msginfo) {
             sysMethod.pushAdmin({
               platform: [`${sfrom}`],
