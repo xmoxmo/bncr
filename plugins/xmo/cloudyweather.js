@@ -2,7 +2,7 @@
  * @author xmo
  * @name cloudyweather
  * @team xmo
- * @version 0.1.1
+ * @version 0.1.2
  * @description 彩云查天气
  * @rule ^彩云天气 ([\s\S]+)$
  * @admin false
@@ -91,12 +91,6 @@ module.exports = async s => {
   // console.log(locinfos_add);
   // console.log(locinfos);
     
-  if (!locinfo.location) {
-    console.log(`转换地址为经纬度失败，插件即将退出`);
-    s.reply(`高德转换地址为经纬度失败，插件即将退出`);
-    return;
-  }
-
   if (locinfos.length == 1) {
     locinfo = locinfos[0];
   } else {
@@ -125,13 +119,19 @@ module.exports = async s => {
   }
   // console.log(locinfo);
 
+  if (!locinfo.location) {
+    console.log(`转换地址为经纬度失败，插件即将退出`);
+    s.reply(`高德转换地址为经纬度失败，插件即将退出`);
+    return;
+  }
+
   // 彩云天气API
   apiurl = `https://api.caiyunapp.com/v2.6/${caiyuntoken}/${locinfo.location}/weather?alert=true&dailysteps=1&hourlysteps=24`;
   sbody = await get(apiurl);
   // console.log(sbody);
   if (sbody.status != "ok") {
     console.log(`彩云天气API接口异常：\n${sbody}`);
-    s.reply(`彩云天气API接口异常,请检查key是否正确”`);
+    s.reply(`彩云天气API接口异常,请检查key是否正确`);
     return;
   } else {
     const wcode = ['CLEAR_DAY','CLEAR_NIGHT','PARTLY_CLOUDY_DAY','PARTLY_CLOUDY_NIGHT','CLOUDY','LIGHT_HAZE','MODERATE_HAZE','HEAVY_HAZE','LIGHT_RAIN','MODERATE_RAIN','HEAVY_RAIN','STORM_RAIN','FOG','LIGHT_SNOW','MODERATE_SNOW','HEAVY_SNOW','STORM_SNOW','DUST','SAND','WIND'];
