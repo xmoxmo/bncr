@@ -2,7 +2,7 @@
  * @author xmo
  * @name cloudyweather
  * @team xmo
- * @version 0.1.2
+ * @version 0.1.3
  * @description 彩云查天气
  * @rule ^彩云天气 ([\s\S]+)$
  * @admin false
@@ -62,7 +62,7 @@ module.exports = async s => {
   sbody = await get(apiurl);
   if (sbody.infocode != "10000") {
     console.log(`高德API接口异常：\n${sbody}`);
-    s.reply(`高德API接口异常,检查key是否有效或key的“绑定服务”是否为“web服务”`);
+    s.reply(`高德API接口异常,检查key是否正确或“绑定服务”是否为“web服务”`);
     return;
   } else {
     let geocodes = sbody.geocodes || [];
