@@ -3,7 +3,7 @@
  * @author Aming
  * @name HumanTG
  * @team xmo
- * @version 1.0.7
+ * @version 1.0.8
  * @description Telegarm人行适配器
  * @adapter true
  * @public true
@@ -134,6 +134,9 @@ module.exports = () => {
     if (!(await HumanTgDb.get('admin'))) {
       HumanTgDb.set('admin', loginUserInfo.id.toString());
     }
+    if (!(await HumanTgDb.get('botid'))) {
+      HumanTgDb.set('botid', loginUserInfo.id.toString());
+    }
 
     // console.log(loginUserInfo);
 
@@ -181,6 +184,12 @@ module.exports = () => {
 
     HumanTG.reply = async function (replyInfo) {
       // console.log('replyInfo',replyInfo);
+      if (replyInfo.userId) {
+        if (replyInfo.userId.includes('&')) {
+          const newuserids = replyInfo.userId.split('&');
+          replyInfo.userId = newuserids[0];
+        }
+      }
       try {
         let sendRes = null,
           sendID = +replyInfo.groupId || +this?.msgInfo?.friendId || +replyInfo.userId;
