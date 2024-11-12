@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.3.3
+ * @version 3.3.4
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -53,6 +53,9 @@
    @username@     //用户名称
    @nowdate@      //当前日期
    @nowtime@      //当前时间
+   @userkeyword@  //消息内容(剔除模糊匹配词)
+   @nodel@        //持久消息(不受自动删除的约束)
+   @delayN@       //延时发送秒数(N改为整数)
  示例：
    参照：https://github.com/xmoxmo/bncr
  */
@@ -78,7 +81,7 @@ const jsonSchema = BncrCreateSchema.object({
   noreplychat: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('聊天设置').setDescription(`禁用聊天模式的适配器，填写数据库中无匹配数据时不再调用"指令关键词"进行额外回复的适配器名称。当聊天模式开关开启时此处才会生效。`).setDefault(['HumanTG']),
   humantg: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('自动撤回').setDescription(`开启将启用自动撤回功能，此功能依赖插件“delmsg.js”请提前下载`).setDefault(false),
-    humanfrom: BncrCreateSchema.string().setTitle('人形平台').setDescription(`填写人形平台名称并设置该平台的botid[set 平台名 botid 人形id]，使用英文“,”分割。`).setDefault('HumanTG'),
+    humanfrom: BncrCreateSchema.string().setTitle('人形平台').setDescription(`填写人形平台名称，使用英文“,”分割。设置该平台的botid[set 平台名 botid 人形id]。`).setDefault('HumanTG'),
     mode: BncrCreateSchema.string().setTitle('模式设置').setDescription('选择合适自己的模式').setEnum(['white', 'black']).setEnumNames(['白名单模式', '黑名单模式']).setDefault('white'),
     modestr: BncrCreateSchema.string().setTitle('生效设置').setDescription(`填写应用上述模式的群id使用英文“,”分割。`).setDefault(''),
     chcmd: BncrCreateSchema.string().setTitle('删除指令').setDescription(`填写删除消息的指令"。`).setDefault('.tgde 2 60'),
@@ -87,7 +90,7 @@ const jsonSchema = BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
-const ver = '3.3.3';
+const ver = '3.3.4';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
