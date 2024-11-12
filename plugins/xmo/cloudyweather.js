@@ -117,7 +117,7 @@ module.exports = async s => {
   }
   // console.log(locinfo);
   
-  if (!locinfo.location) {
+  if (!locinfo.location || locinfo.location == '多地址请选择序号继续(q退出)：') {
     console.log(`转换地址为经纬度失败，插件即将退出`);
     return;
   }
