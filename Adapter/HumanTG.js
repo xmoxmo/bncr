@@ -3,7 +3,7 @@
  * @author Aming
  * @name HumanTG
  * @team xmo
- * @version 1.0.8
+ * @version 1.0.9
  * @description Telegarm人行适配器
  * @adapter true
  * @public true
@@ -184,27 +184,23 @@ module.exports = () => {
 
     HumanTG.reply = async function (replyInfo) {
       // console.log('replyInfo',replyInfo);
-      if (replyInfo.userId) {
-        if (replyInfo.userId.includes('&')) {
-          const newuserids = replyInfo.userId.split('&');
-          replyInfo.userId = newuserids[0];
-        }
-      }
       try {
         let sendRes = null,
           sendID = +replyInfo.groupId || +this?.msgInfo?.friendId || +replyInfo.userId;
         if (replyInfo.type === 'text') {
           /* 编辑消息 */
-          if (!replyInfo?.dontEdit && replyInfo.userId === loginUserInfo.id.toString()) {
-            try {
-              // throw new Error('')   //取消注释此行代码为直接发送消息,不编辑
-              sendRes = await client.editMessage(sendID, {
-                message: +replyInfo.toMsgId,
-                text: replyInfo.msg,
-              });
-              return (sendRes && `${sendRes.id}`) || '';
-            } catch (e) {
-              console.log(e);
+          if (replyInfo.toMsgId && replyInfo.toMsgId != 0) {
+            if (!replyInfo?.dontEdit && replyInfo.userId === loginUserInfo.id.toString()) {
+              try {
+                // throw new Error('')   //取消注释此行代码为直接发送消息,不编辑
+                sendRes = await client.editMessage(sendID, {
+                  message: +replyInfo.toMsgId,
+                  text: replyInfo.msg,
+                });
+                return (sendRes && `${sendRes.id}`) || '';
+              } catch (e) {
+                console.log(e);
+              }
             }
           }
           /* 编辑消息失败直接发送信息 */
@@ -267,7 +263,23 @@ module.exports = () => {
       );
     };
     HumanTG.push = async function (replyInfo) {
-      return this.reply(replyInfo);
+      let replyinfos = '';
+      if (replyInfo.userId && replyInfo.userId != 0) {
+        if (replyInfo.userId.includes('&')) {
+          const newuserids = replyInfo.userId.split('&');
+          let replyinfo = '';
+          for (const newreplyid of newuserids) {
+            replyInfo.userId = newreplyid;
+            replyinfo = await this.reply(replyInfo);
+            if (replyinfos === '') {
+              replyinfos = replyinfo;
+            } else {
+              replyinfos = `${replyinfos}&${replyinfo}`;
+            }
+          }
+        }
+      }
+      return replyinfos;
     };
     HumanTG.Bridge.editImage = async function (replyInfo) {
       if (Object.prototype.toString.call(replyInfo) === '[object Object]') {
