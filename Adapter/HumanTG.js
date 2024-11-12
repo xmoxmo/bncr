@@ -3,7 +3,7 @@
  * @author Aming
  * @name HumanTG
  * @team xmo
- * @version 1.0.9
+ * @version 1.1.0
  * @description Telegarm人行适配器
  * @adapter true
  * @public true
@@ -278,6 +278,8 @@ module.exports = () => {
             }
           }
         }
+      } else {
+        return await this.reply(replyInfo);
       }
       return replyinfos;
     };
