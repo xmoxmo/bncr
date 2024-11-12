@@ -2,7 +2,7 @@
  * @author xmo
  * @name cloudyweather
  * @team xmo
- * @version 0.1.0
+ * @version 0.1.1
  * @description 彩云查天气
  * @rule ^彩云天气 ([\s\S]+)$
  * @admin false
