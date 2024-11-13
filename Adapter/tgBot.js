@@ -3,7 +3,7 @@
  * @author Aming
  * @name tgBot
  * @team xmo
- * @version 1.1.2
+ * @version 1.1.3
  * @description tgBot适配器
  * @adapter true
  * @public true
@@ -153,16 +153,28 @@ module.exports = async () => {
     ApiData = JSON.parse(ApiResponse.body);
     return ApiData.result.username;
   }
-  tgname = await gettgname();
+  const tgname = await gettgname();
+  let tgid = '';
+  if (Token) {
+    const Tokens = Token.split(':');
+    tgid = Tokens[0];
+  }
   sysMethod.startOutLogs(`tgBot：Contact<${tgname}> 调用成功`);
   setname(tgname);
   async function setname(tgname) {
     const tgDB = new BncrDB('tgBot');
-    dbtgname = await tgDB.get("botname");
+    const dbtgname = await tgDB.get("botname");
     if (tgname) {
       if (dbtgname !== tgname) {
         tgDB.set("botname", tgname);
         sysMethod.startOutLogs(`tgBot：botname<${tgname}> 更新成功`);
+      }
+    }
+    const dbtgid = await tgDB.get("botid");
+    if (tgid) {
+      if (dbtgid !== tgid) {
+        tgDB.set("botid", tgid);
+        sysMethod.startOutLogs(`tgBot：botid<${tgid}> 更新成功`);
       }
     }
   }
