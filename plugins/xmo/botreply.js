@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.3.9
+ * @version 3.4.0
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -20,6 +20,7 @@
  功能介绍：
    关键词重定向参数格式：@remsg@重定向后的关键词
    伪装消息参数格式：@mask@平台@ones@群组ID@ones@好友ID@ones@用户ID@ones@消息
+   伪装删除参数格式：@mask@@delmsg@平台@ones@群组ID@ones@好友ID@ones@用户ID
    管理命令参数格式：@admincmd@平台@ones@命令
    管理推送参数格式：@adminpush@平台@ones@消息@ones@类型@ones@路径
    用户推送参数格式：@userpush@平台@ones@群组ID@ones@用户ID@ones@消息@ones@类型@ones@路径
@@ -34,31 +35,32 @@
    @userblacklist@ @userwhitelist@      //用户黑白名单，选择一个使用，两个同时存在只生效黑名单
    @oneblacklist@ @onewhitelist@        //私聊黑白名单，选择一个使用，两个同时存在只生效黑名单
  传参指令：
-   @remsg@        //重定向标识符
-   @mask@         //伪装消息标识符
-   @admincmd@     //管理命令标识符
-   @adminpush@    //管理推送标识符
-   @userpush@     //用户推送标识符
-   @chatcom@      //关键词标识符
-   @ones@         //通用分隔符
-   @type@         //文件类型分隔符，发送文件类型不为text时使用此标识符分割
-   |@@|           //多条回复内容分割标识符
-   @sfrom@        //平台
-   @groupid@      //群组id
-   @userid@       //用户id
-   @admin@        //管理员权限
-   @msgself@      //消息内容
-   @msgid@        //消息id
-   @groupname@    //群组名称
-   @username@     //用户名称
-   @nowdate@      //当前日期
-   @nowtime@      //当前时间
-   @userkeyword@  //消息内容(剔除模糊匹配词)
-   @nodel@        //持久消息(不受自动删除的约束)
-   @delayN@       //延时发送秒数(N改为整数)
-   @nochat@       //禁止创建回复路径
-   @deldelayN@    //自定义延时发送秒数(N改为整数)
-   @recallmsg@    //撤回消息识别符(目前仅支持QQ)
+   @remsg@          //重定向标识符
+   @mask@           //伪装消息标识符
+   @mask@@delmsg@   //伪装删除标识符
+   @admincmd@       //管理命令标识符
+   @adminpush@      //管理推送标识符
+   @userpush@       //用户推送标识符
+   @recallmsg@      //撤回消息识别符
+   @chatcom@        //关键词标识符
+   @ones@           //通用分隔符
+   @type@           //文件类型分隔符，发送文件类型不为text时使用此标识符分割
+   |@@|             //多条回复内容分割标识符
+   @sfrom@          //平台
+   @groupid@        //群组id
+   @userid@         //用户id
+   @admin@          //管理员权限
+   @msgself@        //消息内容
+   @msgid@          //消息id
+   @groupname@      //群组名称
+   @username@       //用户名称
+   @nowdate@        //当前日期
+   @nowtime@        //当前时间
+   @userkeyword@    //消息内容(剔除模糊匹配词)
+   @nodel@          //持久消息(不受自动删除的约束)
+   @delayN@         //延时发送秒数(N改为整数)
+   @nochat@         //禁止创建回复路径
+   @deldelayN@      //自定义延时发送秒数(N改为整数)
  示例：
    参照：https://github.com/xmoxmo/bncr
  */
@@ -87,19 +89,18 @@ const jsonSchema = BncrCreateSchema.object({
     delay: BncrCreateSchema.number().setTitle('超时秒数').setDescription(`设置自动撤回超时的秒数`).setDefault(60),
   }).setTitle('撤回设置').setDefault({}),
   humantg: BncrCreateSchema.object({
-    enable: BncrCreateSchema.boolean().setTitle('自动撤回').setDescription(`开启将启用自动撤回功能，此功能依赖插件“delmsg.js”请提前下载。`).setDefault(false),
+    enable: BncrCreateSchema.boolean().setTitle('自动撤回').setDescription(`开启将启用自动撤回功能。`).setDefault(false),
     humanfrom: BncrCreateSchema.string().setTitle('人形平台').setDescription(`填写人形平台名称，使用英文“,”分割。设置对应平台的botid[set 平台名 botid 人形id]。`).setDefault('HumanTG'),
     mode: BncrCreateSchema.string().setTitle('模式设置').setDescription('选择合适自己的模式').setEnum(['white', 'black']).setEnumNames(['白名单模式', '黑名单模式']).setDefault('white'),
     modestr: BncrCreateSchema.string().setTitle('生效设置').setDescription(`填写应用上述模式的群id使用英文“,”分割。`).setDefault(''),
-    chcmd: BncrCreateSchema.string().setTitle('撤回指令').setDescription(`填写撤回消息的指令"。`).setDefault('.tgde 1'),
-    delay: BncrCreateSchema.number().setTitle('超时秒数').setDescription(`设置自动撤回超时的秒数`).setDefault(60),
+    delay: BncrCreateSchema.number().setTitle('撤回延时').setDescription(`设置自动撤回超时的秒数`).setDefault(60),
   }).setTitle('人形设置').setDefault({}),
   debug: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.3.9';
+const ver = '3.4.0';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -142,7 +143,6 @@ module.exports = async (s) => {
   const humanfrom = ConfigDB.userConfig.humantg.humanfrom || '';
   const mode = ConfigDB.userConfig.humantg.mode || 'white';
   const modestr = ConfigDB.userConfig.humantg.modestr || '';
-  const chcmd = ConfigDB.userConfig.humantg.chcmd || '.tgde 2 60';
   const debug = ConfigDB.userConfig.debug.enable;
   const groupId = s.getGroupId();
   const userId = s.getUserId();
@@ -981,25 +981,63 @@ module.exports = async (s) => {
               dbuserid = '';
               dbmsg = '';
               replydb = replydb.slice(6);
-              if (replydb.includes('@ones@')) {
-                replydbones = replydb.split('@ones@');
-                dbsfrom = replydbones[0];
-                if (dbsfrom == 0) {
-                  dbsfrom = sfrom;
-                }
-                dbgroupid = replydbones[1];
-                dbfriendid = replydbones[2];
-                dbuserid = replydbones[3];
-                dbmsg = replydbones[4];
-                const msgInfo = {
-                  type: 'text',
-                  msg: dbmsg.replaceAll('\\n', '\n'),
-                  userId: dbuserid || '0',
-                  groupId: dbgroupid || '0',
-                  friendId: dbfriendid || '0',
-                }
-                sysMethod.Adapters(msgInfo, sfrom, 'inlinemask', msgInfo);
-              } 
+              if (replydb.slice(0, 8) === '@delmsg@') {
+                replydb = replydb.slice(8);
+                if (replydb.includes('@ones@')) {
+                  if (sfrom === 'HumanTG') {
+                    replydbones = replydb.split('@ones@');
+                    dbsfrom = replydbones[0];
+                    if (dbsfrom == 0) {
+                      dbsfrom = sfrom;
+                    }
+                    dbgroupid = replydbones[1];
+                    dbfriendid = replydbones[2];
+                    dbuserid = replydbones[3];
+                    const msgInfo = {
+                      userId: dbuserid || '0',
+                      groupId: dbgroupid || '0',
+                      friendId: dbfriendid || '0',
+                    }
+                    if (userkeyword) {
+                      const userkeywords = userkeyword.split(' ');
+                      let delnum = Number(userkeywords[0]) || 1;
+                      if (!isNaN(delnum)) {
+                        delnum = 1;
+                      }
+                      let deltime = Number(userkeywords[1]) || 1;
+                      if (!isNaN(deltime)) {
+                        deltime = 1;
+                      }
+                      let delinfo = [];
+                      const ChatID = +dbgroupid || +dbfriendid || +dbuserid;
+                      delinfo = await s.Bridge.getUserMsgId(ChatID, dbuserid, delnum);
+                      console.log(delinfo);
+                      await sysMethod.sleep(deltime);
+                      sysMethod.Adapters(msgInfo, sfrom, 'delMsg', delinfo);
+                    }
+                  }
+                } 
+              } else {
+                if (replydb.includes('@ones@')) {
+                  replydbones = replydb.split('@ones@');
+                  dbsfrom = replydbones[0];
+                  if (dbsfrom == 0) {
+                    dbsfrom = sfrom;
+                  }
+                  dbgroupid = replydbones[1];
+                  dbfriendid = replydbones[2];
+                  dbuserid = replydbones[3];
+                  dbmsg = replydbones[4];
+                  const msgInfo = {
+                    type: 'text',
+                    msg: dbmsg.replaceAll('\\n', '\n'),
+                    userId: dbuserid || '0',
+                    groupId: dbgroupid || '0',
+                    friendId: dbfriendid || '0',
+                  }
+                  sysMethod.Adapters(msgInfo, sfrom, 'inlinemask', msgInfo);
+                } 
+              }
             } else if (replydb.slice(0, 10) === '@admincmd@') { //管理命令
               replydb = replydb.slice(10);
               sysMethod.inline(replydb.replaceAll('\\n', '\n'));
@@ -1094,8 +1132,15 @@ module.exports = async (s) => {
                 }
               }
             } else if  (replydb.slice(0, 11) === '@recallmsg@') {
-              if (sfrom === 'qq') {
+              if (sfrom === 'qq' || sfrom === 'tgBot') {
                 s.delMsg(msgId);
+              }
+              if (sfrom === 'HumanTG') {
+                const msgInfo = {
+                  userId: botid || '0',
+                  groupId: groupId || '0',
+                }
+                sysMethod.Adapters(msgInfo, sfrom, 'delMsg', [msgId]);
               }
             } else {
               let replydbtype = '';
@@ -1142,15 +1187,13 @@ module.exports = async (s) => {
         if (botid == userId) {
           s.delMsg(await s.reply(info), { wait: autodelmsgdelay });
         } else {
-          await s.reply(info);
+          const newmsgid = await s.reply(info);
           const msgInfo = {
-            type: 'text',
-            msg: `${chcmd} ${autodelmsgdelay}`,
             userId: botid || '0',
             groupId: groupId || '0',
-            friendId: userId || '0',
           }
-          sysMethod.Adapters(msgInfo, sfrom, 'inlinemask', msgInfo);
+          await sysMethod.sleep(autodelmsgdelay);
+          sysMethod.Adapters(msgInfo, sfrom, 'delMsg', [newmsgid]);
         }
       } else {
         s.delMsg(await s.reply(info), { wait: autodelmsgdelay });
