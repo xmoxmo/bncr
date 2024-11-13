@@ -1011,7 +1011,6 @@ module.exports = async (s) => {
                       let delinfo = [];
                       const ChatID = +dbgroupid || +dbfriendid || +dbuserid;
                       delinfo = await s.Bridge.getUserMsgId(ChatID, dbuserid, delnum);
-                      console.log(delinfo);
                       await sysMethod.sleep(deltime);
                       sysMethod.Adapters(msgInfo, sfrom, 'delMsg', delinfo);
                     }
