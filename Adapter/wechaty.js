@@ -3,7 +3,7 @@
  * @author 小寒寒
  * @name wechaty
  * @team xmo
- * @version 1.3.5
+ * @version 1.3.6
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -94,9 +94,17 @@ module.exports = async () => {
                     sendRes = await contact.say(replyInfo.msg);
                 }
             }
-            else if (['image', 'video'].includes(replyInfo.type)) {
+            else if (['image', 'video', 'music', 'audio'].includes(replyInfo.type)) {
                 const file = FileBox.fromUrl(replyInfo.path);
-                file['_name'] += replyInfo.type == 'image' ? '.png' : '.mp4';
+                // file['_name'] += replyInfo.type == 'image' ? '.png' : '.mp4';
+                let newtype = '.mp3';
+                if (replyInfo.type === 'music' || replyInfo.type === 'audio') {
+                    // console.log(file['_name'].split('.').pop().toLocaleLowerCase());
+                    if (file['_name'].split('.').pop().toLocaleLowerCase() === "mp3") {
+                        newtype = '';
+                    }
+                }
+                file['_name'] += replyInfo.type == 'image' ? '.png' : replyInfo.type == 'video' ? '.mp4' : newtype;
                 sendRes = room ? await room.say(file) : await contact.say(file);
                 if (replyInfo.msg) {
                     if (room) {
