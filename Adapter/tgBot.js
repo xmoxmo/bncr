@@ -3,7 +3,7 @@
  * @author Aming
  * @name tgBot
  * @team xmo
- * @version 1.1.1
+ * @version 1.1.2
  * @description tgBot适配器
  * @adapter true
  * @public true
@@ -93,7 +93,7 @@ module.exports = async () => {
                   let [chatid, sendid] = e.split(':');
                   // console.log(chatid);
                   // console.log(sendid);
-                  console.log('撤销:', e);
+                  // console.log('撤销:', e);
                   tgBot.deleteMessage(chatid, sendid);
               }
           });
