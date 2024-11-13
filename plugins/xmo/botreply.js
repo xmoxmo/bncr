@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.3.6
+ * @version 3.3.7
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -57,6 +57,8 @@
    @nodel@        //持久消息(不受自动删除的约束)
    @delayN@       //延时发送秒数(N改为整数)
    @nochat@       //禁止创建回复路径
+   @deldelayN@    //自定义延时发送秒数(N改为整数)
+   @recallmsg@    //撤回消息识别符(目前仅支持QQ)
  示例：
    参照：https://github.com/xmoxmo/bncr
  */
@@ -80,19 +82,24 @@ const jsonSchema = BncrCreateSchema.object({
   })).setTitle('指令相关').setDefault([]),
   nobotname: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('Bot设置').setDescription(`填写未设置bot名称不提示引导操作的适配器名称，设置bot名称主要用来识别群组内是否被@。若bot所在适配器无群组功能则无需设置bot名称，并将此适配器名称填写到以下表单。`).setDefault(['web', 'ssh', 'wxMP']),
   noreplychat: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('聊天设置').setDescription(`禁用聊天模式的适配器，填写数据库中无匹配数据时不再调用"指令关键词"进行额外回复的适配器名称。当聊天模式开关开启时此处才会生效。`).setDefault(['HumanTG']),
+  autodelglobal: BncrCreateSchema.object({
+    enable: BncrCreateSchema.boolean().setTitle('自动撤回').setDescription('开启后将启用人形外平台的自动撤回').setDefault(false),
+    delay: BncrCreateSchema.number().setTitle('超时秒数').setDescription(`设置自动撤回超时的秒数`).setDefault(60),
+  }).setTitle('撤回设置').setDefault({}),
   humantg: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('自动撤回').setDescription(`开启将启用自动撤回功能，此功能依赖插件“delmsg.js”请提前下载。`).setDefault(false),
     humanfrom: BncrCreateSchema.string().setTitle('人形平台').setDescription(`填写人形平台名称，使用英文“,”分割。设置对应平台的botid[set 平台名 botid 人形id]。`).setDefault('HumanTG'),
     mode: BncrCreateSchema.string().setTitle('模式设置').setDescription('选择合适自己的模式').setEnum(['white', 'black']).setEnumNames(['白名单模式', '黑名单模式']).setDefault('white'),
     modestr: BncrCreateSchema.string().setTitle('生效设置').setDescription(`填写应用上述模式的群id使用英文“,”分割。`).setDefault(''),
-    chcmd: BncrCreateSchema.string().setTitle('删除指令').setDescription(`填写删除消息的指令"。`).setDefault('.tgde 1 60'),
+    chcmd: BncrCreateSchema.string().setTitle('撤回指令').setDescription(`填写撤回消息的指令"。`).setDefault('.tgde 1'),
+    delay: BncrCreateSchema.number().setTitle('超时秒数').setDescription(`设置自动撤回超时的秒数`).setDefault(60),
   }).setTitle('人形设置').setDefault({}),
   debug: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('调试开关').setDescription(`开启将开启调试模式，对应平台管理员将收到额外的调试信息。`).setDefault(false),
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.3.6';
+const ver = '3.3.7';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -130,6 +137,7 @@ module.exports = async (s) => {
   const maxword = custommaxword || ConfigDB.userConfig.basic.maxword || 80;
   const nonamearr = ConfigDB.userConfig.nobotname || [];
   const noreplychatarr = ConfigDB.userConfig.noreplychat || [];
+  const autodelglobal = ConfigDB.userConfig.autodelglobal.enable || false;
   const autodel = ConfigDB.userConfig.humantg.enable || false;
   const humanfrom = ConfigDB.userConfig.humantg.humanfrom || '';
   const mode = ConfigDB.userConfig.humantg.mode || 'white';
@@ -154,25 +162,38 @@ module.exports = async (s) => {
   let botname = await fromDB.get('botname') || '';
   let botid = await fromDB.get('botid') || '';
   let autodelmsg = 'n';
+  let autodelmsgdelay = 60;
+  let humanfroms = [];
   if (autodel) {
-    if (mode === 'white') {
-      if (modestr) {
-        modestrs = modestr.split(',');
-        if (modestrs.indexOf(groupId) != -1) {
-          autodelmsg = 'y';
+    if (humanfrom) {
+      humanfroms = humanfrom.split(',');
+      if (humanfroms.indexOf(sfrom) != -1) {
+        if (mode === 'white') {
+          if (modestr) {
+            modestrs = modestr.split(',');
+            if (modestrs.indexOf(groupId) != -1) {
+              autodelmsg = 'y';
+              autodelmsgdelay = ConfigDB.userConfig.humantg.delay || 60;
+            }
+          }
         }
-      }
-    }
-    if (mode === 'black') {
-      if (modestr) {
-        modestrs = modestr.split(',');
-        if (modestrs.indexOf(groupId) == -1) {
-          autodelmsg = 'y';
+        if (mode === 'black') {
+          if (modestr) {
+            modestrs = modestr.split(',');
+            if (modestrs.indexOf(groupId) == -1) {
+              autodelmsg = 'y';
+              autodelmsgdelay = ConfigDB.userConfig.humantg.delay || 60;
+            }
+          }
         }
       }
     }
   }
   // console.log(autodelmsg);
+  if (autodelglobal) {
+    autodelmsg = 'y';
+    autodelmsgdelay = ConfigDB.userConfig.autodelglobal.delay || 60;
+  }
 
   // console.log(`Received command: ${commandType}, Keyword: ${keyword}, ReplyContent: ${replyContent}`);
 
@@ -878,6 +899,16 @@ module.exports = async (s) => {
                 await sysMethod.sleep(5);
               }
             }
+            const deldelay = replydb.match(/@deldelay([^ \n]+)@/g);
+            let deldelay0 = 0;
+            if (deldelay) {
+              deldelay0 = deldelay[0];
+              replydb = replydb.replace(new RegExp(deldelay0,'g'), '');
+              const deldelayn = deldelay0.replace(new RegExp('@deldelay','g'), '').replace(new RegExp('@','g'), '');
+              if (!isNaN(deldelayn)) {
+                autodelmsgdelay = deldelayn;
+              }
+            }
             let nodelmsgs = false;
             if (replydb.includes('@nodel@')) {
               replydb = replydb.replace(new RegExp('@nodel@','g'), '');
@@ -1059,6 +1090,10 @@ module.exports = async (s) => {
                   }
                 }
               }
+            } else if  (replydb.slice(0, 11) === '@recallmsg@') {
+              if (sfrom === 'qq') {
+                s.delMsg(msgId);
+              }
             } else {
               let replydbtype = '';
               let replymsg = '';
@@ -1095,26 +1130,30 @@ module.exports = async (s) => {
     }
   }
   async function autoreply(info) {
-    await s.reply(info);
-    if (info.nodelmsg) {
-      return null;
-    }
-    if (humanfrom) {
-      const humanfroms = humanfrom.split(',');
-      if (humanfroms.indexOf(sfrom) != -1) {
-        if (autodelmsg === 'y') {
-          if (botid) {
-            const msgInfo = {
-              type: 'text',
-              msg: chcmd,
-              userId: botid || '0',
-              groupId: groupId || '0',
-              friendId: userId || '0',
-            }
-            sysMethod.Adapters(msgInfo, sfrom, 'inlinemask', msgInfo);
-          }
-        }
+    if (autodelmsg === 'y') {
+      if (info.nodelmsg) {
+        await s.reply(info);
+        return null;
       }
+      if (humanfroms.indexOf(sfrom) != -1) {
+        if (botid == userId) {
+          s.delMsg(await s.reply(info), { wait: autodelmsgdelay });
+        } else {
+          await s.reply(info);
+          const msgInfo = {
+            type: 'text',
+            msg: `${chcmd} ${autodelmsgdelay}`,
+            userId: botid || '0',
+            groupId: groupId || '0',
+            friendId: userId || '0',
+          }
+          sysMethod.Adapters(msgInfo, sfrom, 'inlinemask', msgInfo);
+        }
+      } else {
+        s.delMsg(await s.reply(info), { wait: autodelmsgdelay });
+      }
+    } else {
+      await s.reply(info);
     }
   }
 };
