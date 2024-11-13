@@ -3,7 +3,7 @@
  * @author Aming
  * @name qq
  * @team xmo
- * @version 1.0.8
+ * @version 1.0.9
  * @description 外置qq机器人适配器
  * @adapter true
  * @public true
@@ -117,7 +117,7 @@ async function ws(qq) {
                       body.params.message = `[CQ:image,file=${replyInfo.path}]`;
                   } else if (replyInfo.type === 'video') {
                       body.params.message = `[CQ:video,file=${replyInfo.path}]`;
-                  } else if (replyInfo.type === 'audio') {
+                  } else if (replyInfo.type === 'audio' || replyInfo.type === 'music') {
                       body.params.message = `[CQ:record,file=${replyInfo.path}]`;
                   }
                   if (replyInfo.msg) {
