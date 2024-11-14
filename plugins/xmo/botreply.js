@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.4.3
+ * @version 3.4.4
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -103,7 +103,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.4.3';
+const ver = '3.4.4';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -167,6 +167,7 @@ module.exports = async (s) => {
   let botid = await fromDB.get('botid') || '';
   let autodelmsg = 'n';
   let autodelmsgdelay = 60;
+  let autodelmsgdelayraw = 0;
   let recallmsg = 0;
   let humanfroms = [];
   if (autodel) {
@@ -198,6 +199,7 @@ module.exports = async (s) => {
   if (autodelglobal) {
     autodelmsg = 'y';
     autodelmsgdelay = ConfigDB.userConfig.autodelglobal.delay || 60;
+    autodelmsgdelayraw = autodelmsgdelay;
   }
 
   // console.log(`Received command: ${commandType}, Keyword: ${keyword}, ReplyContent: ${replyContent}`);
@@ -893,23 +895,24 @@ module.exports = async (s) => {
               }
             }
             const delay = replydb.match(/@delay([^ \n]+)@/g);
-            let delay0 = 0;
+            let delay0 = '';
+            let delayn = 0;
             if (delay) {
+              replydb = replydb.replace(new RegExp(/@delay([^ \n]+)@/, 'g'), '');
               delay0 = delay[0];
-              replydb = replydb.replace(new RegExp(delay0, 'g'), '');
-              const delayn = delay0.replace(new RegExp('@delay', 'g'), '').replace(new RegExp('@', 'g'), '');
+              delayn = delay0.replace(new RegExp('@delay', 'g'), '').replace(new RegExp('@', 'g'), '');
               if (!isNaN(delayn)) {
                 await sysMethod.sleep(Math.round(delayn));
-              } else {
-                await sysMethod.sleep(5);
               }
             }
+            autodelmsgdelay = autodelmsgdelayraw;
             const deldelay = replydb.match(/@deldelay([^ \n]+)@/g);
-            let deldelay0 = 0;
+            let deldelay0 = '';
+            let deldelayn = 0;
             if (deldelay) {
+              replydb = replydb.replace(new RegExp(/@deldelay([^ \n]+)@/, 'g'), '');
               deldelay0 = deldelay[0];
-              replydb = replydb.replace(new RegExp(deldelay0, 'g'), '');
-              const deldelayn = Number(deldelay0.replace(new RegExp('@deldelay', 'g'), '').replace(new RegExp('@', 'g'), ''));
+              deldelayn = Number(deldelay0.replace(new RegExp('@deldelay', 'g'), '').replace(new RegExp('@', 'g'), ''));
               if (!isNaN(deldelayn)) {
                 if (autodelmsg === 'n') {
                   autodelmsg === 'y';
@@ -917,16 +920,15 @@ module.exports = async (s) => {
                 autodelmsgdelay = deldelayn;
               }
             }
+            recallmsg = 0;
             const recalldelay = replydb.match(/@recalldelay([^ \n]+)@/g);
-            let recalldelay0 = 0;
+            let recalldelay0 = '';
+            let recalldelayn = 0;
             if (recalldelay) {
+              replydb = replydb.replace(new RegExp(/@recalldelay([^ \n]+)@/, 'g'), '');
               recalldelay0 = recalldelay[0];
-              replydb = replydb.replace(new RegExp(recalldelay0, 'g'), '');
               const recalldelayn = Number(recalldelay0.replace(new RegExp('@recalldelay', 'g'), '').replace(new RegExp('@', 'g'), ''));
               if (!isNaN(recalldelayn)) {
-                if (autodelmsg === 'n') {
-                  autodelmsg === 'y';
-                }
                 recallmsg = recalldelayn;
               }
             }
