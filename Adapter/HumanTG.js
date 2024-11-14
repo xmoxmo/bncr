@@ -3,7 +3,7 @@
  * @author Aming
  * @name HumanTG
  * @team xmo
- * @version 1.1.1
+ * @version 1.1.2
  * @description Telegarm人行适配器
  * @adapter true
  * @public true
@@ -118,12 +118,12 @@ module.exports = () => {
       await client.getDialogs().catch(e => e);
     } catch {}
 
-    sysMethod.startOutLogs('HumanTG登录成功...');
     // await sysMethod.sleep(5);
     const newSession = client.session.save();
     if (newSession !== session) await HumanTgDb.set('session', newSession); //保存登录session
     /* 获取登录的账号信息 */
     const loginUserInfo = await client.getMe();
+    sysMethod.startOutLogs(`HumanTG：Contact<${loginUserInfo.username.toString()}>登录成功`);
     /* 心跳检测 */
     sysMethod.cron.newCron(`0 */1 * * * *`, async () => {
       try {
@@ -131,11 +131,39 @@ module.exports = () => {
       } catch {}
     });
     /* 保存管理员信息 ，注释这句*/
-    if (!(await HumanTgDb.get('admin'))) {
+    const dbadmin = await HumanTgDb.get('admin');
+    if (!dbadmin) {
       HumanTgDb.set('admin', loginUserInfo.id.toString());
+    } else {
+      if (dbadmin.includes('&')) {
+        if (!(dbadmin.includes(loginUserInfo.id.toString()))) {
+          HumanTgDb.set('admin', `${dbadmin}&${loginUserInfo.id.toString()}`);
+        }
+      } else {
+        if (dbadmin != loginUserInfo.id.toString()) {
+          HumanTgDb.set('admin', loginUserInfo.id.toString());
+        }
+      }
     }
-    if (!(await HumanTgDb.get('botid'))) {
+    const dbbotid = await HumanTgDb.get('botid');
+    if (!dbbotid) {
       HumanTgDb.set('botid', loginUserInfo.id.toString());
+      sysMethod.startOutLogs(`HumanTG：botid<${loginUserInfo.id.toString()}>设置成功`);
+    } else {
+      if (dbbotid != loginUserInfo.id.toString()) {
+        HumanTgDb.set('botid', loginUserInfo.id.toString());
+        sysMethod.startOutLogs(`HumanTG：botid<${loginUserInfo.id.toString()}>更新成功`);
+      }
+    }
+    const dbbotname = await HumanTgDb.get('botname');
+    if (!dbbotname) {
+      HumanTgDb.set('botname', loginUserInfo.username.toString());
+      sysMethod.startOutLogs(`HumanTG：botname<${loginUserInfo.username.toString()}>设置成功`);
+    } else {
+      if (dbbotname != loginUserInfo.username.toString()) {
+        HumanTgDb.set('botname', loginUserInfo.username.toString());
+        sysMethod.startOutLogs(`HumanTG：botname<${loginUserInfo.username.toString()}>更新成功`);
+      }
     }
 
     // console.log(loginUserInfo);
