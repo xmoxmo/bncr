@@ -3,7 +3,7 @@
  * @author Aming
  * @name HumanTG
  * @team xmo
- * @version 1.1.2
+ * @version 1.1.3
  * @description Telegarm人行适配器
  * @adapter true
  * @public true
@@ -134,14 +134,18 @@ module.exports = () => {
     const dbadmin = await HumanTgDb.get('admin');
     if (!dbadmin) {
       HumanTgDb.set('admin', loginUserInfo.id.toString());
+      sysMethod.startOutLogs(`HumanTG：admin<${loginUserInfo.id.toString()}>设置成功`);
     } else {
       if (dbadmin.includes('&')) {
-        if (!(dbadmin.includes(loginUserInfo.id.toString()))) {
+        const dbadmins = dbadmin.split('&');
+        if (dbadmins.indexOf(loginUserInfo.id.toString()) == -1) {
           HumanTgDb.set('admin', `${dbadmin}&${loginUserInfo.id.toString()}`);
+          sysMethod.startOutLogs(`HumanTG：admin<${loginUserInfo.id.toString()}>添加成功`);
         }
       } else {
         if (dbadmin != loginUserInfo.id.toString()) {
-          HumanTgDb.set('admin', loginUserInfo.id.toString());
+          HumanTgDb.set('admin', `${dbadmin}&${loginUserInfo.id.toString()}`);
+          sysMethod.startOutLogs(`HumanTG：admin<${loginUserInfo.id.toString()}>添加成功`);
         }
       }
     }
