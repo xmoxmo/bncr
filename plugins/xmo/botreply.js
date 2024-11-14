@@ -25,42 +25,43 @@
   管理推送参数格式：@adminpush@平台@ones@消息@ones@类型@ones@路径
   用户推送参数格式：@userpush@平台@ones@群组ID@ones@用户ID@ones@消息@ones@类型@ones@路径
 基本指令：
-  botreply 关键词 回复内容         //向数据库中添加新的回复[关键词内不应该有空格，若必须设置半角空格用“%20”全角空格用“%E3%80%80”代替进行设置]
-  botreply list                   //数据库中关键词列表
-  botreply empty                  //清空所有关键词
-  botreply upkey 旧key|>>|新key   //更新key，回复内容不变
+  botreply key keyword                          //向数据库中添加新的回复[半角空格用“%20”；全角空格用“%E3%80%80”]
+  botreply list                                 //数据库中关键词列表
+  botreply empty                                //清空所有关键词
+  botreply upkey oldkey|>>|newkey               //更新key，回复内容不变
+  botreply treply oldkeyword|tt|newkeyword      //替换回复中的部分内容
 黑白名单：
-  @keyblacklist@                       //key黑名单
-  @groupblacklist@ @groupwhitelist@    //群组黑白名单，选择一个使用，两个同时存在只生效黑名单
-  @userblacklist@ @userwhitelist@      //用户黑白名单，选择一个使用，两个同时存在只生效黑名单
-  @oneblacklist@ @onewhitelist@        //私聊黑白名单，选择一个使用，两个同时存在只生效黑名单
+  @keyblacklist@                         //key黑名单
+  @groupblacklist@ @groupwhitelist@      //群组黑白名单，选择一个使用，两个同时存在只生效黑名单
+  @userblacklist@ @userwhitelist@        //用户黑白名单，选择一个使用，两个同时存在只生效黑名单
+  @oneblacklist@ @onewhitelist@          //私聊黑白名单，选择一个使用，两个同时存在只生效黑名单
 传参指令：
-  @remsg@          //重定向标识符
-  @mask@           //伪装消息标识符
-  @mask@@delmsg@   //伪装删除标识符
-  @admincmd@       //管理命令标识符
-  @adminpush@      //管理推送标识符
-  @userpush@       //用户推送标识符
-  @recallmsg@      //撤回消息识别符
-  @chatcom@        //关键词标识符
-  @ones@           //通用分隔符
-  @type@           //文件类型分隔符，发送文件类型不为text时使用此标识符分割
-  |@@|             //多条回复内容分割标识符
-  @sfrom@          //平台
-  @groupid@        //群组id
-  @userid@         //用户id
-  @admin@          //管理员权限
-  @msgself@        //消息内容
-  @msgid@          //消息id
-  @groupname@      //群组名称
-  @username@       //用户名称
-  @nowdate@        //当前日期
-  @nowtime@        //当前时间
-  @userkeyword@    //消息内容(剔除模糊匹配词)
-  @nodel@          //持久消息(不受自动删除的约束)
-  @delayN@         //延时发送秒数(N改为整数)
-  @nochat@         //禁止创建回复路径
-  @deldelayN@      //自定义延时发送秒数(N改为整数)
+  @remsg@             //重定向标识符
+  @mask@              //伪装消息标识符
+  @mask@@delmsg@      //伪装删除标识符
+  @admincmd@          //管理命令标识符
+  @adminpush@         //管理推送标识符
+  @userpush@          //用户推送标识符
+  @recallmsg@         //撤回消息识别符
+  @chatcom@           //关键词标识符
+  @ones@              //通用分隔符
+  @type@              //文件类型分隔符，发送文件类型不为text时使用此标识符分割
+  |@@|                //多条回复内容分割标识符
+  @sfrom@             //平台
+  @groupid@           //群组id
+  @userid@            //用户id
+  @admin@             //管理员权限
+  @msgself@           //消息内容
+  @msgid@             //消息id
+  @groupname@         //群组名称
+  @username@          //用户名称
+  @nowdate@           //当前日期
+  @nowtime@           //当前时间
+  @userkeyword@       //消息内容(剔除模糊匹配词)
+  @nodel@             //持久消息(不受自动删除的约束)
+  @delayN@            //延时发送秒数(N改为整数)
+  @nochat@            //禁止创建回复路径
+  @deldelayN@         //自定义延时发送秒数(N改为整数)
 示例：
   参照：https://github.com/xmoxmo/bncr
 */
