@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.4.1
+ * @version 3.4.2
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -16,54 +16,54 @@
  * @disable false
  */
 
- /*
- 功能介绍：
-   关键词重定向参数格式：@remsg@重定向后的关键词
-   伪装消息参数格式：@mask@平台@ones@群组ID@ones@好友ID@ones@用户ID@ones@消息
-   伪装删除参数格式：@mask@@delmsg@平台@ones@群组ID@ones@好友ID@ones@用户ID
-   管理命令参数格式：@admincmd@平台@ones@命令
-   管理推送参数格式：@adminpush@平台@ones@消息@ones@类型@ones@路径
-   用户推送参数格式：@userpush@平台@ones@群组ID@ones@用户ID@ones@消息@ones@类型@ones@路径
- 基本指令：
-   botreply 关键词 回复内容         //向数据库中添加新的回复[关键词内不应该有空格，若必须设置半角空格用“%20”全角空格用“%E3%80%80”代替进行设置]
-   botreply list                   //数据库中关键词列表
-   botreply empty                  //清空所有关键词
-   botreply upkey 旧key|>>|新key   //更新key，回复内容不变
- 黑白名单：
-   @keyblacklist@                       //key黑名单
-   @groupblacklist@ @groupwhitelist@    //群组黑白名单，选择一个使用，两个同时存在只生效黑名单
-   @userblacklist@ @userwhitelist@      //用户黑白名单，选择一个使用，两个同时存在只生效黑名单
-   @oneblacklist@ @onewhitelist@        //私聊黑白名单，选择一个使用，两个同时存在只生效黑名单
- 传参指令：
-   @remsg@          //重定向标识符
-   @mask@           //伪装消息标识符
-   @mask@@delmsg@   //伪装删除标识符
-   @admincmd@       //管理命令标识符
-   @adminpush@      //管理推送标识符
-   @userpush@       //用户推送标识符
-   @recallmsg@      //撤回消息识别符
-   @chatcom@        //关键词标识符
-   @ones@           //通用分隔符
-   @type@           //文件类型分隔符，发送文件类型不为text时使用此标识符分割
-   |@@|             //多条回复内容分割标识符
-   @sfrom@          //平台
-   @groupid@        //群组id
-   @userid@         //用户id
-   @admin@          //管理员权限
-   @msgself@        //消息内容
-   @msgid@          //消息id
-   @groupname@      //群组名称
-   @username@       //用户名称
-   @nowdate@        //当前日期
-   @nowtime@        //当前时间
-   @userkeyword@    //消息内容(剔除模糊匹配词)
-   @nodel@          //持久消息(不受自动删除的约束)
-   @delayN@         //延时发送秒数(N改为整数)
-   @nochat@         //禁止创建回复路径
-   @deldelayN@      //自定义延时发送秒数(N改为整数)
- 示例：
-   参照：https://github.com/xmoxmo/bncr
- */
+/*
+功能介绍：
+  关键词重定向参数格式：@remsg@重定向后的关键词
+  伪装消息参数格式：@mask@平台@ones@群组ID@ones@好友ID@ones@用户ID@ones@消息
+  伪装删除参数格式：@mask@@delmsg@平台@ones@群组ID@ones@好友ID@ones@用户ID
+  管理命令参数格式：@admincmd@平台@ones@命令
+  管理推送参数格式：@adminpush@平台@ones@消息@ones@类型@ones@路径
+  用户推送参数格式：@userpush@平台@ones@群组ID@ones@用户ID@ones@消息@ones@类型@ones@路径
+基本指令：
+  botreply 关键词 回复内容         //向数据库中添加新的回复[关键词内不应该有空格，若必须设置半角空格用“%20”全角空格用“%E3%80%80”代替进行设置]
+  botreply list                   //数据库中关键词列表
+  botreply empty                  //清空所有关键词
+  botreply upkey 旧key|>>|新key   //更新key，回复内容不变
+黑白名单：
+  @keyblacklist@                       //key黑名单
+  @groupblacklist@ @groupwhitelist@    //群组黑白名单，选择一个使用，两个同时存在只生效黑名单
+  @userblacklist@ @userwhitelist@      //用户黑白名单，选择一个使用，两个同时存在只生效黑名单
+  @oneblacklist@ @onewhitelist@        //私聊黑白名单，选择一个使用，两个同时存在只生效黑名单
+传参指令：
+  @remsg@          //重定向标识符
+  @mask@           //伪装消息标识符
+  @mask@@delmsg@   //伪装删除标识符
+  @admincmd@       //管理命令标识符
+  @adminpush@      //管理推送标识符
+  @userpush@       //用户推送标识符
+  @recallmsg@      //撤回消息识别符
+  @chatcom@        //关键词标识符
+  @ones@           //通用分隔符
+  @type@           //文件类型分隔符，发送文件类型不为text时使用此标识符分割
+  |@@|             //多条回复内容分割标识符
+  @sfrom@          //平台
+  @groupid@        //群组id
+  @userid@         //用户id
+  @admin@          //管理员权限
+  @msgself@        //消息内容
+  @msgid@          //消息id
+  @groupname@      //群组名称
+  @username@       //用户名称
+  @nowdate@        //当前日期
+  @nowtime@        //当前时间
+  @userkeyword@    //消息内容(剔除模糊匹配词)
+  @nodel@          //持久消息(不受自动删除的约束)
+  @delayN@         //延时发送秒数(N改为整数)
+  @nochat@         //禁止创建回复路径
+  @deldelayN@      //自定义延时发送秒数(N改为整数)
+示例：
+  参照：https://github.com/xmoxmo/bncr
+*/
 
 const jsonSchema = BncrCreateSchema.object({
   basic: BncrCreateSchema.object({
@@ -100,7 +100,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.4.1';
+const ver = '3.4.2';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -205,9 +205,9 @@ module.exports = async (s) => {
       await handleEmptyKeywords(s);
     } else if (replyContent === 'del') {
       await handleDelReply(s, keyword);
-    } else if (keyword  === 'upkey') {
+    } else if (keyword === 'upkey') {
       await handleModifykey(s, replyContent);
-    } else if (keyword  === 'treply') {
+    } else if (keyword === 'treply') {
       await handlereplacekeyword(s, replyContent);
     } else {
       await handleAddReply(s, keyword, replyContent);
@@ -265,7 +265,7 @@ module.exports = async (s) => {
       // console.log('User does not have admin privileges');
       return autoreply('你没有权限执行此操作');
     }
-    
+
     let str = keyword;
     let oldkey = '';
     let newkey = '';
@@ -322,12 +322,12 @@ module.exports = async (s) => {
             let addmsg = '';
             let key = keys[i];
             replydb = await sysDB.get(key);
-            newreplydb = replydb.replace(new RegExp(oldt,'g'), newt);
+            newreplydb = replydb.replace(new RegExp(oldt, 'g'), newt);
             if (replydb !== newreplydb) {
               addresult = await setReply(key, newreplydb);
               addmsg = (addresult ? '' : key);
               if (addmsg) {
-                 replymsg += '、' + addmsg;
+                replymsg += '、' + addmsg;
               }
             }
           }
@@ -400,8 +400,8 @@ module.exports = async (s) => {
             });
             return 'next';
           }
-          if (str.includes('*')) { 
-            str = str.replace(new RegExp(/\*/,'g'), '');
+          if (str.includes('*')) {
+            str = str.replace(new RegExp(/\*/, 'g'), '');
             if (keyword.includes(str)) {
               return 'next';
             }
@@ -535,7 +535,7 @@ module.exports = async (s) => {
     }
     if (keyword.includes('@group@')) {
       if (!(await s.isAdmin())) {
-        keyword = keyword.replace(new RegExp('@group@','g'), '');
+        keyword = keyword.replace(new RegExp('@group@', 'g'), '');
       }
     }
     let atbotmsg = '';
@@ -620,9 +620,9 @@ module.exports = async (s) => {
             if (sfrom === 'wxXyo') {
               newkeyword = newkeyword.replace(new RegExp(/\[at=.*?\]/, 'g'), '');
             }
-            newkeyword = newkeyword.replace(new RegExp(atbotmsg,'g'), '');
-            newkeyword = newkeyword.replace(new RegExp(' ','g'), '');
-            newkeyword = newkeyword.replace(new RegExp(' ','g'), '');
+            newkeyword = newkeyword.replace(new RegExp(atbotmsg, 'g'), '');
+            newkeyword = newkeyword.replace(new RegExp(' ', 'g'), '');
+            newkeyword = newkeyword.replace(new RegExp(' ', 'g'), '');
             if (newkeyword) {
               if (forwardline) {
                 s.inlineSugar(`${forwardline} ${newkeyword}`);
@@ -672,7 +672,7 @@ module.exports = async (s) => {
       // console.log('User does not have admin privileges');
       return autoreply('你没有权限执行此操作');
     }
-    
+
     const keys = await sysDB.keys();
     // console.log(`Listing keywords: ${keys}`);
     if (keys.length > 0) {
@@ -729,7 +729,7 @@ module.exports = async (s) => {
   async function getReply(keyword) {
     try {
       if (keyword.includes('　')) {
-        keyword = keyword.replace(new RegExp('　','g'), ' ');
+        keyword = keyword.replace(new RegExp('　', 'g'), ' ');
       }
       if (keyword.slice(0, 7) === '@remsg@') {
         return '@noreply@';
@@ -766,7 +766,7 @@ module.exports = async (s) => {
               keyword = keywords[0] + fgf;
             }
             try {
-              userkeyword = userkeyword.replace(new RegExp(`${keyword}`,'g'), '');
+              userkeyword = userkeyword.replace(new RegExp(`${keyword}`, 'g'), '');
             } catch (e) {
               // console.error('正则替换失败:', e);
             }
@@ -797,7 +797,7 @@ module.exports = async (s) => {
                 if (groupId && groupId !== '0') {
                   let smatch = '';
                   if (keygjc.includes('*')) {
-                    keygjc = keygjc.replace(new RegExp(/\*/,'g'), '');
+                    keygjc = keygjc.replace(new RegExp(/\*/, 'g'), '');
                     if (fgf) {
                       smatch = keyword === keygjc;
                     } else {
@@ -829,7 +829,7 @@ module.exports = async (s) => {
                   }
                 } else {
                   if (keygjc.includes('*')) {
-                    keygjc = keygjc.replace(new RegExp(/\*/,'g'), '');
+                    keygjc = keygjc.replace(new RegExp(/\*/, 'g'), '');
                     if (keyword === keygjc) {
                       newkeyword += `|@@|${keys[i]}`;
                       // break;
@@ -874,7 +874,7 @@ module.exports = async (s) => {
             return null;
           }
         }
-        
+
         async function funsendreply(replydb, userkeyword) {
           if (replydb) {
             if (replydb === '@noreply@') {
@@ -882,7 +882,7 @@ module.exports = async (s) => {
             }
             if (replydb.includes('@admin@')) {
               if (await s.isAdmin()) {
-                replydb = replydb.replace(new RegExp('@admin@','g'), '');
+                replydb = replydb.replace(new RegExp('@admin@', 'g'), '');
               } else {
                 autoreply('你没有权限执行此操作');
                 return '@noreply@';
@@ -892,8 +892,8 @@ module.exports = async (s) => {
             let delay0 = 0;
             if (delay) {
               delay0 = delay[0];
-              replydb = replydb.replace(new RegExp(delay0,'g'), '');
-              const delayn = delay0.replace(new RegExp('@delay','g'), '').replace(new RegExp('@','g'), '');
+              replydb = replydb.replace(new RegExp(delay0, 'g'), '');
+              const delayn = delay0.replace(new RegExp('@delay', 'g'), '').replace(new RegExp('@', 'g'), '');
               if (!isNaN(delayn)) {
                 await sysMethod.sleep(Math.round(delayn));
               } else {
@@ -904,8 +904,8 @@ module.exports = async (s) => {
             let deldelay0 = 0;
             if (deldelay) {
               deldelay0 = deldelay[0];
-              replydb = replydb.replace(new RegExp(deldelay0,'g'), '');
-              const deldelayn = Number(deldelay0.replace(new RegExp('@deldelay','g'), '').replace(new RegExp('@','g'), ''));
+              replydb = replydb.replace(new RegExp(deldelay0, 'g'), '');
+              const deldelayn = Number(deldelay0.replace(new RegExp('@deldelay', 'g'), '').replace(new RegExp('@', 'g'), ''));
               if (!isNaN(deldelayn)) {
                 if (autodelmsg === 'n') {
                   autodelmsg === 'y';
@@ -916,46 +916,46 @@ module.exports = async (s) => {
             }
             let nodelmsgs = false;
             if (replydb.includes('@nodel@')) {
-              replydb = replydb.replace(new RegExp('@nodel@','g'), '');
+              replydb = replydb.replace(new RegExp('@nodel@', 'g'), '');
               nodelmsgs = true;
             }
             if (replydb.includes('@userkeyword@')) {
-              replydb = replydb.replace(new RegExp('@userkeyword@','g'), userkeyword);
+              replydb = replydb.replace(new RegExp('@userkeyword@', 'g'), userkeyword);
             }
             if (replydb.includes('@sfrom@')) {
-              replydb = replydb.replace(new RegExp('@sfrom@','g'), sfrom);
+              replydb = replydb.replace(new RegExp('@sfrom@', 'g'), sfrom);
             }
             if (replydb.includes('@groupid@')) {
-              replydb = replydb.replace(new RegExp('@groupid@','g'), groupId);
+              replydb = replydb.replace(new RegExp('@groupid@', 'g'), groupId);
             }
             if (replydb.includes('@userid@')) {
-              replydb = replydb.replace(new RegExp('@userid@','g'), userId);
+              replydb = replydb.replace(new RegExp('@userid@', 'g'), userId);
             }
             if (replydb.includes('@msgself@')) {
-              replydb = replydb.replace(new RegExp('@msgself@','g'), msgSelf);
+              replydb = replydb.replace(new RegExp('@msgself@', 'g'), msgSelf);
             }
             if (replydb.includes('@msgid@')) {
-              replydb = replydb.replace(new RegExp('@msgid@','g'), msgId);
+              replydb = replydb.replace(new RegExp('@msgid@', 'g'), msgId);
             }
             if (replydb.includes('@username@')) {
-              replydb = replydb.replace(new RegExp('@username@','g'), userName);
+              replydb = replydb.replace(new RegExp('@username@', 'g'), userName);
             }
             if (replydb.includes('@groupname@')) {
-              replydb = replydb.replace(new RegExp('@groupname@','g'), groupName);
+              replydb = replydb.replace(new RegExp('@groupname@', 'g'), groupName);
             }
             if (replydb.includes('@nowdate@')) {
-              replydb = replydb.replace(new RegExp('@nowdate@','g'), nowDate);
+              replydb = replydb.replace(new RegExp('@nowdate@', 'g'), nowDate);
             }
             if (replydb.includes('@nowtime@')) {
-              replydb = replydb.replace(new RegExp('@nowtime@','g'), nowTime);
+              replydb = replydb.replace(new RegExp('@nowtime@', 'g'), nowTime);
             }
             let onchat = 1;
             if (replydb.includes('@nochat@')) {
-              replydb = replydb.replace(new RegExp('@nochat@','g'), '');
+              replydb = replydb.replace(new RegExp('@nochat@', 'g'), '');
               onchat = 0;
             }
             let replydbones = '';
-            let dbsfrom ='';
+            let dbsfrom = '';
             let dbgroupid = '';
             let dbfriendid = '';
             let dbuserid = '';
@@ -968,7 +968,7 @@ module.exports = async (s) => {
             if (replydb.slice(0, 7) === '@remsg@') {
               replydb = replydb.slice(7);
               if (replydb.includes('@chatcom@')) {
-                replydb = replydb.replace(new RegExp('@chatcom@','g'), forwardline);
+                replydb = replydb.replace(new RegExp('@chatcom@', 'g'), forwardline);
                 if (forwardline) {
                   s.inlineSugar(replydb);
                 }
@@ -977,7 +977,7 @@ module.exports = async (s) => {
               }
             } else if (replydb.slice(0, 6) === '@mask@') { //伪装消息
               replydbones = '';
-              dbsfrom ='';
+              dbsfrom = '';
               dbgroupid = '';
               dbfriendid = '';
               dbuserid = '';
@@ -1017,7 +1017,7 @@ module.exports = async (s) => {
                       sysMethod.Adapters(msgInfo, sfrom, 'delMsg', delinfo);
                     }
                   }
-                } 
+                }
               } else {
                 if (replydb.includes('@ones@')) {
                   replydbones = replydb.split('@ones@');
@@ -1037,14 +1037,14 @@ module.exports = async (s) => {
                     friendId: dbfriendid || '0',
                   }
                   sysMethod.Adapters(msgInfo, sfrom, 'inlinemask', msgInfo);
-                } 
+                }
               }
             } else if (replydb.slice(0, 10) === '@admincmd@') { //管理命令
               replydb = replydb.slice(10);
               sysMethod.inline(replydb.replaceAll('\\n', '\n'));
             } else if (replydb.slice(0, 11) === '@adminpush@') { //管理推送
               replydbones = '';
-              dbsfrom ='';
+              dbsfrom = '';
               dbmsg = '';
               dbtype = '';
               dbpath = '';
@@ -1086,7 +1086,7 @@ module.exports = async (s) => {
               }
             } else if (replydb.slice(0, 10) === '@userpush@') { //用户推送
               replydbones = '';
-              dbsfrom ='';
+              dbsfrom = '';
               dbgroupid = '';
               dbuserid = '';
               dbmsg = '';
@@ -1132,7 +1132,7 @@ module.exports = async (s) => {
                   }
                 }
               }
-            } else if  (replydb.slice(0, 11) === '@recallmsg@') {
+            } else if (replydb.slice(0, 11) === '@recallmsg@') {
               if (sfrom === 'qq' || sfrom === 'tgBot') {
                 s.delMsg(msgId, { wait: recallmsg });
               }
@@ -1163,8 +1163,8 @@ module.exports = async (s) => {
             if (await s.isAdmin()) {
               if (debug) {
                 sysMethod.pushAdmin({
-                    platform: [`${sfrom}`],
-                    msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
+                  platform: [`${sfrom}`],
+                  msg: `管理员调试消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >回复:${replydb}\n  >指令:${forwardline}`,
                 });
               }
             }
