@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.4.2
+ * @version 3.4.3
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -61,7 +61,8 @@
   @nodel@             //持久消息(不受自动删除的约束)
   @delayN@            //延时发送秒数(N改为整数)
   @nochat@            //禁止创建回复路径
-  @deldelayN@         //自定义延时发送秒数(N改为整数)
+  @deldelayN@         //延时删除回复的秒数(N改为整数)
+  @recalldelayN@         //延时删除回复的秒数(N改为整数)
 示例：
   参照：https://github.com/xmoxmo/bncr
 */
@@ -73,6 +74,7 @@ const jsonSchema = BncrCreateSchema.object({
     enablechat: BncrCreateSchema.boolean().setTitle('聊天模式开关').setDescription(`聊天模式总开关，当数据库中无匹配回复时自动调用聊天模式指令关键词所在ai插件回复。`).setDefault(false),
     forwardchat: BncrCreateSchema.string().setTitle('聊天模式指令关键词').setDescription(`为聊天模式单独设置其他插件匹配指令关键词，留空则使用"指令关键词"。`).setDefault(''),
     maxword: BncrCreateSchema.number().setTitle('聊天模式限制字数').setDescription(`设置私聊时忽略超过指定字数的问题应答`).setDefault(80),
+    noadmintip: BncrCreateSchema.string().setTitle('无权限提示词').setDescription(`自定义没有权限时的提示词,无权限时不回复输入“@noreply@”即可。`).setDefault('你没有权限执行此操作'),
   }).setTitle('基本设置').setDefault({}),
   forwards: BncrCreateSchema.array(BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('启用').setDescription('是否启用').setDefault(true),
@@ -101,7 +103,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.4.2';
+const ver = '3.4.3';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -137,6 +139,7 @@ module.exports = async (s) => {
     forwardlinechat = customforwardlinechat || ConfigDB.userConfig.basic.forwardchat || '';
   }
   const maxword = custommaxword || ConfigDB.userConfig.basic.maxword || 80;
+  const noadmintip = ConfigDB.userConfig.basic.noadmintip || '你没有权限执行此操作';
   const nonamearr = ConfigDB.userConfig.nobotname || [];
   const noreplychatarr = ConfigDB.userConfig.noreplychat || [];
   const autodelglobal = ConfigDB.userConfig.autodelglobal.enable || false;
@@ -223,7 +226,7 @@ module.exports = async (s) => {
   async function handleAddReply(s, keyword, reply) {
     if (!(await s.isAdmin())) {
       // console.log('User does not have admin privileges');
-      return autoreply('你没有权限执行此操作');
+      return autoreply(noadmintip);
     }
 
     let str = keyword;
@@ -248,7 +251,7 @@ module.exports = async (s) => {
   async function handleDelReply(s, keyword) {
     if (!(await s.isAdmin())) {
       // console.log('User does not have admin privileges');
-      return autoreply('你没有权限执行此操作');
+      return autoreply(noadmintip);
     }
 
     let keys = await sysDB.keys();
@@ -264,7 +267,7 @@ module.exports = async (s) => {
   async function handleModifykey(s, keyword) {
     if (!(await s.isAdmin())) {
       // console.log('User does not have admin privileges');
-      return autoreply('你没有权限执行此操作');
+      return autoreply(noadmintip);
     }
 
     let str = keyword;
@@ -305,7 +308,7 @@ module.exports = async (s) => {
   async function handlereplacekeyword(s, keyword) {
     if (!(await s.isAdmin())) {
       // console.log('User does not have admin privileges');
-      return autoreply('你没有权限执行此操作');
+      return autoreply(noadmintip);
     }
 
     if (keyword.includes('|tt|')) {
@@ -379,7 +382,7 @@ module.exports = async (s) => {
         }
         return null;
       } else {
-        autoreply('你没有权限执行此操作');
+        autoreply(noadmintip);
         return null;
       }
     }
@@ -512,7 +515,7 @@ module.exports = async (s) => {
         }
         return null;
       } else {
-        autoreply('你没有权限执行此操作');
+        autoreply(noadmintip);
         return null;
       }
     }
@@ -520,7 +523,7 @@ module.exports = async (s) => {
       if (await s.isAdmin()) {
         autoreply('指令有误');
       } else {
-        autoreply('你没有权限执行此操作');
+        autoreply(noadmintip);
       }
       return null;
     }
@@ -671,7 +674,7 @@ module.exports = async (s) => {
   async function handleListKeywords(s) {
     if (!(await s.isAdmin())) {
       // console.log('User does not have admin privileges');
-      return autoreply('你没有权限执行此操作');
+      return autoreply(noadmintip);
     }
 
     const keys = await sysDB.keys();
@@ -686,7 +689,7 @@ module.exports = async (s) => {
   async function handleEmptyKeywords(s) {
     if (!(await s.isAdmin())) {
       // console.log('User does not have admin privileges');
-      return autoreply('你没有权限执行此操作');
+      return autoreply(noadmintip);
     }
 
     try {
@@ -885,7 +888,7 @@ module.exports = async (s) => {
               if (await s.isAdmin()) {
                 replydb = replydb.replace(new RegExp('@admin@', 'g'), '');
               } else {
-                autoreply('你没有权限执行此操作');
+                autoreply(noadmintip);
                 return '@noreply@';
               }
             }
@@ -912,7 +915,19 @@ module.exports = async (s) => {
                   autodelmsg === 'y';
                 }
                 autodelmsgdelay = deldelayn;
-                recallmsg = deldelayn;
+              }
+            }
+            const recalldelay = replydb.match(/@recalldelay([^ \n]+)@/g);
+            let recalldelay0 = 0;
+            if (recalldelay) {
+              recalldelay0 = recalldelay[0];
+              replydb = replydb.replace(new RegExp(recalldelay0, 'g'), '');
+              const recalldelayn = Number(recalldelay0.replace(new RegExp('@recalldelay', 'g'), '').replace(new RegExp('@', 'g'), ''));
+              if (!isNaN(recalldelayn)) {
+                if (autodelmsg === 'n') {
+                  autodelmsg === 'y';
+                }
+                recallmsg = recalldelayn;
               }
             }
             let nodelmsgs = false;
@@ -1014,8 +1029,7 @@ module.exports = async (s) => {
                       let delinfo = [];
                       const ChatID = +dbgroupid || +dbfriendid || +dbuserid;
                       delinfo = await s.Bridge.getUserMsgId(ChatID, dbuserid, delnum);
-                      await sysMethod.sleep(deltime);
-                      sysMethod.Adapters(msgInfo, sfrom, 'delMsg', delinfo);
+                      autodelmsginfo(msgInfo, delinfo, deltime);
                     }
                   }
                 }
@@ -1142,8 +1156,7 @@ module.exports = async (s) => {
                   userId: botid || '0',
                   groupId: groupId || '0',
                 }
-                await sysMethod.sleep(recallmsg);
-                sysMethod.Adapters(msgInfo, sfrom, 'delMsg', [msgId]);
+                autodelmsginfo(msgInfo, [msgId], recallmsg);
               }
             } else {
               let replydbtype = '';
@@ -1181,28 +1194,33 @@ module.exports = async (s) => {
     }
   }
   async function autoreply(info) {
+    if (info === '@noreply@' || info.msg === '@noreply@') {
+      return null;
+    }
+    const newmsgid = await s.reply(info);
     if (autodelmsg === 'y') {
       if (info.nodelmsg) {
-        await s.reply(info);
-        return null;
+        return newmsgid;
       }
       if (humanfroms.indexOf(sfrom) != -1) {
         if (botid == userId) {
-          s.delMsg(await s.reply(info), { wait: autodelmsgdelay });
+          s.delMsg(newmsgid, { wait: autodelmsgdelay });
         } else {
-          const newmsgid = await s.reply(info);
           const msgInfo = {
             userId: botid || '0',
             groupId: groupId || '0',
           }
-          await sysMethod.sleep(autodelmsgdelay);
-          sysMethod.Adapters(msgInfo, sfrom, 'delMsg', [newmsgid]);
+          autodelmsginfo(msgInfo, [newmsgid], autodelmsgdelay);
         }
       } else {
-        s.delMsg(await s.reply(info), { wait: autodelmsgdelay });
+        s.delMsg(newmsgid, { wait: autodelmsgdelay });
       }
-    } else {
-      await s.reply(info);
+      return null;
     }
+    return newmsgid;
+  }
+  async function autodelmsginfo(msgInfo, info, delay) {
+    await sysMethod.sleep(delay);
+    sysMethod.Adapters(msgInfo, sfrom, 'delMsg', info);
   }
 };
