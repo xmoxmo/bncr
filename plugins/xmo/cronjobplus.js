@@ -2,7 +2,7 @@
  * @author xmo
  * @name cronjobplus
  * @team xmo
- * @version 0.0.9
+ * @version 0.1.0
  * @description 定时任务Plus。
  * @rule ^(初始化定时任务)$
  * @admin true
@@ -64,7 +64,7 @@ const jsonSchema = BncrCreateSchema.object({
 
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 
-sysMethod.createStartupCompletionHook('outStartOK', async () => {
+sysMethod.createStartupCompletionHook('CronJobPlusStartOK', async () => {
   sysMethod.inline('初始化定时任务');
 });
 
