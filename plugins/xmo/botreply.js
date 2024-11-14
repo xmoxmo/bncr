@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.4.0
+ * @version 3.4.1
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -100,7 +100,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.4.0';
+const ver = '3.4.1';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -163,6 +163,7 @@ module.exports = async (s) => {
   let botid = await fromDB.get('botid') || '';
   let autodelmsg = 'n';
   let autodelmsgdelay = 60;
+  let recallmsg = 0;
   let humanfroms = [];
   if (autodel) {
     if (humanfrom) {
@@ -910,6 +911,7 @@ module.exports = async (s) => {
                   autodelmsg === 'y';
                 }
                 autodelmsgdelay = deldelayn;
+                recallmsg = deldelayn;
               }
             }
             let nodelmsgs = false;
@@ -1132,13 +1134,14 @@ module.exports = async (s) => {
               }
             } else if  (replydb.slice(0, 11) === '@recallmsg@') {
               if (sfrom === 'qq' || sfrom === 'tgBot') {
-                s.delMsg(msgId);
+                s.delMsg(msgId, { wait: recallmsg });
               }
               if (sfrom === 'HumanTG') {
                 const msgInfo = {
                   userId: botid || '0',
                   groupId: groupId || '0',
                 }
+                await sysMethod.sleep(recallmsg);
                 sysMethod.Adapters(msgInfo, sfrom, 'delMsg', [msgId]);
               }
             } else {
