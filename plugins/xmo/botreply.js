@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.4.8
+ * @version 3.4.9
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -104,7 +104,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.4.8';
+const ver = '3.4.9';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -248,11 +248,11 @@ module.exports = async (s) => {
       keygjc = str;
     }
     if (!keygjc) {
-      autoreply('设置失败：无关键词');
+      return autoreply('设置失败：无关键词');
     } else {
       const result = await setReply(keyword, reply);
       // console.log(`Set reply result for keyword ${keyword}: ${result}`);
-      autoreply(result ? '设置成功' : '设置失败');
+      return autoreply(result ? '设置成功' : '设置失败');
     }
   }
 
@@ -264,12 +264,11 @@ module.exports = async (s) => {
 
     let keys = await sysDB.keys();
     if (keys.indexOf(keyword) == -1) {
-      autoreply(`删除失败：数据库中无[${keyword}]`);
-      return null;
+      return autoreply(`删除失败：数据库中无[${keyword}]`);
     }
     const result = await deleteReply(keyword);
     // console.log(`Delete reply result for keyword ${keyword}: ${result}`);
-    autoreply(result ? '删除成功' : '删除失败');
+    return autoreply(result ? '删除成功' : '删除失败');
   }
 
   async function handleModifykey(s, keyword) {
@@ -298,18 +297,18 @@ module.exports = async (s) => {
         }
       }
       if (replymsg) {
-        autoreply('更改失败：' + replymsg);
+        return autoreply('更改失败：' + replymsg);
       } else {
         const delresult = await deleteReply(oldkey);
         replymsg = (delresult ? '' : '删除oldkey失败');
         if (replymsg) {
-          autoreply('更改失败：' + replymsg);
+          return autoreply('更改失败：' + replymsg);
         } else {
-          autoreply('更改成功');
+          return autoreply('更改成功');
         }
       }
     } else {
-      autoreply('更改失败：无标识符[|>>|]');
+      return autoreply('更改失败：无标识符[|>>|]');
     }
   }
 
@@ -349,12 +348,12 @@ module.exports = async (s) => {
         }
       }
       if (replymsg) {
-        autoreply('替换失败：' + replymsg);
+        return autoreply('替换失败：' + replymsg);
       } else {
-        autoreply('替换成功');
+        return autoreply('替换成功');
       }
     } else {
-      autoreply('替换失败：无标识符[|tt|]');
+      return autoreply('替换失败：无标识符[|tt|]');
     }
   }
 
@@ -688,9 +687,9 @@ module.exports = async (s) => {
     const keys = await sysDB.keys();
     // console.log(`Listing keywords: ${keys}`);
     if (keys.length > 0) {
-      autoreply(`当前关键词列表:\n${keys.join('\n')}`);
+      return autoreply(`当前关键词列表:\n${keys.join('\n')}`);
     } else {
-      autoreply('当前没有关键词');
+      return autoreply('当前没有关键词');
     }
   }
 
@@ -706,10 +705,10 @@ module.exports = async (s) => {
         await sysDB.del(key);
       }
       // console.log('All keywords cleared');
-      autoreply('所有关键词已清空');
+      return autoreply('所有关键词已清空');
     } catch (e) {
       // console.error('清空失败:', e);
-      autoreply('清空失败');
+      return autoreply('清空失败');
     }
   }
 
@@ -1008,38 +1007,42 @@ module.exports = async (s) => {
               dbmsg = '';
               replydb = replydb.slice(6);
               if (replydb.slice(0, 8) === '@delmsg@') {
-                replydb = replydb.slice(8);
-                if (replydb.includes('@ones@')) {
-                  if (sfrom === 'HumanTG') {
+                if (sfrom === 'HumanTG') {
+                  replydb = replydb.slice(8);
+                  if (replydb.includes('@ones@')) {
                     replydbones = replydb.split('@ones@');
                     dbsfrom = replydbones[0];
                     if (dbsfrom == 0) {
                       dbsfrom = sfrom;
                     }
-                    dbgroupid = replydbones[1];
-                    dbfriendid = replydbones[2];
-                    dbuserid = replydbones[3];
-                    const msgInfo = {
-                      userId: dbuserid || '0',
-                      groupId: dbgroupid || '0',
-                      friendId: dbfriendid || '0',
-                    }
-                    if (userkeyword) {
-                      const userkeywords = userkeyword.split(' ');
-                      let delnum = Number(userkeywords[0]) || 1;
-                      if (!isNaN(delnum)) {
-                        delnum = 1;
+                    if (dbsfrom === 'HumanTG') {
+                      dbgroupid = replydbones[1];
+                      dbfriendid = replydbones[2];
+                      dbuserid = replydbones[3];
+                      const msgInfo = {
+                        userId: dbuserid || '0',
+                        groupId: dbgroupid || '0',
+                        friendId: dbfriendid || '0',
                       }
-                      let deltime = Number(userkeywords[1]) || 1;
-                      if (!isNaN(deltime)) {
-                        deltime = 1;
+                      if (userkeyword) {
+                        const userkeywords = userkeyword.split(' ');
+                        let delnum = Number(userkeywords[0]) || 1;
+                        if (!isNaN(delnum)) {
+                          delnum = 1;
+                        }
+                        let deltime = Number(userkeywords[1]) || 1;
+                        if (!isNaN(deltime)) {
+                          deltime = 1;
+                        }
+                        let delinfo = [];
+                        const ChatID = +dbgroupid || +dbfriendid || +dbuserid;
+                        delinfo = await s.Bridge.getUserMsgId(ChatID, dbuserid, delnum);
+                        autodelmsginfo(msgInfo, dbsfrom, delinfo, deltime);
                       }
-                      let delinfo = [];
-                      const ChatID = +dbgroupid || +dbfriendid || +dbuserid;
-                      delinfo = await s.Bridge.getUserMsgId(ChatID, dbuserid, delnum);
-                      autodelmsginfo(msgInfo, dbsfrom, delinfo, deltime);
                     }
                   }
+                } else {
+                  autoreply('该指令仅可在“HumanTG”平台内执行');
                 }
               } else {
                 if (replydb.includes('@ones@')) {
@@ -1059,7 +1062,7 @@ module.exports = async (s) => {
                     groupId: dbgroupid || '0',
                     friendId: dbfriendid || '0',
                   }
-                  sysMethod.Adapters(msgInfo, sfrom, 'inlinemask', msgInfo);
+                  sysMethod.Adapters(msgInfo, dbsfrom, 'inlinemask', msgInfo);
                 }
               }
             } else if (replydb.slice(0, 10) === '@admincmd@') { //管理命令
