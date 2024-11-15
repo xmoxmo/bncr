@@ -88,11 +88,12 @@ const jsonSchema = BncrCreateSchema.object({
   nobotname: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('Bot设置').setDescription(`填写未设置bot名称不提示引导操作的适配器名称，设置bot名称主要用来识别群组内是否被@。若bot所在适配器无群组功能则无需设置bot名称，并将此适配器名称填写到以下表单。`).setDefault(['web', 'ssh', 'wxMP']),
   noreplychat: BncrCreateSchema.array(BncrCreateSchema.string()).setTitle('聊天设置').setDescription(`禁用聊天模式的适配器，填写数据库中无匹配数据时不再调用"指令关键词"进行额外回复的适配器名称。当聊天模式开关开启时此处才会生效。`).setDefault(['HumanTG']),
   autodelglobal: BncrCreateSchema.object({
-    enable: BncrCreateSchema.boolean().setTitle('自动撤回').setDescription('开启后将启用人形外平台的自动撤回').setDefault(false),
+    enable: BncrCreateSchema.boolean().setTitle('自动撤回').setDescription('开启后将启用全局自动撤回').setDefault(false),
     delay: BncrCreateSchema.number().setTitle('超时秒数').setDescription(`设置自动撤回超时的秒数`).setDefault(60),
   }).setTitle('撤回设置').setDefault({}),
   humantg: BncrCreateSchema.object({
-    enable: BncrCreateSchema.boolean().setTitle('自动撤回').setDescription(`开启将启用自动撤回功能。`).setDefault(false),
+    enable: BncrCreateSchema.boolean().setTitle('总开关').setDescription(`开启将启用人形个性化设置,开启后生效后续设置。`).setDefault(true),
+    autodel: BncrCreateSchema.boolean().setTitle('自动撤回').setDescription(`开启将启用自动撤回功能。`).setDefault(false),
     humanfrom: BncrCreateSchema.string().setTitle('人形平台').setDescription(`填写人形平台名称，使用英文“,”分割。设置对应平台的botid[set 平台名 botid 人形id]。`).setDefault('HumanTG'),
     mode: BncrCreateSchema.string().setTitle('模式设置').setDescription('选择合适自己的模式').setEnum(['white', 'black']).setEnumNames(['白名单模式', '黑名单模式']).setDefault('white'),
     modestr: BncrCreateSchema.string().setTitle('生效设置').setDescription(`填写应用上述模式的群id使用英文“,”分割。`).setDefault(''),
@@ -103,7 +104,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.4.6';
+const ver = '3.4.7';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -143,7 +144,8 @@ module.exports = async (s) => {
   const nonamearr = ConfigDB.userConfig.nobotname || [];
   const noreplychatarr = ConfigDB.userConfig.noreplychat || [];
   const autodelglobal = ConfigDB.userConfig.autodelglobal.enable || false;
-  const autodel = ConfigDB.userConfig.humantg.enable || false;
+  const humanset = ConfigDB.userConfig.humantg.enable || true;
+  const autodel = ConfigDB.userConfig.humantg.autodel || false;
   const humanfrom = ConfigDB.userConfig.humantg.humanfrom || '';
   const mode = ConfigDB.userConfig.humantg.mode || 'white';
   const modestr = ConfigDB.userConfig.humantg.modestr || '';
@@ -170,27 +172,35 @@ module.exports = async (s) => {
   let autodelmsgdelayraw = 0;
   let recallmsgdelay = 0;
   let humanfroms = [];
-  if (autodel) {
-    if (humanfrom) {
-      humanfroms = humanfrom.split(',');
-      if (humanfroms.indexOf(sfrom) != -1) {
-        if (mode === 'white') {
-          if (modestr) {
-            modestrs = modestr.split(',');
-            if (modestrs.indexOf(groupId) != -1) {
-              autodelmsg = 'y';
-              autodelmsgdelay = ConfigDB.userConfig.humantg.delay || 60;
-              autodelmsgdelayraw = autodelmsgdelay;
+  if (autodelglobal) {
+    autodelmsg = 'y';
+    autodelmsgdelay = ConfigDB.userConfig.autodelglobal.delay || 60;
+    autodelmsgdelayraw = autodelmsgdelay;
+  }
+  if (humanset) {
+    autodelmsg = 'n';
+    if (autodel) {
+      autodelmsgdelay = ConfigDB.userConfig.humantg.delay || 60;
+      autodelmsgdelayraw = autodelmsgdelay;
+      if (humanfrom) {
+        humanfroms = humanfrom.split(',');
+        if (humanfroms.indexOf(sfrom) != -1) {
+          if (mode === 'white') {
+            if (modestr) {
+              modestrs = modestr.split(',');
+              if (modestrs.indexOf(groupId) != -1) {
+                autodelmsg = 'y';
+              }
             }
           }
-        }
-        if (mode === 'black') {
-          if (modestr) {
-            modestrs = modestr.split(',');
-            if (modestrs.indexOf(groupId) == -1) {
+          if (mode === 'black') {
+            if (modestr) {
+              modestrs = modestr.split(',');
+              if (modestrs.indexOf(groupId) == -1) {
+                autodelmsg = 'y';
+              }
+            } else {
               autodelmsg = 'y';
-              autodelmsgdelay = ConfigDB.userConfig.humantg.delay || 60;
-              autodelmsgdelayraw = autodelmsgdelay;
             }
           }
         }
@@ -198,14 +208,8 @@ module.exports = async (s) => {
     }
   }
   // console.log(autodelmsg);
-  if (autodelglobal) {
-    autodelmsg = 'y';
-    autodelmsgdelay = ConfigDB.userConfig.autodelglobal.delay || 60;
-    autodelmsgdelayraw = autodelmsgdelay;
-  }
 
   // console.log(`Received command: ${commandType}, Keyword: ${keyword}, ReplyContent: ${replyContent}`);
-
   if (commandType === 'botreply') {
     if (keyword === 'list') {
       await handleListKeywords(s);
