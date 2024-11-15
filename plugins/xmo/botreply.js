@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.4.4
+ * @version 3.4.5
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -103,7 +103,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.4.4';
+const ver = '3.4.5';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -168,7 +168,7 @@ module.exports = async (s) => {
   let autodelmsg = 'n';
   let autodelmsgdelay = 60;
   let autodelmsgdelayraw = 0;
-  let recallmsg = 0;
+  let recallmsgdelay = 0;
   let humanfroms = [];
   if (autodel) {
     if (humanfrom) {
@@ -920,7 +920,7 @@ module.exports = async (s) => {
                 autodelmsgdelay = deldelayn;
               }
             }
-            recallmsg = 0;
+            recallmsgdelay = 0;
             const recalldelay = replydb.match(/@recalldelay([^ \n]+)@/g);
             let recalldelay0 = '';
             let recalldelayn = 0;
@@ -929,7 +929,7 @@ module.exports = async (s) => {
               recalldelay0 = recalldelay[0];
               const recalldelayn = Number(recalldelay0.replace(new RegExp('@recalldelay', 'g'), '').replace(new RegExp('@', 'g'), ''));
               if (!isNaN(recalldelayn)) {
-                recallmsg = recalldelayn;
+                recallmsgdelay = recalldelayn;
               }
             }
             let nodelmsgs = false;
@@ -1151,14 +1151,14 @@ module.exports = async (s) => {
               }
             } else if (replydb.slice(0, 11) === '@recallmsg@') {
               if (sfrom === 'qq' || sfrom === 'tgBot') {
-                s.delMsg(msgId, { wait: recallmsg });
+                s.delMsg(msgId, { wait: recallmsgdelay });
               }
               if (sfrom === 'HumanTG') {
                 const msgInfo = {
                   userId: botid || '0',
                   groupId: groupId || '0',
                 }
-                autodelmsginfo(msgInfo, [msgId], recallmsg);
+                autodelmsginfo(msgInfo, [msgId], recallmsgdelay);
               }
             } else {
               let replydbtype = '';
