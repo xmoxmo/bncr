@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.4.9
+ * @version 3.5.0
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -104,7 +104,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.4.9';
+const ver = '3.5.0';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -905,7 +905,7 @@ module.exports = async (s) => {
             if (delay) {
               replydb = replydb.replace(new RegExp(/@delay([^ \n]+)@/, 'g'), '');
               delay0 = delay[0];
-              delayn = delay0.replace(new RegExp('@delay', 'g'), '').replace(new RegExp('@', 'g'), '');
+              delayn = Number(delay0.replace(new RegExp('@delay', 'g'), '').replace(new RegExp('@', 'g'), ''));
               if (!isNaN(delayn)) {
                 await sysMethod.sleep(Math.round(delayn));
               }
@@ -1027,11 +1027,11 @@ module.exports = async (s) => {
                       if (userkeyword) {
                         const userkeywords = userkeyword.split(' ');
                         let delnum = Number(userkeywords[0]) || 1;
-                        if (!isNaN(delnum)) {
+                        if (isNaN(delnum)) {
                           delnum = 1;
                         }
                         let deltime = Number(userkeywords[1]) || 1;
-                        if (!isNaN(deltime)) {
+                        if (isNaN(deltime)) {
                           deltime = 1;
                         }
                         let delinfo = [];
