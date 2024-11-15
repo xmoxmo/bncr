@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.4.7
+ * @version 3.4.8
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -104,7 +104,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.4.7';
+const ver = '3.4.8';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -1037,7 +1037,7 @@ module.exports = async (s) => {
                       let delinfo = [];
                       const ChatID = +dbgroupid || +dbfriendid || +dbuserid;
                       delinfo = await s.Bridge.getUserMsgId(ChatID, dbuserid, delnum);
-                      autodelmsginfo(msgInfo, delinfo, deltime);
+                      autodelmsginfo(msgInfo, dbsfrom, delinfo, deltime);
                     }
                   }
                 }
@@ -1164,7 +1164,7 @@ module.exports = async (s) => {
                   userId: botid || '0',
                   groupId: groupId || '0',
                 }
-                autodelmsginfo(msgInfo, [msgId], recallmsgdelay);
+                autodelmsginfo(msgInfo, sfrom, [msgId], recallmsgdelay);
               }
             } else {
               let replydbtype = '';
@@ -1218,7 +1218,7 @@ module.exports = async (s) => {
             userId: botid || '0',
             groupId: groupId || '0',
           }
-          autodelmsginfo(msgInfo, [newmsgid], autodelmsgdelay);
+          autodelmsginfo(msgInfo, sfrom, [newmsgid], autodelmsgdelay);
         }
       } else {
         s.delMsg(newmsgid, { wait: autodelmsgdelay });
@@ -1227,8 +1227,8 @@ module.exports = async (s) => {
     }
     return newmsgid;
   }
-  async function autodelmsginfo(msgInfo, info, delay) {
+  async function autodelmsginfo(msgInfo, from, info, delay) {
     await sysMethod.sleep(delay);
-    sysMethod.Adapters(msgInfo, sfrom, 'delMsg', info);
+    sysMethod.Adapters(msgInfo, from, 'delMsg', info);
   }
 };
