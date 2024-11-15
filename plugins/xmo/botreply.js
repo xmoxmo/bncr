@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.4.6
+ * @version 3.4.7
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -93,8 +93,8 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('撤回设置').setDefault({}),
   humantg: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('总开关').setDescription(`开启将启用人形个性化设置,开启后生效后续设置。`).setDefault(true),
-    autodel: BncrCreateSchema.boolean().setTitle('自动撤回').setDescription(`开启将启用自动撤回功能。`).setDefault(false),
     humanfrom: BncrCreateSchema.string().setTitle('人形平台').setDescription(`填写人形平台名称，使用英文“,”分割。设置对应平台的botid[set 平台名 botid 人形id]。`).setDefault('HumanTG'),
+    autodel: BncrCreateSchema.boolean().setTitle('自动撤回').setDescription(`开启将启用上述平台自动撤回功能。`).setDefault(false),
     mode: BncrCreateSchema.string().setTitle('模式设置').setDescription('选择合适自己的模式').setEnum(['white', 'black']).setEnumNames(['白名单模式', '黑名单模式']).setDefault('white'),
     modestr: BncrCreateSchema.string().setTitle('生效设置').setDescription(`填写应用上述模式的群id使用英文“,”分割。`).setDefault(''),
     delay: BncrCreateSchema.number().setTitle('撤回延时').setDescription(`设置自动撤回超时的秒数`).setDefault(60),
@@ -145,8 +145,8 @@ module.exports = async (s) => {
   const noreplychatarr = ConfigDB.userConfig.noreplychat || [];
   const autodelglobal = ConfigDB.userConfig.autodelglobal.enable || false;
   const humanset = ConfigDB.userConfig.humantg.enable || true;
-  const autodel = ConfigDB.userConfig.humantg.autodel || false;
   const humanfrom = ConfigDB.userConfig.humantg.humanfrom || '';
+  const autodel = ConfigDB.userConfig.humantg.autodel || false;
   const mode = ConfigDB.userConfig.humantg.mode || 'white';
   const modestr = ConfigDB.userConfig.humantg.modestr || '';
   const debug = ConfigDB.userConfig.debug.enable;
@@ -168,23 +168,19 @@ module.exports = async (s) => {
   let botname = await fromDB.get('botname') || '';
   let botid = await fromDB.get('botid') || '';
   let autodelmsg = 'n';
-  let autodelmsgdelay = 60;
-  let autodelmsgdelayraw = 0;
+  let autodelmsgdelay = ConfigDB.userConfig.autodelglobal.delay || 60;
+  let autodelmsgdelayraw = autodelmsgdelay;
   let recallmsgdelay = 0;
   let humanfroms = [];
   if (autodelglobal) {
     autodelmsg = 'y';
-    autodelmsgdelay = ConfigDB.userConfig.autodelglobal.delay || 60;
-    autodelmsgdelayraw = autodelmsgdelay;
   }
   if (humanset) {
-    autodelmsg = 'n';
-    if (autodel) {
-      autodelmsgdelay = ConfigDB.userConfig.humantg.delay || 60;
-      autodelmsgdelayraw = autodelmsgdelay;
-      if (humanfrom) {
-        humanfroms = humanfrom.split(',');
-        if (humanfroms.indexOf(sfrom) != -1) {
+    if (humanfrom) {
+      autodelmsg = 'n';
+      humanfroms = humanfrom.split(',');
+      if (humanfroms.indexOf(sfrom) != -1) {
+        if (autodel) {
           if (mode === 'white') {
             if (modestr) {
               modestrs = modestr.split(',');
@@ -203,6 +199,10 @@ module.exports = async (s) => {
               autodelmsg = 'y';
             }
           }
+        }
+      } else {
+        if (autodelglobal) {
+          autodelmsg = 'y';
         }
       }
     }
