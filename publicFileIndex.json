@@ -154,6 +154,28 @@
     "id": "1WO5n9ocCRhvO7qBVFPpImHrE0k=",
     "isChatPlugin": true
   },
+  "MPoomHu9SqdMbDySq372Zi3uMZI=": {
+    "type": "github",
+    "name": "beautyinstitute",
+    "author": "烟雨",
+    "team": "xmo",
+    "version": "1.0.5",
+    "description": "美女研究所",
+    "classification": [
+      "插件"
+    ],
+    "filename": "beautyinstitute.js",
+    "fileDir": "/plugins/xmo/beautyinstitute.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "MPoomHu9SqdMbDySq372Zi3uMZI=",
+    "isChatPlugin": true
+  },
   "k+OHlXZbDNEdIBMwmbZ9Go9P5qw=": {
     "type": "github",
     "name": "bellevideo",
