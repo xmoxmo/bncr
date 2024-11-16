@@ -2,7 +2,7 @@
  * @author xmo
  * @name cloudyweather
  * @team xmo
- * @version 0.1.3
+ * @version 0.1.4
  * @description 彩云查天气
  * @rule ^彩云天气 ([\s\S]+)$
  * @admin false
@@ -91,7 +91,8 @@ module.exports = async s => {
   // console.log(locinfos_add);
   // console.log(locinfos);
     
-  if (locinfos.length == 1) {
+  const addscon = locinfos.length;
+  if (addscon == 1) {
     locinfo = locinfos[0];
   } else {
     let adds = '多地址请选择序号继续(q退出)：';
@@ -102,14 +103,13 @@ module.exports = async s => {
     }
     // console.log(adds);
     s.reply(adds);
-    const addscon = adds.length;
     let selectcode = await s.waitInput(async (s)=> {
       let scode = s.getMsg();
       if (scode === 'q') {
-      } else if (scode - 1 !== scode - 1) {
-          return await s.again('无效选择,重新输出');
-      } else if (scode > addscon + 1) {
-          return await s.again('无效选择,重新输出');
+      } else if (isNaN(scode) {
+        return await s.again('选择无效,请重新选择:');
+      } else if (scode > addscon || scode < 1) {
+        return await s.again('选择无效,请重新选择:');
       }
     }, 30);
     if (selectcode === null) return s.reply('超时退出');
