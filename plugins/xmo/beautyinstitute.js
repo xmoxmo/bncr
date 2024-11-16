@@ -3,7 +3,7 @@
  * @name beautyinstitute
  * @team xmo
  * @origin 烟雨阁
- * @version 1.0.5
+ * @version 1.0.6
  * @description 美女研究所
  * @rule ^(mvyjs)$
  * @admin flase
