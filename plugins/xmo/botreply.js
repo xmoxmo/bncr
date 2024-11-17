@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.5.0
+ * @version 3.5.1
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -104,7 +104,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.5.0';
+const ver = '3.5.1';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -160,7 +160,7 @@ module.exports = async (s) => {
   const sysDB = new BncrDB('BotReplyDB');
   const commandType = s.param(1);
   const keyword = decodeURIComponent(s.param(2));
-  const replyContent = s.param(3);
+  const replyContent = decodeURIComponent(s.param(3));
   const fromDB = new BncrDB(sfrom);
   const nowDate = sysMethod.getTime('yyyy-MM-dd');
   const nowTime = sysMethod.getTime('hh:mm:ss');
@@ -369,7 +369,12 @@ module.exports = async (s) => {
         msginfo = getlastmsgs[1];
         let lag = Number(getTime) - Number(msgstamp);
         if (Number(lag) < 30) {
-          if (nowmsginfo === msginfo) {
+          let msginfokeyword = '';
+          if (msginfo.includes(':')) {
+            const msginfos = msginfo.split(':');
+            msginfokeyword = msginfos[1];
+          }
+          if (nowmsginfo === msginfo || keyword.includes(msginfokeyword)) {
             sysMethod.pushAdmin({
               platform: [`${sfrom}`],
               msg: `管理员消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >详情:疑似循环`,
@@ -782,8 +787,8 @@ module.exports = async (s) => {
               // console.error('正则替换失败:', e);
             }
           }
-          // console.log('key' + '{' + keyword + '}');
-          // console.log('user' + userkeyword);
+          // console.log('skey:' + '{' + keyword + '}');
+          // console.log('user:' + '{' + userkeyword + '}');
           let keys = await sysDB.keys();
           keys = await sortArray(keys);
           return await newkeyword(keys, keyword, userkeyword, oldkeyword, fgf);
@@ -990,13 +995,49 @@ module.exports = async (s) => {
             let olddbmsg = '';
             if (replydb.slice(0, 7) === '@remsg@') {
               replydb = replydb.slice(7);
-              if (replydb.includes('@chatcom@')) {
-                replydb = replydb.replace(new RegExp('@chatcom@', 'g'), forwardline);
-                if (forwardline) {
-                  s.inlineSugar(replydb);
+              let matchdbkeyword = '';
+              if (replydb.indexOf(userkeyword) == -1) {
+                matchdbkeyword = replydb;
+              } else {
+                let matchdbkeywords = replydb.split(userkeyword);
+                for (const matchx of matchdbkeywords) {
+                  if (matchx) {
+                    matchdbkeyword = matchx;
+                    break;
+                  }
+                }
+              }
+              // console.log('replydb:' + '{' + replydb + '}');
+              // console.log('userkey:' + '{' + userkeyword + '}');
+              // console.log('madbkey:' + '{' + matchdbkeyword + '}');
+              let remsgstop = 0;
+              if (matchdbkeyword) {
+                let verify = 1;
+                if (msgSelf.includes(matchdbkeyword)) {
+                  // console.log('remsgcn:' + '{' + msgSelf.match(new RegExp(matchdbkeyword, 'g')).length + '}');
+                  if (msgSelf.match(new RegExp(matchdbkeyword, 'g')).length > 0) {
+                    verify = 0;
+                    remsgstop = 1;
+                  }
+                }
+                if (verify) {
+                  if (replydb.includes('@chatcom@')) {
+                    replydb = replydb.replace(new RegExp('@chatcom@', 'g'), forwardline);
+                    if (forwardline) {
+                      s.inlineSugar(replydb);
+                    }
+                  } else {
+                    s.inlineSugar(replydb);
+                  }
                 }
               } else {
-                s.inlineSugar(replydb);
+                remsgstop = 1;
+              }
+              if (remsgstop) {
+                sysMethod.pushAdmin({
+                  platform: [`${sfrom}`],
+                  msg: `管理员消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${msgSelf}\n  >详情:重定向指令未响应`,
+                });
               }
             } else if (replydb.slice(0, 6) === '@mask@') { //伪装消息
               replydbones = '';
