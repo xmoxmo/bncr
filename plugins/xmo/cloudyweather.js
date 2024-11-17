@@ -2,7 +2,7 @@
  * @author xmo
  * @name cloudyweather
  * @team xmo
- * @version 0.1.4
+ * @version 0.1.5
  * @description 彩云查天气
  * @rule ^彩云天气 ([\s\S]+)$
  * @admin false
@@ -106,7 +106,7 @@ module.exports = async s => {
     let selectcode = await s.waitInput(async (s)=> {
       let scode = s.getMsg();
       if (scode === 'q') {
-      } else if (isNaN(scode) {
+      } else if (isNaN(scode)) {
         return await s.again('选择无效,请重新选择:');
       } else if (scode > addscon || scode < 1) {
         return await s.again('选择无效,请重新选择:');
