@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.5.1
+ * @version 3.5.2
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -104,7 +104,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.5.1';
+const ver = '3.5.2';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -814,7 +814,7 @@ module.exports = async (s) => {
                   let smatch = '';
                   if (keygjc.includes('*')) {
                     keygjc = keygjc.replace(new RegExp(/\*/, 'g'), '');
-                    if (fgf) {
+                    if (fgf || keygjc.includes(' ') || keygjc.includes(':')) {
                       smatch = keyword === keygjc;
                     } else {
                       smatch = keyword.includes(keygjc);
