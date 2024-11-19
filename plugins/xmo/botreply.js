@@ -62,7 +62,7 @@
   @delayN@            //延时发送秒数(N改为整数)
   @nochat@            //禁止创建回复路径
   @deldelayN@         //延时删除回复的秒数(N改为整数)
-  @recalldelayN@         //延时删除回复的秒数(N改为整数)
+  @recalldelayN@      //延时删除回复的秒数(N改为整数)
 示例：
   参照：https://github.com/xmoxmo/bncr
 */
@@ -912,9 +912,13 @@ module.exports = async (s) => {
             let delay0 = '';
             let delayn = 0;
             if (delay) {
-              replydb = replydb.replace(new RegExp(/@delay([^ \n]+)@/, 'g'), '');
               delay0 = delay[0];
-              delayn = Number(delay0.replace(new RegExp('@delay', 'g'), '').replace(new RegExp('@', 'g'), ''));
+              delay0 = delay0.replace(new RegExp('@delay', 'g'), '')
+              if (delay0.includes('@')) {
+                const delay0s = delay0.split('@');
+                delay0 = delay0s[0];
+              }
+              delayn = Number(delay0);
               if (!isNaN(delayn)) {
                 await sysMethod.sleep(Math.round(delayn));
               }
@@ -924,9 +928,13 @@ module.exports = async (s) => {
             let deldelay0 = '';
             let deldelayn = 0;
             if (deldelay) {
-              replydb = replydb.replace(new RegExp(/@deldelay([^ \n]+)@/, 'g'), '');
               deldelay0 = deldelay[0];
-              deldelayn = Number(deldelay0.replace(new RegExp('@deldelay', 'g'), '').replace(new RegExp('@', 'g'), ''));
+              deldelay0 = deldelay0.replace(new RegExp('@deldelay', 'g'), '')
+              if (deldelay0.includes('@')) {
+                const deldelay0s = deldelay0.split('@');
+                deldelay0 = deldelay0s[0];
+              }
+              deldelayn = Number(deldelay0);
               if (!isNaN(deldelayn)) {
                 if (autodelmsg === 'n') {
                   autodelmsg === 'y';
@@ -939,12 +947,25 @@ module.exports = async (s) => {
             let recalldelay0 = '';
             let recalldelayn = 0;
             if (recalldelay) {
-              replydb = replydb.replace(new RegExp(/@recalldelay([^ \n]+)@/, 'g'), '');
               recalldelay0 = recalldelay[0];
-              const recalldelayn = Number(recalldelay0.replace(new RegExp('@recalldelay', 'g'), '').replace(new RegExp('@', 'g'), ''));
+              recalldelay0 = recalldelay0.replace(new RegExp('@recalldelay', 'g'), '')
+              if (recalldelay0.includes('@')) {
+                const recalldelay0s = recalldelay0.split('@');
+                recalldelay0 = recalldelay0s[0];
+              }
+              recalldelayn = Number(recalldelay0);
               if (!isNaN(recalldelayn)) {
                 recallmsgdelay = recalldelayn;
               }
+            }
+            if (delay) {
+              replydb = replydb.replace(new RegExp(/@delay([^ \n]+)@/, 'g'), '');
+            }
+            if (deldelay) {
+              replydb = replydb.replace(new RegExp(/@deldelay([^ \n]+)@/, 'g'), '');
+            }
+            if (recalldelay) {
+              replydb = replydb.replace(new RegExp(/@recalldelay([^ \n]+)@/, 'g'), '');
             }
             let nodelmsgs = false;
             if (replydb.includes('@nodel@')) {
