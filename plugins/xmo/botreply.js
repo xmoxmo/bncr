@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.5.4
+ * @version 3.5.5
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -62,7 +62,7 @@
   @delayN@            //延时发送秒数(N改为整数)
   @nochat@            //禁止创建回复路径
   @deldelayN@         //延时删除回复的秒数(N改为整数)
-  @recalldelayN@      //延时删除回复的秒数(N改为整数)
+  @recalldelayN@      //延时撤回消息的秒数(N改为整数)
 示例：
   参照：https://github.com/xmoxmo/bncr
 */
@@ -104,7 +104,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.5.4';
+const ver = '3.5.5';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -908,6 +908,46 @@ module.exports = async (s) => {
                 return '@noreply@';
               }
             }
+            let nodelmsgs = false;
+            if (replydb.includes('@nodel@')) {
+              replydb = replydb.replace(new RegExp('@nodel@', 'g'), '');
+              nodelmsgs = true;
+            }
+            if (replydb.includes('@userkeyword@')) {
+              replydb = replydb.replace(new RegExp('@userkeyword@', 'g'), userkeyword);
+            }
+            if (replydb.includes('@sfrom@')) {
+              replydb = replydb.replace(new RegExp('@sfrom@', 'g'), sfrom);
+            }
+            if (replydb.includes('@groupid@')) {
+              replydb = replydb.replace(new RegExp('@groupid@', 'g'), groupId);
+            }
+            if (replydb.includes('@userid@')) {
+              replydb = replydb.replace(new RegExp('@userid@', 'g'), userId);
+            }
+            if (replydb.includes('@msgself@')) {
+              replydb = replydb.replace(new RegExp('@msgself@', 'g'), msgSelf);
+            }
+            if (replydb.includes('@msgid@')) {
+              replydb = replydb.replace(new RegExp('@msgid@', 'g'), msgId);
+            }
+            if (replydb.includes('@username@')) {
+              replydb = replydb.replace(new RegExp('@username@', 'g'), userName);
+            }
+            if (replydb.includes('@groupname@')) {
+              replydb = replydb.replace(new RegExp('@groupname@', 'g'), groupName);
+            }
+            if (replydb.includes('@nowdate@')) {
+              replydb = replydb.replace(new RegExp('@nowdate@', 'g'), nowDate);
+            }
+            if (replydb.includes('@nowtime@')) {
+              replydb = replydb.replace(new RegExp('@nowtime@', 'g'), nowTime);
+            }
+            let onchat = 1;
+            if (replydb.includes('@nochat@')) {
+              replydb = replydb.replace(new RegExp('@nochat@', 'g'), '');
+              onchat = 0;
+            }
             const delay = replydb.match(/@delay([^ \n]+)@/g);
             let delay0 = '';
             let delayn = 0;
@@ -966,46 +1006,6 @@ module.exports = async (s) => {
             }
             if (recalldelay) {
               replydb = replydb.replace(new RegExp(/@recalldelay([^ \n]+)@/, 'g'), '');
-            }
-            let nodelmsgs = false;
-            if (replydb.includes('@nodel@')) {
-              replydb = replydb.replace(new RegExp('@nodel@', 'g'), '');
-              nodelmsgs = true;
-            }
-            if (replydb.includes('@userkeyword@')) {
-              replydb = replydb.replace(new RegExp('@userkeyword@', 'g'), userkeyword);
-            }
-            if (replydb.includes('@sfrom@')) {
-              replydb = replydb.replace(new RegExp('@sfrom@', 'g'), sfrom);
-            }
-            if (replydb.includes('@groupid@')) {
-              replydb = replydb.replace(new RegExp('@groupid@', 'g'), groupId);
-            }
-            if (replydb.includes('@userid@')) {
-              replydb = replydb.replace(new RegExp('@userid@', 'g'), userId);
-            }
-            if (replydb.includes('@msgself@')) {
-              replydb = replydb.replace(new RegExp('@msgself@', 'g'), msgSelf);
-            }
-            if (replydb.includes('@msgid@')) {
-              replydb = replydb.replace(new RegExp('@msgid@', 'g'), msgId);
-            }
-            if (replydb.includes('@username@')) {
-              replydb = replydb.replace(new RegExp('@username@', 'g'), userName);
-            }
-            if (replydb.includes('@groupname@')) {
-              replydb = replydb.replace(new RegExp('@groupname@', 'g'), groupName);
-            }
-            if (replydb.includes('@nowdate@')) {
-              replydb = replydb.replace(new RegExp('@nowdate@', 'g'), nowDate);
-            }
-            if (replydb.includes('@nowtime@')) {
-              replydb = replydb.replace(new RegExp('@nowtime@', 'g'), nowTime);
-            }
-            let onchat = 1;
-            if (replydb.includes('@nochat@')) {
-              replydb = replydb.replace(new RegExp('@nochat@', 'g'), '');
-              onchat = 0;
             }
             let replydbones = '';
             let dbsfrom = '';
