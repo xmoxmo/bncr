@@ -3,7 +3,7 @@
  * @author Aming
  * @name qq
  * @team xmo
- * @version 1.1.0
+ * @version 1.1.1
  * @description 外置qq机器人适配器
  * @adapter true
  * @public true
@@ -18,10 +18,7 @@
 const jsonSchema = BncrCreateSchema.object({
   enable: BncrCreateSchema.boolean().setTitle('是否开启适配器').setDescription(`设置为关则不加载该适配器`).setDefault(false),
   mode: BncrCreateSchema.string().setTitle('适配器模式').setDescription(`1.“WebSocket”:接收地址ws://bncrip:9090/api/bot/qqws 2.“Http”:填写“http交互发送地址”`).setEnum(['ws', 'http']).setEnumNames(['WebSocket', 'Http']).setDefault('ws'),
-  sendUrl: BncrCreateSchema.string()
-    .setTitle('http交互发送地址')
-    .setDescription(`1. 远端qq机器人的监听地址:端口 2. 无界接收地址为:http://bncrip:9090/api/bot/qqHttp`)
-    .setDefault(''),
+  sendUrl: BncrCreateSchema.string().setTitle('http交互发送地址').setDescription(`1. 填写:http://qq机器人的地址:端口 2. 接收地址:http://bncrip:9090/api/bot/qqHttp`).setDefault(''),
 });
 
 /* 配置管理器 */
