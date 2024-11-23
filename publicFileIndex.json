@@ -482,6 +482,28 @@
     "id": "lmTP/s+TMZm1ooycsE2t73cmA0c=",
     "isChatPlugin": true
   },
+  "HG3FF9c0XmHsBjaEhpHBEtBFjR0=": {
+    "type": "github",
+    "name": "resetpublic",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.2",
+    "description": "根据作者和团队自动开启或关闭Public状态",
+    "classification": [
+      "插件"
+    ],
+    "filename": "resetpublic.ts",
+    "fileDir": "/plugins/xmo/resetpublic.ts",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "HG3FF9c0XmHsBjaEhpHBEtBFjR0=",
+    "isChatPlugin": true
+  },
   "lXMhWeQvKSlirY+uhthf4UjOHeA=": {
     "type": "github",
     "name": "skits",
