@@ -308,6 +308,28 @@
     "id": "2jNYXLZhhOJb1eZWOPvIVZJ34d4=",
     "isChatPlugin": true
   },
+  "db1zT7vggON/q+a6fHQjEkyXUbE=": {
+    "type": "github",
+    "name": "cultivation",
+    "author": "onz3v",
+    "team": "xmo",
+    "version": "v1.0.2",
+    "description": "🐒这个人很懒什么都没有留下。",
+    "classification": [
+      "插件"
+    ],
+    "filename": "cultivation.js",
+    "fileDir": "/plugins/xmo/cultivation.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": false,
+    "id": "db1zT7vggON/q+a6fHQjEkyXUbE=",
+    "isChatPlugin": true
+  },
   "l/znp9hXhwOXBEIqMAWTKCmNeGQ=": {
     "type": "github",
     "name": "delmsg",
