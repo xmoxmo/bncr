@@ -2,7 +2,7 @@
  * @author xmo
  * @name resetpublic
  * @team xmo
- * @version 0.0.2
+ * @version 0.0.4
  * @description 根据作者和团队自动开启或关闭Public状态
  * @rule ^(修正发布状态)$
  * @admin true
@@ -59,7 +59,7 @@ function replaceInFile(filePath: string) {
       console.error(`读取文件出错: ${filePath}`, err);
       return;
     }
-    if (!filePath.includes('resetpublic') && !data.includes('@keeppublic')) {
+    if (!data.includes('@keeppublic')) {
       if (data.includes('@public true')) {
         let verifyt = false;
         if (author && team) {
