@@ -2,13 +2,13 @@
  * @author xmo
  * @name resetpublic
  * @team xmo
- * @version 0.0.1
+ * @version 0.0.2
  * @description 根据作者和团队自动开启或关闭Public状态
  * @rule ^(修正发布状态)$
  * @admin true
  * @priority 9999
  * @classification ["插件"]
- * @public false
+ * @public true
  * @disable false
  */
 
