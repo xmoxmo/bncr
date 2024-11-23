@@ -291,8 +291,8 @@
     "name": "cronjobplus",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.0",
-    "description": "定时任务Plus。",
+    "version": "0.1.1",
+    "description": "定时任务Plus，修改配置后重启生效",
     "classification": [
       "cronjobplus"
     ],
