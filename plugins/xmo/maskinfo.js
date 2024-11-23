@@ -2,7 +2,7 @@
  * @author xmo
  * @name maskinfo
  * @team xmo
- * @version 0.0.4
+ * @version 0.0.5
  * @description 伪装消息 (平台) (群组) (好友) (用户) (内容) 
  * @rule ^伪装消息\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+([\s\S]+)$
  * @rule ^伪装消息\s+(\S+)\s+(\S+)\s+(\S+)\s+([\s\S]+)$
@@ -40,12 +40,8 @@ module.exports = async s => {
   if (userid == 0) {
     userid = '0';
   }
-  if (groupid == 0 && friendid == 0) {
-    s.reply('伪装消息群组和好友不能同时为空');
-    return;
-  }
-  if (userid == 0) {
-    s.reply('伪装消息用户不能为空');
+  if (groupid == 0 && friendid == 0 && userid == 0) {
+    s.reply('伪装消息群组、好友、用户不能同时为空');
     return;
   }
   if (!msg) {
