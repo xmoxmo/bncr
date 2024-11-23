@@ -2,8 +2,8 @@
  * @author xmo
  * @name cronjobplus
  * @team xmo
- * @version 0.1.0
- * @description 定时任务Plus。
+ * @version 0.1.1
+ * @description 定时任务Plus，修改配置后重启生效
  * @rule ^(初始化定时任务)$
  * @admin true
  * @priority 100
