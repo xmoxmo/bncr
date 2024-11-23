@@ -399,7 +399,7 @@
     "name": "maskinfo",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "伪装消息 (平台) (群组) (好友) (用户) (内容) ",
     "classification": [
       "插件"
