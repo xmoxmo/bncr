@@ -6,11 +6,12 @@
  * @rule ^(每日一练|每日二练)$
  * @description 🐒这个人很懒什么都没有留下。
  * @author onz3v
- * @version v1.0.1
+ * @version v1.0.2
  * @public true
  * @name cultivation
  * @admin true
  * @team xmo
+ * @classification ["插件"]
  */
 
 module.exports = async s => {
