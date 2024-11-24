@@ -2,7 +2,7 @@
  * @author xmo
  * @name resetpublic
  * @team xmo
- * @version 0.0.5
+ * @version 0.0.6
  * @description 根据作者和团队自动开启或关闭Public状态
  * @rule ^(修正发布状态)$
  * @admin true
@@ -26,8 +26,6 @@ const jsonSchema = BncrCreateSchema.object({
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 let author = '';
 let team = '';
-let outcome = '';
-let outcomen = 0;
 
 import fs from 'fs';
 import path from 'path';
@@ -56,6 +54,8 @@ module.exports = async (s: Sender) => {
 
 // 替换文件中的字符串
 function replaceInFile(filePath: string) {
+  let outcome = '';
+  let outcomen = 0;
   fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
       console.error(`读取文件出错: ${filePath}`, err);
