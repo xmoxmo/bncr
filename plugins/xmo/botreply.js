@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.5.6
+ * @version 3.5.7
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -104,7 +104,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.5.6';
+const ver = '3.5.7';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -374,7 +374,13 @@ module.exports = async (s) => {
             const msginfos = msginfo.split(':');
             msginfokeyword = msginfos[1];
           }
-          if (nowmsginfo === msginfo || keyword.includes(msginfokeyword)) {
+          let xverify = 0;
+          if (keyword.includes(' ') && msginfokeyword.includes(' ')) {
+            if (keyword.includes(msginfokeyword)) {
+              xverify = 1;
+            }
+          }
+          if (nowmsginfo === msginfo || xverify) {
             sysMethod.pushAdmin({
               platform: [`${sfrom}`],
               msg: `管理员消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >详情:疑似循环`,
@@ -1006,6 +1012,9 @@ module.exports = async (s) => {
             }
             if (recalldelay) {
               replydb = replydb.replace(new RegExp(/@recalldelay([^ \n]+)@/, 'g'), '');
+            }
+            if (sfrom !== 'HumanTG') {
+              replydb = replydb.replace(new RegExp('```', 'g'), '');
             }
             let replydbones = '';
             let dbsfrom = '';
