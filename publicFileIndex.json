@@ -487,7 +487,7 @@
     "name": "resetpublic",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "根据作者和团队自动开启或关闭Public状态",
     "classification": [
       "插件"
