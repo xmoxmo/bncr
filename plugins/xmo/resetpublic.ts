@@ -2,7 +2,7 @@
  * @author xmo
  * @name resetpublic
  * @team xmo
- * @version 0.0.4
+ * @version 0.0.5
  * @description 根据作者和团队自动开启或关闭Public状态
  * @rule ^(修正发布状态)$
  * @admin true
@@ -26,6 +26,8 @@ const jsonSchema = BncrCreateSchema.object({
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 let author = '';
 let team = '';
+let outcome = '';
+let outcomen = 0;
 
 import fs from 'fs';
 import path from 'path';
@@ -47,10 +49,10 @@ module.exports = async (s: Sender) => {
   directories.forEach(directory => {
     processDirectory(directory);
   });
+  s.reply('修正发布状态: 执行完成！详情查看日志');
 
-  console.log('字符串替换完成。');
-  s.reply('字符串替换完成。');
 };
+
 
 // 替换文件中的字符串
 function replaceInFile(filePath: string) {
@@ -59,42 +61,112 @@ function replaceInFile(filePath: string) {
       console.error(`读取文件出错: ${filePath}`, err);
       return;
     }
-    if (!data.includes('@keeppublic')) {
-      if (data.includes('@public true')) {
-        let verifyt = false;
-        if (author && team) {
-          verifyt = !data.includes(`@author ${author}`) && !data.includes(`@team ${team}`);
-        } else {
-          if (author) {
-            verifyt = !data.includes(`@author ${author}`);
-          }
-          if (team) {
-            verifyt = !data.includes(`@team ${team}`);
-          }
-        }
-        if (verifyt) {
-          const result = data.replace('@public true', '@public false');
-          fs.writeFile(filePath, result, 'utf8', err => {
-            if (err) {
-              console.error(`写入文件出错: ${filePath}`, err);
+    let keyword = '';
+    let regex = '';
+    let matchedLines = '';
+    let matchedLine = '';
+    keyword = '@keeppublic';
+    regex = new RegExp(`^.*${keyword}.*\n?`, 'gm');
+    matchedLines = data.match(regex);
+    if (matchedLines) {
+      matchedLine = matchedLines[0];
+    }
+    if (matchedLine) {
+      matchedLine = matchedLine.slice(0, 14);
+    }
+    if (matchedLine !== ' * @keeppublic') {
+      keyword = '';
+      regex = '';
+      matchedLines = '';
+      matchedLine = '';
+      keyword = '@public true';
+      regex = new RegExp(`^.*${keyword}.*\n?`, 'gm');
+      matchedLines = data.match(regex);
+      if (matchedLines) {
+        matchedLine = matchedLines[0];
+      }
+      if (matchedLine) {
+        matchedLine = matchedLine.slice(0, 15);
+        if (matchedLine === ' * @public true') {
+          let verifyt = false;
+          if (author && team) {
+            verifyt = !data.includes(`@author ${author}`) && !data.includes(`@team ${team}`);
+          } else {
+            if (author) {
+              verifyt = !data.includes(`@author ${author}`);
             }
-          });
+            if (team) {
+              verifyt = !data.includes(`@team ${team}`);
+            }
+          }
+          if (verifyt) {
+            outcomen = outcomen + 1;
+            outcome = '修正发布状态：' + outcomen + '. ' + filePath.split('\\').pop().split('/').pop() + ' >> @public false';
+            console.log(outcome);
+            const result = data.replace(' * @public true', ' * @public false');
+            fs.writeFile(filePath, result, 'utf8', err => {
+              if (err) {
+                console.error(`写入文件出错: ${filePath}`, err);
+              }
+            });
+          }
         }
       }
-      if (data.includes('@public false')) {
-        let verifyf = false;
-        if (author && team) {
-          verifyf = data.includes(`@author ${author}`) || data.includes(`@team ${team}`);
-        } else {
-          if (author) {
-            verifyf = data.includes(`@author ${author}`);
+      keyword = '';
+      regex = '';
+      matchedLines = '';
+      matchedLine = '';
+      keyword = '@public false';
+      regex = new RegExp(`^.*${keyword}.*\n?`, 'gm');
+      matchedLines = data.match(regex);
+      if (matchedLines) {
+        matchedLine = matchedLines[0];
+      }
+      if (matchedLine) {
+        matchedLine = matchedLine.slice(0, 16);
+        if (matchedLine === ' * @public false') {
+          let verifyf = false;
+          if (author && team) {
+            verifyf = data.includes(`@author ${author}`) || data.includes(`@team ${team}`);
+          } else {
+            if (author) {
+              verifyf = data.includes(`@author ${author}`);
+            }
+            if (team) {
+              verifyf = data.includes(`@team ${team}`);
+            }
           }
-          if (team) {
-            verifyf = data.includes(`@team ${team}`);
+          if (verifyf) {
+            outcomen = outcomen + 1;
+            outcome = '修正发布状态：' + outcomen + '. ' + filePath.split('\\').pop().split('/').pop() + ' >> @public true';
+            console.log(outcome);
+            const result = data.replace(' * @public false', ' * @public true');
+            fs.writeFile(filePath, result, 'utf8', err => {
+              if (err) {
+                console.error(`写入文件出错: ${filePath}`, err);
+              }
+            });
           }
         }
-        if (verifyf) {
-          const result = data.replace('@public false', '@public true');
+      }
+    } else {
+      keyword = '';
+      regex = '';
+      matchedLines = '';
+      matchedLine = '';
+      keyword = '@public true';
+      regex = new RegExp(`^.*${keyword}.*\n?`, 'gm');
+      matchedLines = data.match(regex);
+      if (matchedLines) {
+        matchedLine = matchedLines[0];
+      }
+      if (matchedLine) {
+        matchedLine = matchedLine.slice(0, 15);
+        if (matchedLine === ' * @public true') {
+          outcomen = outcomen + 1;
+          outcome = '修正发布状态：' + outcomen + '. ' + filePath.split('\\').pop().split('/').pop() + ' >> @public false';
+          console.log(outcome);
+          const result = data.replace(' * @public true', ' * @public false');
           fs.writeFile(filePath, result, 'utf8', err => {
             if (err) {
               console.error(`写入文件出错: ${filePath}`, err);
@@ -129,3 +201,4 @@ function processDirectory(directory: string) {
     });
   });
 }
+
