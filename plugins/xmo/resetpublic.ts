@@ -2,7 +2,7 @@
  * @author xmo
  * @name resetpublic
  * @team xmo
- * @version 0.0.6
+ * @version 0.0.7
  * @description 根据作者和团队自动开启或关闭Public状态
  * @rule ^(修正发布状态)$
  * @admin true
@@ -24,6 +24,7 @@ const jsonSchema = BncrCreateSchema.object({
 });
 
 const ConfigDB = new BncrPluginConfig(jsonSchema);
+const sysDB = new BncrDB('ResetPublic');
 let author = '';
 let team = '';
 
@@ -42,67 +43,142 @@ module.exports = async (s: Sender) => {
     return;
   }
 
+  let xoutcome = '';
+  let outcomen = 0;
+
+  let xdboutcome = await sysDB.get('outcome');
+  if (xdboutcome) {
+    await sysDB.set('outcome', '')
+    xdboutcome = '';
+  }
+
   const directories = ['Adapter', 'plugins'].map(e => path.join(sysMethod.runWorkDir, e));
 
   directories.forEach(directory => {
     processDirectory(directory);
   });
-  s.reply('修正发布状态: 执行完成！详情查看日志');
+  
+  await sysMethod.sleep(3);
+  xdboutcome = await sysDB.get('outcome');
+  if (xdboutcome) {
+    s.reply('发布状态修正结果:' + '\n' + xdboutcome);
+  } else {
+    s.reply('发布状态与预设作者、团队匹配，无需修正');
+  }
 
-};
-
-
-// 替换文件中的字符串
-function replaceInFile(filePath: string) {
-  let outcome = '';
-  let outcomen = 0;
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) {
-      console.error(`读取文件出错: ${filePath}`, err);
-      return;
-    }
-    let keyword = '';
-    let regex = '';
-    let matchedLines = '';
-    let matchedLine = '';
-    keyword = '@keeppublic';
-    regex = new RegExp(`^.*${keyword}.*\n?`, 'gm');
-    matchedLines = data.match(regex);
-    if (matchedLines) {
-      matchedLine = matchedLines[0];
-    }
-    if (matchedLine) {
-      matchedLine = matchedLine.slice(0, 14);
-    }
-    if (matchedLine !== ' * @keeppublic') {
-      keyword = '';
-      regex = '';
-      matchedLines = '';
-      matchedLine = '';
-      keyword = '@public true';
+  // 替换文件中的字符串
+  async function replaceInFile(filePath: string) {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      let outcome = '';
+      if (err) {
+        console.error(`读取文件出错: ${filePath}`, err);
+        return;
+      }
+      let keyword = '';
+      let regex = '';
+      let matchedLines = '';
+      let matchedLine = '';
+      keyword = '@keeppublic';
       regex = new RegExp(`^.*${keyword}.*\n?`, 'gm');
       matchedLines = data.match(regex);
       if (matchedLines) {
         matchedLine = matchedLines[0];
       }
       if (matchedLine) {
-        matchedLine = matchedLine.slice(0, 15);
-        if (matchedLine === ' * @public true') {
-          let verifyt = false;
-          if (author && team) {
-            verifyt = !data.includes(`@author ${author}`) && !data.includes(`@team ${team}`);
-          } else {
-            if (author) {
-              verifyt = !data.includes(`@author ${author}`);
+        matchedLine = matchedLine.slice(0, 14);
+      }
+      if (matchedLine !== ' * @keeppublic') {
+        keyword = '';
+        regex = '';
+        matchedLines = '';
+        matchedLine = '';
+        keyword = '@public true';
+        regex = new RegExp(`^.*${keyword}.*\n?`, 'gm');
+        matchedLines = data.match(regex);
+        if (matchedLines) {
+          matchedLine = matchedLines[0];
+        }
+        if (matchedLine) {
+          matchedLine = matchedLine.slice(0, 15);
+          if (matchedLine === ' * @public true') {
+            let verifyt = false;
+            if (author && team) {
+              verifyt = !data.includes(`@author ${author}`) && !data.includes(`@team ${team}`);
+            } else {
+              if (author) {
+                verifyt = !data.includes(`@author ${author}`);
+              }
+              if (team) {
+                verifyt = !data.includes(`@team ${team}`);
+              }
             }
-            if (team) {
-              verifyt = !data.includes(`@team ${team}`);
+            if (verifyt) {
+              outcomen = outcomen + 1;
+              outcome = outcomen + '. ' + filePath.split('\\').pop().split('/').pop() + ' >> @public false';
+              // console.log(outcome);
+              const result = data.replace(' * @public true', ' * @public false');
+              fs.writeFile(filePath, result, 'utf8', err => {
+                if (err) {
+                  console.error(`写入文件出错: ${filePath}`, err);
+                }
+              });
             }
           }
-          if (verifyt) {
+        }
+        keyword = '';
+        regex = '';
+        matchedLines = '';
+        matchedLine = '';
+        keyword = '@public false';
+        regex = new RegExp(`^.*${keyword}.*\n?`, 'gm');
+        matchedLines = data.match(regex);
+        if (matchedLines) {
+          matchedLine = matchedLines[0];
+        }
+        if (matchedLine) {
+          matchedLine = matchedLine.slice(0, 16);
+          if (matchedLine === ' * @public false') {
+            let verifyf = false;
+            if (author && team) {
+              verifyf = data.includes(`@author ${author}`) || data.includes(`@team ${team}`);
+            } else {
+              if (author) {
+                verifyf = data.includes(`@author ${author}`);
+              }
+              if (team) {
+                verifyf = data.includes(`@team ${team}`);
+              }
+            }
+            if (verifyf) {
+              outcomen = outcomen + 1;
+              outcome = outcomen + '. ' + filePath.split('\\').pop().split('/').pop() + ' >> @public true';
+              // console.log(outcome);
+              const result = data.replace(' * @public false', ' * @public true');
+              fs.writeFile(filePath, result, 'utf8', err => {
+                if (err) {
+                  console.error(`写入文件出错: ${filePath}`, err);
+                }
+              });
+            }
+          }
+        }
+      } else {
+        keyword = '';
+        regex = '';
+        matchedLines = '';
+        matchedLine = '';
+        keyword = '@public true';
+        regex = new RegExp(`^.*${keyword}.*\n?`, 'gm');
+        matchedLines = data.match(regex);
+        if (matchedLines) {
+          matchedLine = matchedLines[0];
+        }
+        if (matchedLine) {
+          matchedLine = matchedLine.slice(0, 15);
+          if (matchedLine === ' * @public true') {
             outcomen = outcomen + 1;
-            outcome = '修正发布状态：' + outcomen + '. ' + filePath.split('\\').pop().split('/').pop() + ' >> @public false';
-            console.log(outcome);
+            outcome = outcomen + '. ' + filePath.split('\\').pop().split('/').pop() + ' >> @public false';
+            // console.log(outcome);
             const result = data.replace(' * @public true', ' * @public false');
             fs.writeFile(filePath, result, 'utf8', err => {
               if (err) {
@@ -112,93 +188,45 @@ function replaceInFile(filePath: string) {
           }
         }
       }
-      keyword = '';
-      regex = '';
-      matchedLines = '';
-      matchedLine = '';
-      keyword = '@public false';
-      regex = new RegExp(`^.*${keyword}.*\n?`, 'gm');
-      matchedLines = data.match(regex);
-      if (matchedLines) {
-        matchedLine = matchedLines[0];
+      if (outcome) {
+        // console.log(sysMethod.getTime('hh:mm:ss') + ' 发布状态修正：' + outcome);
+        if (xoutcome) {
+          xoutcome = xoutcome + '\n' + outcome;
+        } else {
+          xoutcome = outcome;
+        }
+        assetdb(xoutcome);
       }
-      if (matchedLine) {
-        matchedLine = matchedLine.slice(0, 16);
-        if (matchedLine === ' * @public false') {
-          let verifyf = false;
-          if (author && team) {
-            verifyf = data.includes(`@author ${author}`) || data.includes(`@team ${team}`);
-          } else {
-            if (author) {
-              verifyf = data.includes(`@author ${author}`);
-            }
-            if (team) {
-              verifyf = data.includes(`@team ${team}`);
-            }
-          }
-          if (verifyf) {
-            outcomen = outcomen + 1;
-            outcome = '修正发布状态：' + outcomen + '. ' + filePath.split('\\').pop().split('/').pop() + ' >> @public true';
-            console.log(outcome);
-            const result = data.replace(' * @public false', ' * @public true');
-            fs.writeFile(filePath, result, 'utf8', err => {
-              if (err) {
-                console.error(`写入文件出错: ${filePath}`, err);
-              }
-            });
-          }
+      async function assetdb(outcome) {
+        let dboutcome = await sysDB.get('outcome');
+        if (dboutcome !== outcome) {
+          await sysDB.set('outcome', outcome);
         }
       }
-    } else {
-      keyword = '';
-      regex = '';
-      matchedLines = '';
-      matchedLine = '';
-      keyword = '@public true';
-      regex = new RegExp(`^.*${keyword}.*\n?`, 'gm');
-      matchedLines = data.match(regex);
-      if (matchedLines) {
-        matchedLine = matchedLines[0];
-      }
-      if (matchedLine) {
-        matchedLine = matchedLine.slice(0, 15);
-        if (matchedLine === ' * @public true') {
-          outcomen = outcomen + 1;
-          outcome = '修正发布状态：' + outcomen + '. ' + filePath.split('\\').pop().split('/').pop() + ' >> @public false';
-          console.log(outcome);
-          const result = data.replace(' * @public true', ' * @public false');
-          fs.writeFile(filePath, result, 'utf8', err => {
-            if (err) {
-              console.error(`写入文件出错: ${filePath}`, err);
-            }
-          });
-        }
-      }
-    }
-  });
-}
+    });
+  }
 
-// 递归遍历目录
-function processDirectory(directory: string) {
-  fs.readdir(directory, (err, files) => {
-    if (err) {
-      console.error(`读取目录出错: ${directory}`, err);
-      return;
-    }
-    files.forEach(file => {
-      const filePath = path.join(directory, file);
-      fs.stat(filePath, (err, stats) => {
-        if (err) {
-          console.error(`获取文件状态出错: ${filePath}`, err);
-          return;
-        }
-        if (stats.isFile()) {
-          replaceInFile(filePath);
-        } else if (stats.isDirectory()) {
-          processDirectory(filePath);
-        }
+  // 递归遍历目录
+  async function processDirectory(directory: string) {
+    fs.readdir(directory, (err, files) => {
+      if (err) {
+        console.error(`读取目录出错: ${directory}`, err);
+        return;
+      }
+      files.forEach(file => {
+        const filePath = path.join(directory, file);
+        fs.stat(filePath, (err, stats) => {
+          if (err) {
+            console.error(`获取文件状态出错: ${filePath}`, err);
+            return;
+          }
+          if (stats.isFile()) {
+            replaceInFile(filePath);
+          } else if (stats.isDirectory()) {
+            processDirectory(filePath);
+          }
+        });
       });
     });
-  });
-}
-
+  }
+};
