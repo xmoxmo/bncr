@@ -5,7 +5,7 @@
  * @rule ^(每日一练|每日二练)$
  * @description 🐒这个人很懒什么都没有留下。
  * @author onz3v
- * @version v1.0.2
+ * @version 1.0.3
  * @public true
  * @name cultivation
  * @admin true
