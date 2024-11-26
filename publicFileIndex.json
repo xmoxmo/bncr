@@ -132,28 +132,6 @@
     "id": "A+OGpa9VE7Lr00jQW8GVgxrdKhE=",
     "isChatPlugin": false
   },
-  "1WO5n9ocCRhvO7qBVFPpImHrE0k=": {
-    "type": "github",
-    "name": "aigptv2",
-    "author": "YuanKK",
-    "team": "xmo",
-    "version": "1.0.3",
-    "description": "aigptv2 触发命令aigptv2",
-    "classification": [
-      "GPTI"
-    ],
-    "filename": "aigptv2.js",
-    "fileDir": "/plugins/xmo/aigptv2.js",
-    "systemVersionRange": "",
-    "isCron": false,
-    "isAdapter": false,
-    "isMod": false,
-    "isService": false,
-    "isAuthentication": false,
-    "isEncPlugin": false,
-    "id": "1WO5n9ocCRhvO7qBVFPpImHrE0k=",
-    "isChatPlugin": true
-  },
   "MPoomHu9SqdMbDySq372Zi3uMZI=": {
     "type": "github",
     "name": "beautyinstitute",
