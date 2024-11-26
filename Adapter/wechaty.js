@@ -3,7 +3,7 @@
  * @author 小寒寒
  * @name wechaty
  * @team xmo
- * @version 1.3.6
+ * @version 1.3.7
  * @description wx机器人内置适配器，微信需要实名。
  * @adapter true
  * @public true
@@ -41,6 +41,7 @@ const ConfigDB = new BncrPluginConfig(jsonSchema);
 /* 重置通知计次 */
 let tzco = 0;
 let tzzz = 0;
+let tzon = 0;
 module.exports = async () => {
     /* 读取用户配置 */
     await ConfigDB.get();
@@ -56,7 +57,10 @@ module.exports = async () => {
     const autoReply = ConfigDB.userConfig.friend.autoReply || '';
     const notifyco = ConfigDB.userConfig.basic.notify || 20;
     const notifyway = ConfigDB.userConfig.basic.route;
-
+    let notifyways = '';
+    if (notifyway) {
+        notifyways = notifyway.split(",");
+    }
     /** 定时器 */
     let timeoutID = setTimeout(() => {
         throw new Error('wechaty登录超时,放弃加载该适配器');
@@ -128,10 +132,6 @@ module.exports = async () => {
         if (!tzco) {
             tzco = 0;
         }
-        let notifyways = '';
-        if (notifyway) {
-            notifyways = notifyway.split(",");
-        }
         const notify = notifyways || 'all';
         sysMethod.startOutLogs('wechaty扫码通知-平台：' + notify);
         if (status == 2) {
@@ -152,7 +152,7 @@ module.exports = async () => {
                     try {
                         sysMethod.pushAdmin({
                             platform: notifyways || [],
-                            msg: `wechaty登录消息发送超过指定次数，请进入ssh扫码登录或重启无界后等待重新发送扫码链接后登录`,
+                            msg: `wechaty登录：登录消息发送超过指定次数，请进入ssh扫码登录或重启无界后等待重新发送扫码链接后登录`,
                         });
                         tzzz = 1;
                     } catch (e) {
@@ -165,10 +165,11 @@ module.exports = async () => {
         if (status == 3) {
           tzco = 0;
           tzzz = 0;
+          tzon = 1;
             try {
                 sysMethod.pushAdmin({
                     platform: notifyways || [],
-                    msg: `wechaty扫码成功，请在手机端确认登录`,
+                    msg: `wechaty登录：扫码成功，请在手机端确认登录`,
                 });
             } catch (e) {
                 // 发送失败
@@ -178,6 +179,17 @@ module.exports = async () => {
 
     bot.on('login', (user) => {
         sysMethod.startOutLogs(`wechaty：${user} 登录成功`);
+        if (tzon) {
+            tzon = 0;
+            try {
+                sysMethod.pushAdmin({
+                    platform: notifyways || [],
+                    msg: `wechaty登录：机器人${user} 登录成功`,
+                });
+            } catch (e) {
+                // 发送失败
+            }
+        }
         tzco = 0;
         tzzz = 0;
         wxname = user.payload.name;
@@ -196,6 +208,14 @@ module.exports = async () => {
 
     bot.on('logout', (user) => {
         sysMethod.startOutLogs(`wechaty：${user} 下线了`);
+        try {
+            sysMethod.pushAdmin({
+                platform: notifyways || [],
+                msg: `wechaty登出：机器人${user} 下线了`,
+            });
+        } catch (e) {
+            // 发送失败
+        }
     });
 
     bot.on("room-join", async (room, inviteeList, invite) => {
