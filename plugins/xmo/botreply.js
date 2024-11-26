@@ -2,7 +2,7 @@
  * @author xmo
  * @name botreply
  * @team xmo
- * @version 3.5.7
+ * @version 3.5.8
  * @description 自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。
  * @rule ^(botreply)\s+(\S+)\s+([\s\S]+)$
  * @rule ^(botreply)\s+(\S+)\s+(del)$
@@ -70,7 +70,7 @@
 const jsonSchema = BncrCreateSchema.object({
   basic: BncrCreateSchema.object({
     enable: BncrCreateSchema.boolean().setTitle('指令开关').setDescription(`开启将启用匹配其他插件指令，开启并填写指令关键词后生效。`).setDefault(true),
-    forward: BncrCreateSchema.string().setTitle('指令关键词').setDescription(`请输入其他插件匹配指令关键词，留空则不启用调用，仅读取数据库内容。`).setDefault('aigptv2'),
+    forward: BncrCreateSchema.string().setTitle('指令关键词').setDescription(`请输入其他插件匹配指令关键词，留空则不启用调用，仅读取数据库内容。`).setDefault('aigv2'),
     enablechat: BncrCreateSchema.boolean().setTitle('聊天模式开关').setDescription(`聊天模式总开关，当数据库中无匹配回复时自动调用聊天模式指令关键词所在ai插件回复。`).setDefault(false),
     forwardchat: BncrCreateSchema.string().setTitle('聊天模式指令关键词').setDescription(`为聊天模式单独设置其他插件匹配指令关键词，留空则使用"指令关键词"。`).setDefault(''),
     maxword: BncrCreateSchema.number().setTitle('聊天模式限制字数').setDescription(`设置私聊时忽略超过指定字数的问题应答`).setDefault(80),
@@ -104,7 +104,7 @@ const jsonSchema = BncrCreateSchema.object({
   }).setTitle('调试设置').setDefault({})
 });
 
-const ver = '3.5.7';
+const ver = '3.5.8';
 const ConfigDB = new BncrPluginConfig(jsonSchema);
 module.exports = async (s) => {
   if (!Object.keys(ConfigDB.userConfig).length) {
@@ -369,18 +369,26 @@ module.exports = async (s) => {
         msginfo = getlastmsgs[1];
         let lag = Number(getTime) - Number(msgstamp);
         if (Number(lag) < 30) {
+          let msginfouser = '';
           let msginfokeyword = '';
           if (msginfo.includes(':')) {
             const msginfos = msginfo.split(':');
+            msginfouser = msginfos[0];
             msginfokeyword = msginfos[1];
           }
           let xverify = 0;
-          if (keyword.includes(' ') && msginfokeyword.includes(' ')) {
-            if (keyword.includes(msginfokeyword)) {
+          if (msginfouser === `${sfrom}/${groupId}@${userId}`) {
+            if (keyword === msginfokeyword) {
               xverify = 1;
+            } else {
+              if (keyword.includes(' ') && msginfokeyword.includes(' ')) {
+                if (keyword.includes(msginfokeyword)) {
+                  xverify = 1;
+                }
+              }
             }
           }
-          if (nowmsginfo === msginfo || xverify) {
+          if (xverify) {
             sysMethod.pushAdmin({
               platform: [`${sfrom}`],
               msg: `管理员消息：\n  >来源:${sfrom}\n  >群组id:${groupId}\n  >用户id:${userId}\n  >关键词:${keyword}\n  >详情:疑似循环`,
