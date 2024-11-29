@@ -2,11 +2,11 @@
  * This file is part of the Bncr project.
  * @author Anmour
  * @name wxXyo
- * @team Bncr团队
+ * @team xmo
  * @version 1.0.2
  * @description wxXyo适配器
  * @adapter true
- * @public false
+ * @public true
  * @disable false
  * @priority 2
  * @classification ["官方适配器"]
@@ -95,6 +95,7 @@ module.exports = async () => {
   wxXyo.reply = async function (replyInfo) {
       // console.log('replyInfo', replyInfo);
       let body = null;
+      let bodytext = null;
       if (!token) throw new Error('xyo发送消息失败，没有设置xyo token，发送set wxXyo xyo_token xxx设置');
       const to_Wxid = +replyInfo.groupId ? replyInfo.groupId + '@chatroom' : replyInfo.userId;
       switch (replyInfo.type) {
@@ -135,8 +136,18 @@ module.exports = async () => {
               return;
               break;
       }
-
+      if (replyInfo.type != 'text') {
+          replyInfo.msg = replyInfo.msg.replace(/\n/g, '\r');
+          if (replyInfo.msg) {
+              bodytext = {
+                  to_wxid: to_Wxid,
+                  msg: replyInfo.msg,
+                  api: "SendTextMsg",
+              };
+          }
+      }
       body && await requestXyo(body);
+      bodytext && await requestXyo(bodytext);
       // console.log('body', );
       return '';
   };
