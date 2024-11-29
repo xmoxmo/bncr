@@ -3,7 +3,7 @@
  * @author Anmour
  * @name wxXyo
  * @team xmo
- * @version 1.0.2
+ * @version 1.0.3
  * @description wxXyo适配器
  * @adapter true
  * @public true
@@ -91,7 +91,10 @@ module.exports = async () => {
           res.send({ status: 400, data: '', msg: e.toString() });
       }
   });
-
+  // 伪装消息
+  wxXyo.inlinemask = async function (msgInfo) {
+      return wxXyo.receive(msgInfo);
+  };
   wxXyo.reply = async function (replyInfo) {
       // console.log('replyInfo', replyInfo);
       let body = null;
