@@ -3,7 +3,7 @@
  * @author Aming
  * @name HumanTG
  * @team xmo
- * @version 1.1.4
+ * @version 1.1.5
  * @description Telegarm人行适配器
  * @adapter true
  * @public true
@@ -204,7 +204,7 @@ module.exports = () => {
       if (message?.replyTo?.replyToMsgId) {
         let ChatID = +msgInfo.groupId || +msgInfo.friendId || +msgInfo.userId;
         const replyMsg = await HumanTG.Bridge.getReplyMsg(ChatID, +msgInfo.replyToMsgId);
-        Array.isArray(replyMsg) && replyMsg[0]?.message && (msgInfo.msg += replyMsg[0]?.message);
+        Array.isArray(replyMsg) && replyMsg[0]?.message && (msgInfo.msg += ` | ${replyMsg[0]?.message}`);
       }
       HumanTG.receive(msgInfo);
     }, new NewMessage());
