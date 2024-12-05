@@ -3,7 +3,7 @@
  * @author Aming
  * @name qq
  * @team xmo
- * @version 1.1.3
+ * @version 1.1.4
  * @description 外置qq机器人适配器
  * @adapter true
  * @public true
@@ -16,19 +16,26 @@
 
 /* 配置构造器 */
 const jsonSchema = BncrCreateSchema.object({
-  enable: BncrCreateSchema.boolean().setTitle('是否开启适配器').setDescription(`设置为关则不加载该适配器`).setDefault(false),
-  mode: BncrCreateSchema.string().setTitle('适配器模式').setDescription(`1. “WebSocket”模式:</br>&emsp;远端QQ机器人填写反向ws地址: "ws://无界ip:端口/api/bot/qqws"</br>2. “Http”模式:</br>&emsp;填写以下“http交互发送地址”`).setEnum(['ws', 'http']).setEnumNames(['WebSocket', 'Http']).setDefault('ws'),
-  sendUrl: BncrCreateSchema.string().setTitle('http交互发送地址').setDescription(`1. 仅当“适配器模式”选择“Http”时此项配置才会生效</br>2. 无界填写地址:"http://远端QQ机器人的地址:端口"</br>3. 远端QQ机器人填写地址:"http://无界ip:端口/api/bot/qqHttp"`).setDefault(''),
+  basic: BncrCreateSchema.object({
+    enable: BncrCreateSchema.boolean().setTitle('是否开启适配器').setDescription(`设置为关则不加载该适配器`).setDefault(false),
+    mode: BncrCreateSchema.string().setTitle('适配器模式').setDescription(`1. “WebSocket”模式:</br>&emsp;远端QQ机器人填写反向ws地址: "ws://无界ip:端口/api/bot/qqws"</br>2. “Http”模式:</br>&emsp;填写以下“http交互发送地址”`).setEnum(['ws', 'http']).setEnumNames(['WebSocket', 'Http']).setDefault('ws'),
+    sendUrl: BncrCreateSchema.string().setTitle('http交互发送地址').setDescription(`1. 仅当“适配器模式”选择“Http”时此项配置才会生效</br>2. 无界填写地址:"http://远端QQ机器人的地址:端口"</br>3. 远端QQ机器人填写地址:"http://无界ip:端口/api/bot/qqHttp"`).setDefault(''),
+  }).setTitle('基本设置').setDefault({}),
   friend: BncrCreateSchema.object({
     autoApproveFriendRequest: BncrCreateSchema.boolean().setTitle('是否自动同意好友请求').setDescription('设置为开则自动同意所有的好友请求').setDefault(false),
     autoApproveGroupRequest: BncrCreateSchema.boolean().setTitle('是否自动同意加群').setDescription('设置为开则自动同意所有的加群请求和邀请，需把机器人设为管理员').setDefault(false),
   }).setTitle('自动同意').setDefault({}),
-  rooms: BncrCreateSchema.object({
-    enableWelcomeMessage: BncrCreateSchema.boolean().setTitle('是否启用入群欢迎消息').setDescription('').setDefault(false),
-    welcomeMessage: BncrCreateSchema.string().setTitle('入群欢迎消息').setDescription('自定义入群后的欢迎消息，\\n为换行，需把机器人设为管理员').setDefault(''),
+  joinrooms: BncrCreateSchema.array(BncrCreateSchema.object({
+    enable: BncrCreateSchema.boolean().setTitle('启用').setDescription('是否启用').setDefault(true),
+    rule: BncrCreateSchema.object({
+      joinIds: BncrCreateSchema.string().setTitle('进群监控').setDescription(`当有人进群后触发消息监控的群，多个用“|”隔开`).setDefault(""),
+      joinMsg: BncrCreateSchema.string().setTitle('进群提示').setDescription(`当有人进群后触发消息，“\\n”换行`).setDefault("欢迎加入大家庭~"),
+    }),
+  })).setTitle('入群欢迎').setDefault([]),
+  recalls: BncrCreateSchema.object({
     enableRecallMessage: BncrCreateSchema.boolean().setTitle('是否启用群撤回消息功能').setDescription('').setDefault(false),
     recallKeywords: BncrCreateSchema.string().setTitle('撤回消息关键词').setDescription('群内收到包含该关键词的消息时，执行撤回操作，多个关键词请用“|”分隔').setDefault(''),
-  }).setTitle('群聊相关').setDefault({})
+  }).setTitle('撤回设置').setDefault({})
 });
 
 /* 配置管理器 */
@@ -41,10 +48,10 @@ module.exports = async () => {
     sysMethod.startOutLogs('未配置qq适配器,退出.');
     return;
   }
-  if (!ConfigDB?.userConfig?.enable) return sysMethod.startOutLogs('未启用外置qq 退出.');
+  if (!ConfigDB?.userConfig?.basic?.enable) return sysMethod.startOutLogs('未启用外置qq 退出.');
   let qq = new Adapter('qq');
-  if (ConfigDB.userConfig.mode === 'ws') await ws(qq);
-  else if (ConfigDB.userConfig.mode === 'http') await http(qq);
+  if (ConfigDB.userConfig.basic.mode === 'ws') await ws(qq);
+  else if (ConfigDB.userConfig.basic.mode === 'http') await http(qq);
 
   // 伪装消息
   qq.inlinemask = async function (msgInfo) {
@@ -68,6 +75,7 @@ async function ws(qq) {
       // console.log('收到ws请求', body);
       if (body.post_type === 'meta_event') return;
 
+      // console.log('收到ws请求', body);
       // 加好友
       if (body.post_type === 'request' && body.request_type === 'friend') {
         if (ConfigDB.userConfig.friend.autoApproveFriendRequest) {
@@ -99,35 +107,41 @@ async function ws(qq) {
           };
           ws.send(JSON.stringify(requestBody));
           sysMethod.startOutLogs(`已自动同意${body.sub_type === 'add' ? '加群请求' : '加群邀请'}`);
+        }
+        return;
+      }
 
-          const { enableWelcomeMessage, welcomeMessage } = ConfigDB.userConfig.rooms;
-          if (enableWelcomeMessage && welcomeMessage) {
-            const formattedWelcomeMessage = welcomeMessage.replace(/\\n/g, '\n');
+      // 入群欢迎
+      if (body.sub_type === 'approve') {
+        const roomId = body.group_id.toString();
+        const rooms = ConfigDB.userConfig.joinrooms?.filter(o => o.enable) || [];
+        for (const group of rooms) {
+          const joinIds = group.rule.joinIds.split('|') || [];
+          const joinMsg = group.rule.joinMsg || '欢迎加入大家庭~';
+          if ((joinIds.indexOf(roomId) != -1) && joinMsg) {
+            const formattedWelcomeMessage = joinMsg.replace(/\\n/g, '\n');
             const atMessage = {
               type: 'at',
               data: {
                 qq: body.user_id
               }
             };
-
             const sendGroupMsgBody = {
               action: 'send_group_msg',
               params: {
                 group_id: body.group_id,
                 message: [
                   atMessage,
-                  { type: 'text', data: { text: ` ${formattedWelcomeMessage}` } }
+                  { type: 'text', data: { text: `\n${formattedWelcomeMessage}` } }
                 ]
               }
             };
-
             ws.send(JSON.stringify(sendGroupMsgBody));
           }
         }
         return;
       }
 
-      // console.log('收到ws请求', body);
       if (body.echo) {
         for (const e of listArr) {
           if (body.echo !== e.uuid) continue;
@@ -150,8 +164,9 @@ async function ws(qq) {
       // console.log('最终消息：', msgInfo);
 
       // 撤回
-      if (msgInfo.groupId && msgInfo.groupId !== '0' && ConfigDB.userConfig.rooms.enableRecallMessage) {
-        const recallKeywords = ConfigDB.userConfig.rooms.recallKeywords.split('|').filter(Boolean);
+      const recallson = ConfigDB.userConfig.recalls?.enableRecallMessage || false;
+      if (msgInfo.groupId && msgInfo.groupId !== '0' && recallson) {
+        const recallKeywords = ConfigDB.userConfig.recalls.recallKeywords.split('|').filter(Boolean);
 
         if (recallKeywords.length > 0 && recallKeywords.some(keyword => msgInfo.msg.includes(keyword))) {
           await qq.delMsg([msgInfo.msgId]);
@@ -281,7 +296,7 @@ async function ws(qq) {
 async function http(qq) {
   const request = require('util').promisify(require('request'));
   /* 上报地址（gocq监听地址） */
-  let senderUrl = ConfigDB?.userConfig?.sendUrl;
+  let senderUrl = ConfigDB?.userConfig?.basic?.sendUrl;
   if (!senderUrl) {
     console.log('qq:配置文件未设置sendUrl');
     qq = null;
