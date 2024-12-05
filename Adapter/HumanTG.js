@@ -3,7 +3,7 @@
  * @author Aming
  * @name HumanTG
  * @team xmo
- * @version 1.1.5
+ * @version 1.1.6
  * @description Telegarm人行适配器
  * @adapter true
  * @public true
@@ -123,6 +123,13 @@ module.exports = () => {
     if (newSession !== session) await HumanTgDb.set('session', newSession); //保存登录session
     /* 获取登录的账号信息 */
     const loginUserInfo = await client.getMe();
+    if (!loginUserInfo.username) {
+      if (loginUserInfo.firstName) {
+        loginUserInfo.username = loginUserInfo.firstName;
+      } else {
+        loginUserInfo.username = '空';
+      }
+    }
     sysMethod.startOutLogs(`HumanTG：Contact<${loginUserInfo.username.toString()}> 登录成功`);
     /* 心跳检测 */
     sysMethod.cron.newCron(`0 */1 * * * *`, async () => {
