@@ -4,7 +4,7 @@
  * @name wechatbot
  * @origin xmo
  * @team xmo
- * @version 0.5.2
+ * @version 0.5.3
  * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
  * @adapter true
  * @public true
@@ -67,7 +67,13 @@ module.exports = async () => {
   await sysMethod.testModule(['request', 'axios'], { install: true });
   const request = require('util').promisify(require('request'));
   const wxDB = new BncrDB('wechatbot');
-  const botinfo = await updatebotinfo();
+  let token = 'authenticationwechatbottoken';
+  let botinfo = await updatebotinfo();
+  const wxid = botinfo.botid;
+  if (!wxid) {
+    token = 'token';
+    botinfo = await updatebotinfo();
+  }
   const wxname = botinfo.botname;
   if (wxname) {
     sysMethod.startOutLogs(`wechatbot：Contact<${wxname}> 调用成功`);
@@ -82,9 +88,7 @@ module.exports = async () => {
       if (rbody.wtype) {
         if (rbody.wtype === 'MessageEvent') {
           let newcontent = rbody.content;
-          newcontent = newcontent.replace(new RegExp('\n','g'), '\\n');
-          newcontent = newcontent.replace(new RegExp('\t','g'), '\\t');
-          newcontent = newcontent.replace(new RegExp('\r','g'), '\\r');
+          newcontent = await escape(newcontent);
           if (await isJSON(newcontent)) {
             body = JSON.parse(newcontent);
           } else {
@@ -331,7 +335,7 @@ module.exports = async () => {
     } else {
       newname = replyInfo.groupName;
       if (replyInfo.userName) {
-        newmsg = '@' + replyInfo.userName + ' \n' + replyInfo.msg;
+        newmsg = '@' + replyInfo.userName + '\n' + replyInfo.msg;
       } else {
         newmsg = replyInfo.msg;
       }
@@ -473,7 +477,7 @@ module.exports = async () => {
     let options = '';
     if (stype === 'sendText') {
       options = {
-        url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
+        url: `${wechatbotUrl}${stype}?${token}=${wechatbotToken}`,
         method: 'POST',
         headers: {
           "Content-Type": "application/json",
@@ -483,7 +487,7 @@ module.exports = async () => {
       };
     } else {
       options = {
-        url: `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
+        url: `${wechatbotUrl}${stype}?${token}=${wechatbotToken}`,
         method: 'POST',
         headers: {
           "Content-Type": "multipart/form-data",
@@ -636,7 +640,7 @@ module.exports = async () => {
     let options = '';
     options = {
       'method': 'GET',
-      'url': `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
+      'url': `${wechatbotUrl}${stype}?${token}=${wechatbotToken}`,
       'headers': {
       }
     };
@@ -675,7 +679,7 @@ module.exports = async () => {
     // 联系人名片
     options = {
       'method': 'GET',
-      'url': `${wechatbotUrl}${stype}?token=${wechatbotToken}`,
+      'url': `${wechatbotUrl}${stype}?${token}=${wechatbotToken}`,
       'headers': {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
@@ -738,6 +742,14 @@ module.exports = async () => {
         return false;
       }
     }
+  }
+  
+  // 转义处理
+  async function escape(str) {
+    str = str.replace(new RegExp('\n','g'), '\\n');
+    str = str.replace(new RegExp('\t','g'), '\\t');
+    str = str.replace(new RegExp('\r','g'), '\\r');
+    return str;
   }
 
   return wechatbot;
