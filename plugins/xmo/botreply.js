@@ -14,6 +14,8 @@
  * @classification ["botreply"]
  * @public true
  * @disable false
+ * @systemVersion >=:3.0.0
+ * @authentication true
  */
 
 /*
