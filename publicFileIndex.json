@@ -1,0 +1,47 @@
+{
+  "annotation": "该文件由系统自动生成. 用于插件市场索引,请勿编辑该文件中的任何内容",
+  "r7E9zUGJOHzkU1LcZz4PUvddcqw=": {
+    "type": "github",
+    "name": "wechatbot",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.5.6",
+    "description": "wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot",
+    "classification": [
+      "适配器"
+    ],
+    "filename": "wechatbot.js",
+    "fileDir": "/Adapter/wechatbot.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": true,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "r7E9zUGJOHzkU1LcZz4PUvddcqw=",
+    "isChatPlugin": false
+  },
+  "KqT81kjJl1qaIuyWjLMb6w6VJlM=": {
+    "type": "github",
+    "name": "botreply",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "3.5.9",
+    "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
+    "classification": [
+      "botreply"
+    ],
+    "filename": "botreply.js",
+    "fileDir": "/plugins/xmo/botreply.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "KqT81kjJl1qaIuyWjLMb6w6VJlM=",
+    "isChatPlugin": true
+  }
+}
