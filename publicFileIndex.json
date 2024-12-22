@@ -264,6 +264,28 @@
     "id": "/W4l/qb4zyXNTzckmUadDO+FTq0=",
     "isChatPlugin": true
   },
+  "Lj93RWG7qZo7vBDTxkqbiATcs3g=": {
+    "type": "github",
+    "name": "chatverify",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.2",
+    "description": "私聊人机验证器，理论支持所有平台，完美支持tgBot、HumanTG",
+    "classification": [
+      "botreply"
+    ],
+    "filename": "chatverify.js",
+    "fileDir": "/plugins/xmo/chatverify.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "Lj93RWG7qZo7vBDTxkqbiATcs3g=",
+    "isChatPlugin": true
+  },
   "E6/ugNhOUnaaqIHOFYeKNQaJDwU=": {
     "type": "github",
     "name": "cloudyweather",
