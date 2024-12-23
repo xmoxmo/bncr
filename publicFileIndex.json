@@ -5,7 +5,7 @@
     "name": "HumanTG",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.1.7",
+    "version": "1.1.8",
     "description": "Telegarm人行适配器",
     "classification": [
       "官方适配器"
@@ -467,7 +467,7 @@
     "name": "one",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "一言 鸡汤 心灵鸡汤",
     "classification": [
       "插件"
