@@ -2,12 +2,12 @@
  * @author xmo
  * @name chatverify
  * @team xmo
- * @version 0.0.4
+ * @version 0.0.5
  * @description 私聊人机验证器，理论支持所有平台，完美支持tgBot、HumanTG
  * @rule ^([\s\S]+)$
  * @admin false
  * @priority 1000000000
- * @classification ["botreply"]
+ * @classification ["ChatVerify"]
  * @public true
  * @disable false
  * @systemVersion >=:3.0.0
