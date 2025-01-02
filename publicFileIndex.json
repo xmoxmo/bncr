@@ -49,7 +49,7 @@
     "name": "starBot",
     "author": "泡泡大佬",
     "team": "xmo",
-    "version": "1.0.6",
+    "version": "1.0.8",
     "description": "starBot适配器",
     "classification": [
       "专业发单团队专用"
@@ -225,7 +225,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "3.6.3",
+    "version": "3.6.4",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
