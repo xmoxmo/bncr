@@ -203,7 +203,7 @@
     "name": "botaudit",
     "author": "xmo",
     "team": "xmo",
-    "version": "1.4.6",
+    "version": "1.4.7",
     "description": "黑名单模式按平台、群组、用户屏蔽关键词响应。",
     "classification": [
       "botaudit"
