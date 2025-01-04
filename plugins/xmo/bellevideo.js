@@ -6,7 +6,7 @@
  * @author zhu
  * @team xmo
  * @Github https://github.com/Mrzqd
- * @version 1.0.3
+ * @version 1.0.4
  * @disable false
  * @priority 100
  * @classification ["插件"]
