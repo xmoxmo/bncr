@@ -462,6 +462,28 @@
     "id": "xJXlthVjCVam7wbvPQ06ilfZSFU=",
     "isChatPlugin": true
   },
+  "IufKrTtcJa3WXdQEWsRnWWzz1zU=": {
+    "type": "github",
+    "name": "migratedtogewe",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.1",
+    "description": "根据wechaty/wechatbot相关登录信息复制到gewechat，触发词:migratedtogewe",
+    "classification": [
+      "插件"
+    ],
+    "filename": "migratedtogewe.js",
+    "fileDir": "/plugins/xmo/migratedtogewe.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "IufKrTtcJa3WXdQEWsRnWWzz1zU=",
+    "isChatPlugin": true
+  },
   "Cu3ElR4+hPkLhZLjfzwb0O3E9ic=": {
     "type": "github",
     "name": "one",
