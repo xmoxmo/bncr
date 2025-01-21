@@ -269,7 +269,7 @@
     "name": "chatverify",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "私聊人机验证器，理论支持所有平台，完美支持tgBot、HumanTG",
     "classification": [
       "ChatVerify"
