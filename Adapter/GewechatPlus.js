@@ -5,7 +5,7 @@
  * @origin xmo
  * @team xmo
  * @version 0.0.1
- * @description wechatbot适配器，项目地址：https://gitee.com/ilooli/wechat-bot
+ * @description Gewechat适配器
  * @adapter true
  * @public true
  * @disable false
