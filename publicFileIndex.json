@@ -269,7 +269,7 @@
     "name": "chatgpt",
     "author": "Merrick",
     "team": "xmo",
-    "version": "1.1.5",
+    "version": "1.1.6",
     "description": "ChatGpt聊天，适配无界3.0",
     "classification": [
       "插件"
