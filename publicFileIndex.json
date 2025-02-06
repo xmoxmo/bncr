@@ -462,6 +462,28 @@
     "id": "HbJzC1jhqinNtnbT/bEwwixnZ+4=",
     "isChatPlugin": true
   },
+  "vTt5hm0R8RqxfbNlavcr3F/y7UY=": {
+    "type": "github",
+    "name": "marketagent",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.1",
+    "description": "一键批量更换“插件市场”Github源代理。",
+    "classification": [
+      "插件"
+    ],
+    "filename": "marketagent.js",
+    "fileDir": "/plugins/xmo/marketagent.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "vTt5hm0R8RqxfbNlavcr3F/y7UY=",
+    "isChatPlugin": true
+  },
   "xJXlthVjCVam7wbvPQ06ilfZSFU=": {
     "type": "github",
     "name": "maskinfo",
