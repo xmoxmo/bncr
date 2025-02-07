@@ -269,7 +269,7 @@
     "name": "chatgpt",
     "author": "Merrick",
     "team": "xmo",
-    "version": "1.1.7",
+    "version": "1.1.9",
     "description": "ChatGpt聊天，适配无界3.0",
     "classification": [
       "插件"
@@ -372,6 +372,28 @@
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "db1zT7vggON/q+a6fHQjEkyXUbE=",
+    "isChatPlugin": true
+  },
+  "psetHnUTdJ4/hNK0s4d3/Zs6hic=": {
+    "type": "github",
+    "name": "deepseek",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.1",
+    "description": "DeepSeek聊天",
+    "classification": [
+      "插件"
+    ],
+    "filename": "deepseek.js",
+    "fileDir": "/plugins/xmo/deepseek.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "psetHnUTdJ4/hNK0s4d3/Zs6hic=",
     "isChatPlugin": true
   },
   "l/znp9hXhwOXBEIqMAWTKCmNeGQ=": {
