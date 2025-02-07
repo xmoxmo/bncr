@@ -5,7 +5,7 @@
     "name": "GewechatPlus",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "description": "Gewechat适配器",
     "classification": [
       "适配器"
@@ -269,7 +269,7 @@
     "name": "chatgpt",
     "author": "Merrick",
     "team": "xmo",
-    "version": "1.1.9",
+    "version": "1.2.0",
     "description": "ChatGpt聊天，适配无界3.0",
     "classification": [
       "插件"
@@ -548,6 +548,28 @@
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "IufKrTtcJa3WXdQEWsRnWWzz1zU=",
+    "isChatPlugin": true
+  },
+  "q6u/FM7u6ttw4JpRRu4tMXFzBCM=": {
+    "type": "github",
+    "name": "newgpt",
+    "author": "Merrick",
+    "team": "xmo",
+    "version": "1.2.0",
+    "description": "ChatGpt聊天，适配无界3.0",
+    "classification": [
+      "插件"
+    ],
+    "filename": "newgpt.js",
+    "fileDir": "/plugins/xmo/newgpt.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "q6u/FM7u6ttw4JpRRu4tMXFzBCM=",
     "isChatPlugin": true
   },
   "Cu3ElR4+hPkLhZLjfzwb0O3E9ic=": {
