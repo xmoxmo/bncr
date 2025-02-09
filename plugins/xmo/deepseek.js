@@ -2,9 +2,10 @@
  * @author xmo
  * @name deepseek
  * @team xmo
- * @version 0.0.1
+ * @version 0.0.2
  * @description DeepSeek聊天
  * @rule ^(aidss|aidsc)([\s\S]+)$
+ * @rule ^(aidss|aidsc)$
  * @admin false
  * @classification ["插件"]
  * @public true
