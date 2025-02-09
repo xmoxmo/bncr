@@ -2,11 +2,11 @@
  * @author Merrick
  * @name newgpt
  * @origin xmo
- * @version 1.2.0
+ * @version 1.2.1
  * @description ChatGpt聊天，适配无界3.0
  * @team xmo
  * @rule ^(ainewgpt|ainewgptc|ainewdraw) ([\s\S]+)$
- * @rule ^(ainewgpt)$
+ * @rule ^(ainewgpt|ainewgptc)$
  * @admin false
  * @public true
  * @priority 99999
