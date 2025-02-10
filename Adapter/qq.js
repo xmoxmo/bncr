@@ -3,7 +3,7 @@
  * @author Aming
  * @name qq
  * @team xmo
- * @version 1.1.8
+ * @version 1.1.9
  * @description 外置qq机器人适配器
  * @adapter true
  * @public true
