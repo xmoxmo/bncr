@@ -49,7 +49,7 @@
     "name": "qq",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.1.8",
+    "version": "1.1.9",
     "description": "外置qq机器人适配器",
     "classification": [
       "官方适配器"
