@@ -5,7 +5,7 @@
     "name": "GewechatPlus",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "Gewechat适配器",
     "classification": [
       "适配器"
@@ -27,7 +27,7 @@
     "name": "HumanTG",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "description": "Telegarm人行适配器",
     "classification": [
       "官方适配器"
