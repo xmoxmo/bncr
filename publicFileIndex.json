@@ -203,7 +203,7 @@
     "name": "bellevideo",
     "author": "zhu",
     "team": "xmo",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "bellevideo",
     "classification": [
       "插件"
@@ -247,7 +247,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "3.7.8",
+    "version": "3.7.9",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
