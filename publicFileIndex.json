@@ -5,7 +5,7 @@
     "name": "GewechatPlus",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.9",
+    "version": "0.2.0",
     "description": "Gewechat适配器",
     "classification": [
       "适配器"
@@ -27,7 +27,7 @@
     "name": "HumanTG",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "description": "Telegarm人行适配器",
     "classification": [
       "官方适配器"
@@ -49,7 +49,7 @@
     "name": "qq",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.1.9",
+    "version": "1.2.0",
     "description": "外置qq机器人适配器",
     "classification": [
       "官方适配器"
@@ -247,7 +247,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "3.7.7",
+    "version": "3.7.8",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
