@@ -71,7 +71,7 @@
     "name": "starBot",
     "author": "泡泡大佬",
     "team": "xmo",
-    "version": "1.1.7",
+    "version": "1.1.8",
     "description": "starBot适配器",
     "classification": [
       "专业发单团队专用"
@@ -93,7 +93,7 @@
     "name": "tgBot",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.1.6",
+    "version": "1.1.7",
     "description": "tgBot适配器",
     "classification": [
       "官方适配器"
@@ -159,7 +159,7 @@
     "name": "wxXyo",
     "author": "Anmour",
     "team": "xmo",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "description": "wxXyo适配器",
     "classification": [
       "官方适配器"
