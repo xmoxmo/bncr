@@ -63,6 +63,11 @@
        @userkeyword@ 消息内容(剔除模糊匹配词)
        @nodel@ 持久消息(不受自动删除的约束)
        @delayN@ 延时发送秒数(N改为整数)
+       @recalldelayN@ 延时撤回消息的秒数(N改为整数)
+       @requrl,url,get/post,back,body@ 请求网页获取返回的数据[back为返回的节点；多节点使用“|”分割；多层使用“&”分割]
+       @reqext:back@ 请求网页返回的多节点存储定义
+       data[]back1.back2:txt1.txt2:type.back 数组读取规范,配合requrl读取返回数组使用，back的读取方式的一种
+       {[at]} 字符“@”的转义替代符
        
 
 **示例**
@@ -84,6 +89,31 @@
 
      获取当前消息相关id信息
      > botreply ids @sfrom@/@groupid@@@userid@
+
+     获取api并返回结果-文本
+     > botreply 脑筋急转弯 @requrl,https://api.dragonlongzhu.cn/api/yl_njjzw.php,get@
+
+     获取api并返回结果-文本，传参
+     > botreply 星座运势%20* @requrl,https://api.dragonlongzhu.cn/api/xzys.php?msg=@userkeyword@,get@
+
+     获取api并返回结果-json，传参
+     > botreoly 文本转拼音%20* @requrl,https://www.hhlqilongzhu.cn/api/pinyin/pinyin.php?text=@userkeyword@,get,text_noe@
+
+     获取api并返回结果-图片
+     > botreply 黑丝 image@type@http://api.yujn.cn/api/heisi.php
+     > botreply 百丝 image@type@http://api.yujn.cn/api/baisi.php
+
+     获取api并返回结果-图文
+     > botreply 抽签 @requrl,https://api.lolimi.cn/API/chouq/api.php,get,data&draw|data&image|data&format|data&annotate|data&explain|data&details|data&source@image@type@@reqext:data&image@@type@签名: @reqext:data&draw@\n\n签号: @reqext:data&format@\n\n注解: @reqext:data&annotate@\n\n解签: @reqext:data&explain@\n\n详情: @reqext:data&details@\n\n出处: @reqext:data&source@
+
+     获取api并返回数组结果-文本
+     > botreply 新闻文本 @requrl,https://api.yujn.cn/api/new.php?count=10,get,data&[]time.title.brief:时间.标题.详情@
+
+     获取api并返回数组结果-图文
+     > botreply 新闻图文 @requrl,https://api.yujn.cn/api/new.php?count=10,get,data&[]time.title.brief:时间.标题.详情:image.image:{[at]}deldelay30{[at]}@
+
+
+
 ****
 **名称** botaudit.js
 
