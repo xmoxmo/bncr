@@ -112,7 +112,7 @@
      获取api并返回数组结果-图文
      > botreply 新闻图文 @requrl,https://api.yujn.cn/api/new.php?count=10,get,data&[]time.title.brief:时间.标题.详情:image.image:{[at]}deldelay30{[at]}@
 
-     获取api并返回数组结果-视频
+     获取api并返回结果-视频
      > botreply 新小姐姐 video@type@http://api.yujn.cn/api/zzxjj.php?type=video
 
 
