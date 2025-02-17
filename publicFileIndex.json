@@ -27,7 +27,7 @@
     "name": "HumanTG",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "description": "Telegarm人行适配器",
     "classification": [
       "官方适配器"
