@@ -247,7 +247,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "3.8.5",
+    "version": "3.8.6",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
