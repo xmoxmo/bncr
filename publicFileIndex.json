@@ -49,7 +49,7 @@
     "name": "larkTalk",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "飞书企业机器人适配器",
     "classification": [
       "适配器"
