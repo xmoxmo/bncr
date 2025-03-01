@@ -2,7 +2,7 @@
  * @author xmo
  * @name chatverify
  * @team xmo
- * @version 0.1.0
+ * @version 0.1.1
  * @description 私聊人机验证器，理论支持所有平台，完美支持tgBot、HumanTG
  * @rule ^([\s\S]+)$
  * @admin false
