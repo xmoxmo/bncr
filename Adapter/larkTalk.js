@@ -22,12 +22,10 @@
     {
       "scopes": {
         "tenant": [
-          "application:application:self_manage",
-          "im:chat:read",
-          "im:chat:readonly",
           "admin:app.admin_id:readonly",
           "admin:app.info:readonly",
           "application:application.contacts_range:write",
+          "application:application:self_manage",
           "contact:contact",
           "contact:contact.base:readonly",
           "contact:contact:update_department_id",
@@ -72,6 +70,8 @@
           "im:chat.chat_pins:read",
           "im:chat.chat_pins:write_only",
           "im:chat.collab_plugins:read",
+          "im:chat:read",
+          "im:chat:readonly",
           "im:message",
           "im:message.group_at_msg:readonly",
           "im:message.group_msg",
