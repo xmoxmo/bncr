@@ -555,7 +555,7 @@
     "name": "migratedtogewe",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "根据wechaty/wechatbot平台相关京东登录信息对应添加到Gewechat平台，需要安装Gewechat适配器并登录之前wechaty/wechatbot的微信号，触发词: migratedtogewe",
     "classification": [
       "插件"
