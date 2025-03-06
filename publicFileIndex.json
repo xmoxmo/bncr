@@ -445,7 +445,7 @@
     "name": "gemini",
     "author": "Merrick",
     "team": "xmo",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "description": "gemini聊天",
     "classification": [
       "插件"
