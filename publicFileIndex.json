@@ -577,7 +577,7 @@
     "name": "newgpt",
     "author": "xmo",
     "team": "xmo",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "description": "适配NewAPi，支持自定义模型",
     "classification": [
       "插件"
