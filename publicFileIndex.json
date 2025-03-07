@@ -291,7 +291,7 @@
     "name": "chatgpt",
     "author": "Merrick",
     "team": "xmo",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "description": "ChatGpt聊天，适配无界3.0",
     "classification": [
       "插件"
@@ -401,7 +401,7 @@
     "name": "deepseek",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "DeepSeek聊天",
     "classification": [
       "插件"
@@ -577,7 +577,7 @@
     "name": "newgpt",
     "author": "xmo",
     "team": "xmo",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "description": "适配NewAPi，支持自定义模型",
     "classification": [
       "插件"
