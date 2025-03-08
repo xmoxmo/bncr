@@ -49,7 +49,7 @@
     "name": "larkTalk",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "飞书企业机器人适配器",
     "classification": [
       "适配器"
@@ -401,7 +401,7 @@
     "name": "deepseek",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "DeepSeek聊天",
     "classification": [
       "插件"
@@ -445,7 +445,7 @@
     "name": "gemini",
     "author": "Merrick",
     "team": "xmo",
-    "version": "1.0.9",
+    "version": "1.1.1",
     "description": "gemini聊天",
     "classification": [
       "插件"
@@ -577,7 +577,7 @@
     "name": "newgpt",
     "author": "xmo",
     "team": "xmo",
-    "version": "1.2.5",
+    "version": "1.2.6",
     "description": "适配NewAPi，支持自定义模型",
     "classification": [
       "插件"
