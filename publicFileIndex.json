@@ -313,7 +313,7 @@
     "name": "chatverify",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "私聊人机验证器，理论支持所有平台，完美支持tgBot、HumanTG",
     "classification": [
       "ChatVerify"
@@ -577,7 +577,7 @@
     "name": "newgpt",
     "author": "xmo",
     "team": "xmo",
-    "version": "1.2.7",
+    "version": "1.2.8",
     "description": "适配NewAPi，支持自定义模型",
     "classification": [
       "插件"
