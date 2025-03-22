@@ -33,6 +33,8 @@
   botreply empty                                 //清空所有关键词
   botreply upkey oldkey|>>|newkey                //更新key，回复内容不变
   botreply treply oldkeyword|tt|newkeyword       //替换回复中的部分内容
+  botreply dbadd key|++|str                      //数据库中添加数组元素
+  botreply dbdel key|--|str                      //数据库中删除数组元素
 黑白名单：
   @keyblacklist@                                 //key黑名单
   @groupblacklist@ @groupwhitelist@              //群组黑白名单，选择一个使用，两个同时存在只生效黑名单
