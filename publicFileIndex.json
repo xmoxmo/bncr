@@ -5,7 +5,7 @@
     "name": "GewechatPlus",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.3.9",
+    "version": "0.4.0",
     "description": "Gewechat适配器",
     "classification": [
       "适配器"
@@ -313,7 +313,7 @@
     "name": "chatverify",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.2",
+    "version": "0.1.4",
     "description": "私聊人机验证器，理论支持所有平台，完美支持tgBot、HumanTG",
     "classification": [
       "ChatVerify"
