@@ -27,7 +27,7 @@
     "name": "HumanTG",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.2.5",
+    "version": "1.2.6",
     "description": "Telegarm人行适配器",
     "classification": [
       "官方适配器"
@@ -335,7 +335,7 @@
     "name": "cloudyweather",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "description": "彩云查天气",
     "classification": [
       "插件"
@@ -570,6 +570,28 @@
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "IufKrTtcJa3WXdQEWsRnWWzz1zU=",
+    "isChatPlugin": true
+  },
+  "z0qnSr/kcHP3JoXMGRWoMkOzsL4=": {
+    "type": "github",
+    "name": "muiscplay",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.1",
+    "description": "听歌",
+    "classification": [
+      "插件"
+    ],
+    "filename": "muiscplay.js",
+    "fileDir": "/plugins/xmo/muiscplay.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "z0qnSr/kcHP3JoXMGRWoMkOzsL4=",
     "isChatPlugin": true
   },
   "P7fCv1HCLpCobbowHl9gr0uRLPk=": {
