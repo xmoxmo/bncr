@@ -594,6 +594,28 @@
     "id": "z0qnSr/kcHP3JoXMGRWoMkOzsL4=",
     "isChatPlugin": true
   },
+  "jm5cRJ5CfAZkfC7cXpZ23w1JtSQ=": {
+    "type": "github",
+    "name": "musicplay",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.2",
+    "description": "听歌",
+    "classification": [
+      "插件"
+    ],
+    "filename": "musicplay.js",
+    "fileDir": "/plugins/xmo/musicplay.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "jm5cRJ5CfAZkfC7cXpZ23w1JtSQ=",
+    "isChatPlugin": true
+  },
   "P7fCv1HCLpCobbowHl9gr0uRLPk=": {
     "type": "github",
     "name": "newgpt",
