@@ -5,7 +5,7 @@
     "name": "GewechatPlus",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.4.9",
+    "version": "0.5.0",
     "description": "Gewechat适配器",
     "classification": [
       "适配器"
@@ -269,7 +269,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "3.9.6",
+    "version": "3.9.7",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
@@ -731,7 +731,7 @@
     "name": "statisticsplugins",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "统计插件的相关下载信息",
     "classification": [
       "插件"
