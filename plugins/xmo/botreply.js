@@ -74,6 +74,7 @@
   data[]back1.back2:txt1.txt2:type.back          //数组读取规范,配合requrl读取返回数组使用
   {[at]}                                         //字符“@”的转义替代符
   @nowtimestamp@                                 //当前时间戳
+  <:>                                            //属性与值的分隔符
 示例：
   参照：https://github.com/xmoxmo/bncr
 */
