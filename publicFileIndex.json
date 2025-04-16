@@ -731,7 +731,7 @@
     "name": "statisticsplugins",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "统计插件的相关下载信息",
     "classification": [
       "插件"
