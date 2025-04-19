@@ -599,7 +599,7 @@
     "name": "musicplay",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "听歌",
     "classification": [
       "插件"
@@ -731,7 +731,7 @@
     "name": "statisticsplugins",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "统计插件的相关下载信息",
     "classification": [
       "插件"
