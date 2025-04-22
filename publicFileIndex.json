@@ -5,7 +5,7 @@
     "name": "GewechatPlus",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "description": "Gewechat适配器",
     "classification": [
       "适配器"
@@ -709,7 +709,7 @@
     "name": "setsub",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.4",
+    "version": "0.0.6",
     "description": "指令方式查看、添加、更新、删除插件市场订阅",
     "classification": [
       "插件"
