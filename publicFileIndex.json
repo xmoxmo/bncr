@@ -27,7 +27,7 @@
     "name": "HumanTG",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.2.8",
+    "version": "1.2.9",
     "description": "Telegarm人行适配器",
     "classification": [
       "官方适配器"
@@ -181,7 +181,7 @@
     "name": "wxXyo",
     "author": "Anmour",
     "team": "xmo",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "wxXyo适配器",
     "classification": [
       "官方适配器"
@@ -599,7 +599,7 @@
     "name": "musicplay",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "听歌",
     "classification": [
       "插件"
