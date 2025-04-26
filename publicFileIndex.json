@@ -71,7 +71,7 @@
     "name": "qq",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "外置qq机器人适配器",
     "classification": [
       "官方适配器"
@@ -445,7 +445,7 @@
     "name": "gemini",
     "author": "Merrick",
     "team": "xmo",
-    "version": "1.1.4",
+    "version": "1.1.6",
     "description": "gemini聊天",
     "classification": [
       "插件"
@@ -570,28 +570,6 @@
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "IufKrTtcJa3WXdQEWsRnWWzz1zU=",
-    "isChatPlugin": true
-  },
-  "z0qnSr/kcHP3JoXMGRWoMkOzsL4=": {
-    "type": "github",
-    "name": "muiscplay",
-    "author": "xmo",
-    "team": "xmo",
-    "version": "0.0.1",
-    "description": "听歌",
-    "classification": [
-      "插件"
-    ],
-    "filename": "muiscplay.js",
-    "fileDir": "/plugins/xmo/muiscplay.js",
-    "systemVersionRange": "",
-    "isCron": false,
-    "isAdapter": false,
-    "isMod": false,
-    "isService": false,
-    "isAuthentication": false,
-    "isEncPlugin": true,
-    "id": "z0qnSr/kcHP3JoXMGRWoMkOzsL4=",
     "isChatPlugin": true
   },
   "jm5cRJ5CfAZkfC7cXpZ23w1JtSQ=": {
