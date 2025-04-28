@@ -176,6 +176,28 @@
     "id": "A+OGpa9VE7Lr00jQW8GVgxrdKhE=",
     "isChatPlugin": false
   },
+  "JEX+dx3YoPogf/+sZie+YfXmE6E=": {
+    "type": "github",
+    "name": "wxQianxunPro",
+    "author": "云隐",
+    "team": "云隐",
+    "version": "1.1.4",
+    "description": "千寻Pro适配器",
+    "classification": [
+      "千寻Pro适配器"
+    ],
+    "filename": "wxQianxunPro.js",
+    "fileDir": "/Adapter/wxQianxunPro.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": true,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "JEX+dx3YoPogf/+sZie+YfXmE6E=",
+    "isChatPlugin": false
+  },
   "D9KAbYxx/oUPA3jOWpZB7a2Avg0=": {
     "type": "github",
     "name": "wxXyo",
@@ -291,7 +313,7 @@
     "name": "chatgpt",
     "author": "Merrick",
     "team": "xmo",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "description": "ChatGpt聊天，适配无界3.0",
     "classification": [
       "插件"
@@ -599,7 +621,7 @@
     "name": "newgpt",
     "author": "xmo",
     "team": "xmo",
-    "version": "1.2.9",
+    "version": "1.3.0",
     "description": "适配NewAPi，支持自定义模型",
     "classification": [
       "插件"
