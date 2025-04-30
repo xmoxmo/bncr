@@ -5,7 +5,7 @@
     "name": "GewechatPlus",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.5.4",
+    "version": "0.5.5",
     "description": "Gewechat适配器",
     "classification": [
       "适配器"
@@ -174,28 +174,6 @@
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "A+OGpa9VE7Lr00jQW8GVgxrdKhE=",
-    "isChatPlugin": false
-  },
-  "JEX+dx3YoPogf/+sZie+YfXmE6E=": {
-    "type": "github",
-    "name": "wxQianxunPro",
-    "author": "云隐",
-    "team": "云隐",
-    "version": "1.1.4",
-    "description": "千寻Pro适配器",
-    "classification": [
-      "千寻Pro适配器"
-    ],
-    "filename": "wxQianxunPro.js",
-    "fileDir": "/Adapter/wxQianxunPro.js",
-    "systemVersionRange": "",
-    "isCron": false,
-    "isAdapter": true,
-    "isMod": false,
-    "isService": false,
-    "isAuthentication": false,
-    "isEncPlugin": true,
-    "id": "JEX+dx3YoPogf/+sZie+YfXmE6E=",
     "isChatPlugin": false
   },
   "D9KAbYxx/oUPA3jOWpZB7a2Avg0=": {
