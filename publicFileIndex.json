@@ -93,7 +93,7 @@
     "name": "starBot",
     "author": "泡泡大佬",
     "team": "xmo",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "description": "starBot适配器",
     "classification": [
       "专业发单团队专用"
@@ -335,7 +335,7 @@
     "name": "cloudyweather",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "description": "彩云查天气",
     "classification": [
       "插件"
@@ -577,7 +577,7 @@
     "name": "musicplay",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.1",
+    "version": "0.1.3",
     "description": "听歌",
     "classification": [
       "插件"
