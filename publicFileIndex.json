@@ -269,7 +269,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "4.0.2",
+    "version": "4.0.4",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
@@ -577,7 +577,7 @@
     "name": "musicplay",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "description": "听歌",
     "classification": [
       "插件"
