@@ -247,7 +247,7 @@
     "name": "botaudit",
     "author": "xmo",
     "team": "xmo",
-    "version": "1.4.9",
+    "version": "1.5.0",
     "description": "黑名单模式按平台、群组、用户屏蔽关键词响应。",
     "classification": [
       "botaudit"
@@ -269,7 +269,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "4.0.4",
+    "version": "4.0.5",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
