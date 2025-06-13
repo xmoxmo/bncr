@@ -198,6 +198,28 @@
     "id": "D9KAbYxx/oUPA3jOWpZB7a2Avg0=",
     "isChatPlugin": false
   },
+  "baH26I1qAJcLVkuD4G7o15RgEPQ=": {
+    "type": "github",
+    "name": "arithmetic",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.1",
+    "description": "十以内加减法游戏",
+    "classification": [
+      "arithmetic"
+    ],
+    "filename": "arithmetic.js",
+    "fileDir": "/plugins/xmo/arithmetic.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "baH26I1qAJcLVkuD4G7o15RgEPQ=",
+    "isChatPlugin": true
+  },
   "MPoomHu9SqdMbDySq372Zi3uMZI=": {
     "type": "github",
     "name": "beautyinstitute",
