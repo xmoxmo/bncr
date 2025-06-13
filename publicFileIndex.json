@@ -269,7 +269,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "4.0.5",
+    "version": "4.0.6",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
@@ -357,7 +357,7 @@
     "name": "cronjobplus",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "定时任务Plus，修改配置后重启生效",
     "classification": [
       "cronjobplus"
@@ -368,11 +368,11 @@
     "isCron": false,
     "isAdapter": false,
     "isMod": false,
-    "isService": false,
+    "isService": true,
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "2jNYXLZhhOJb1eZWOPvIVZJ34d4=",
-    "isChatPlugin": true
+    "isChatPlugin": false
   },
   "db1zT7vggON/q+a6fHQjEkyXUbE=": {
     "type": "github",
