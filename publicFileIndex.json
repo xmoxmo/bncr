@@ -203,7 +203,7 @@
     "name": "arithmetic",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "十以内加减法游戏",
     "classification": [
       "arithmetic"
