@@ -49,7 +49,7 @@
     "name": "larkTalk",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "飞书企业机器人适配器",
     "classification": [
       "适配器"
@@ -64,6 +64,28 @@
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "1UZf91dTYEmgyLyZWuspW2vUUGY=",
+    "isChatPlugin": false
+  },
+  "5k1J2Rmw2EWuCBc3gcRSgfXUgFg=": {
+    "type": "github",
+    "name": "pgm",
+    "author": "YuanKK",
+    "team": "空空如也",
+    "version": "2.0.1",
+    "description": "pgm适配器",
+    "classification": [
+      "PGM适配器"
+    ],
+    "filename": "pgm.js",
+    "fileDir": "/Adapter/pgm.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": true,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "5k1J2Rmw2EWuCBc3gcRSgfXUgFg=",
     "isChatPlugin": false
   },
   "kS9x/tzoqy0zzdFs6EeBmzMzVZg=": {
@@ -203,7 +225,7 @@
     "name": "arithmetic",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.2",
+    "version": "0.0.4",
     "description": "十以内加减法游戏",
     "classification": [
       "arithmetic"
@@ -247,7 +269,7 @@
     "name": "bellevideo",
     "author": "zhu",
     "team": "xmo",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "description": "bellevideo",
     "classification": [
       "插件"
@@ -291,7 +313,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "4.0.6",
+    "version": "4.0.7",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
@@ -599,7 +621,7 @@
     "name": "musicplay",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "听歌",
     "classification": [
       "插件"
