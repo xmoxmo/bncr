@@ -203,7 +203,7 @@
     "name": "wxXyo",
     "author": "Anmour",
     "team": "xmo",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "wxXyo适配器",
     "classification": [
       "官方适配器"
@@ -291,7 +291,7 @@
     "name": "botaudit",
     "author": "xmo",
     "team": "xmo",
-    "version": "1.5.0",
+    "version": "1.5.1",
     "description": "黑名单模式按平台、群组、用户屏蔽关键词响应。",
     "classification": [
       "botaudit"
@@ -313,7 +313,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "4.0.7",
+    "version": "4.0.8",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
@@ -379,7 +379,7 @@
     "name": "cloudyweather",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "彩云查天气",
     "classification": [
       "插件"
@@ -659,6 +659,50 @@
     "isEncPlugin": true,
     "id": "P7fCv1HCLpCobbowHl9gr0uRLPk=",
     "isChatPlugin": true
+  },
+  "A/BNvbH+Dd4Vm3Qpuov6Brr6j/Y=": {
+    "type": "github",
+    "name": "notifybridge",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.2",
+    "description": "通知转发服务",
+    "classification": [
+      "插件"
+    ],
+    "filename": "notifybridge.js",
+    "fileDir": "/plugins/xmo/notifybridge.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": true,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "A/BNvbH+Dd4Vm3Qpuov6Brr6j/Y=",
+    "isChatPlugin": false
+  },
+  "qbtNn51V2ghVE8QzGpBJ37CefNI=": {
+    "type": "github",
+    "name": "notifyprocess",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.1",
+    "description": "一对一通知处理服务",
+    "classification": [
+      "插件"
+    ],
+    "filename": "notifyprocess.js",
+    "fileDir": "/plugins/xmo/notifyprocess.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": true,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "qbtNn51V2ghVE8QzGpBJ37CefNI=",
+    "isChatPlugin": false
   },
   "Cu3ElR4+hPkLhZLjfzwb0O3E9ic=": {
     "type": "github",
