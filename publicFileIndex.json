@@ -687,7 +687,7 @@
     "name": "notifyprocess",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "一对一通知处理服务",
     "classification": [
       "插件"
