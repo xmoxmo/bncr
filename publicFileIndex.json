@@ -115,7 +115,7 @@
     "name": "starBot",
     "author": "泡泡大佬",
     "team": "xmo",
-    "version": "1.2.4",
+    "version": "1.3.6",
     "description": "starBot适配器",
     "classification": [
       "专业发单团队专用"
@@ -152,6 +152,28 @@
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "dv22lvF1dsli/hsKefdWyFZb3+w=",
+    "isChatPlugin": false
+  },
+  "IxmdixsmKwTuMOl9hQjyBBk6Oqc=": {
+    "type": "github",
+    "name": "web",
+    "author": "Aming",
+    "team": "官方",
+    "version": "3.0.1",
+    "description": "web交互适配器",
+    "classification": [
+      "官方适配器"
+    ],
+    "filename": "web.js",
+    "fileDir": "/Adapter/web.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": true,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "IxmdixsmKwTuMOl9hQjyBBk6Oqc=",
     "isChatPlugin": false
   },
   "r7E9zUGJOHzkU1LcZz4PUvddcqw=": {
@@ -196,6 +218,28 @@
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "A+OGpa9VE7Lr00jQW8GVgxrdKhE=",
+    "isChatPlugin": false
+  },
+  "UBmb79VeQsHHoczXQjeltbGq4LM=": {
+    "type": "github",
+    "name": "wecomapp",
+    "author": "mini-k",
+    "team": "mini-k",
+    "version": "1.0.0",
+    "description": "企业微信应用适配器 - 支持完整对话功能",
+    "classification": [
+      "第三方适配器"
+    ],
+    "filename": "wecomapp.js",
+    "fileDir": "/Adapter/wecomapp.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": true,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "UBmb79VeQsHHoczXQjeltbGq4LM=",
     "isChatPlugin": false
   },
   "D9KAbYxx/oUPA3jOWpZB7a2Avg0=": {
@@ -313,7 +357,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "4.0.9",
+    "version": "4.1.1",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
@@ -660,6 +704,28 @@
     "id": "P7fCv1HCLpCobbowHl9gr0uRLPk=",
     "isChatPlugin": true
   },
+  "F3hC2eML98j/jBTSZDus0SVBx20=": {
+    "type": "github",
+    "name": "nopinfromnexion",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.1",
+    "description": "列出NexionPlus登录微信的通讯录中未绑定的账号昵称",
+    "classification": [
+      "插件"
+    ],
+    "filename": "nopinfromnexion.js",
+    "fileDir": "/plugins/xmo/nopinfromnexion.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "F3hC2eML98j/jBTSZDus0SVBx20=",
+    "isChatPlugin": true
+  },
   "A/BNvbH+Dd4Vm3Qpuov6Brr6j/Y=": {
     "type": "github",
     "name": "notifybridge",
@@ -731,7 +797,7 @@
     "name": "pixiv",
     "author": "啊屁",
     "team": "xmo",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "随机获取一组涩涩纸片人",
     "classification": [
       "插件"
@@ -797,7 +863,7 @@
     "name": "skits",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "全网短剧查询",
     "classification": [
       "插件"
