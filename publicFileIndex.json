@@ -154,28 +154,6 @@
     "id": "dv22lvF1dsli/hsKefdWyFZb3+w=",
     "isChatPlugin": false
   },
-  "IxmdixsmKwTuMOl9hQjyBBk6Oqc=": {
-    "type": "github",
-    "name": "web",
-    "author": "Aming",
-    "team": "官方",
-    "version": "3.0.1",
-    "description": "web交互适配器",
-    "classification": [
-      "官方适配器"
-    ],
-    "filename": "web.js",
-    "fileDir": "/Adapter/web.js",
-    "systemVersionRange": "",
-    "isCron": false,
-    "isAdapter": true,
-    "isMod": false,
-    "isService": false,
-    "isAuthentication": false,
-    "isEncPlugin": true,
-    "id": "IxmdixsmKwTuMOl9hQjyBBk6Oqc=",
-    "isChatPlugin": false
-  },
   "r7E9zUGJOHzkU1LcZz4PUvddcqw=": {
     "type": "github",
     "name": "wechatbot",
@@ -269,7 +247,7 @@
     "name": "arithmetic",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "十以内加减法游戏",
     "classification": [
       "arithmetic"
@@ -335,7 +313,7 @@
     "name": "botaudit",
     "author": "xmo",
     "team": "xmo",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "description": "黑名单模式按平台、群组、用户屏蔽关键词响应。",
     "classification": [
       "botaudit"
@@ -357,7 +335,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "4.1.1",
+    "version": "4.1.2",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
@@ -753,7 +731,7 @@
     "name": "notifyprocess",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "一对一通知处理服务",
     "classification": [
       "插件"
