@@ -93,7 +93,7 @@
     "name": "qq",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.2.3",
+    "version": "1.2.6",
     "description": "外置qq机器人适配器",
     "classification": [
       "官方适配器"
@@ -220,12 +220,34 @@
     "id": "UBmb79VeQsHHoczXQjeltbGq4LM=",
     "isChatPlugin": false
   },
+  "IYO8WLonUdJqHd982wGcDsPIRMg=": {
+    "type": "github",
+    "name": "wxQianxunPro",
+    "author": "🚛热心王友",
+    "team": "🚛热心王友",
+    "version": "1.1.17",
+    "description": "千寻Pro适配器",
+    "classification": [
+      "千寻Pro适配器"
+    ],
+    "filename": "wxQianxunPro.js",
+    "fileDir": "/Adapter/wxQianxunPro.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": true,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "IYO8WLonUdJqHd982wGcDsPIRMg=",
+    "isChatPlugin": false
+  },
   "D9KAbYxx/oUPA3jOWpZB7a2Avg0=": {
     "type": "github",
     "name": "wxXyo",
     "author": "Anmour",
     "team": "xmo",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "description": "wxXyo适配器",
     "classification": [
       "官方适配器"
@@ -247,7 +269,7 @@
     "name": "arithmetic",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.6",
+    "version": "0.1.0",
     "description": "十以内加减法游戏",
     "classification": [
       "arithmetic"
@@ -262,6 +284,28 @@
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "baH26I1qAJcLVkuD4G7o15RgEPQ=",
+    "isChatPlugin": true
+  },
+  "sTdowMDFxYFivnjQ/P+jSgW0xyI=": {
+    "type": "github",
+    "name": "autoupdatebeta",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.1",
+    "description": "灰度发版自动重装升级，依赖“Doraemon_一键卸载重装插件.js”。",
+    "classification": [
+      "插件"
+    ],
+    "filename": "autoupdatebeta.js",
+    "fileDir": "/plugins/xmo/autoupdatebeta.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "sTdowMDFxYFivnjQ/P+jSgW0xyI=",
     "isChatPlugin": true
   },
   "MPoomHu9SqdMbDySq372Zi3uMZI=": {
@@ -335,7 +379,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "4.1.3",
+    "version": "4.1.4",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
@@ -357,7 +401,7 @@
     "name": "chatgpt",
     "author": "Merrick",
     "team": "xmo",
-    "version": "1.2.7",
+    "version": "1.2.8",
     "description": "ChatGpt聊天，适配无界3.0",
     "classification": [
       "插件"
@@ -511,7 +555,7 @@
     "name": "gemini",
     "author": "Merrick",
     "team": "xmo",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "description": "gemini聊天",
     "classification": [
       "插件"
@@ -665,7 +709,7 @@
     "name": "newgpt",
     "author": "xmo",
     "team": "xmo",
-    "version": "1.3.1",
+    "version": "1.3.3",
     "description": "适配NewAPi，支持自定义模型",
     "classification": [
       "插件"
@@ -731,7 +775,7 @@
     "name": "notifyprocess",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.3",
+    "version": "0.1.6",
     "description": "一对一通知处理服务",
     "classification": [
       "插件"
@@ -748,12 +792,34 @@
     "id": "qbtNn51V2ghVE8QzGpBJ37CefNI=",
     "isChatPlugin": false
   },
+  "QQ/75ze6l7mtDwOV6O2I2fjUp0Q=": {
+    "type": "github",
+    "name": "npmuninstall",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.1",
+    "description": "卸载npm包插件",
+    "classification": [
+      "npmuninstall"
+    ],
+    "filename": "npmuninstall.js",
+    "fileDir": "/plugins/xmo/npmuninstall.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "QQ/75ze6l7mtDwOV6O2I2fjUp0Q=",
+    "isChatPlugin": true
+  },
   "Cu3ElR4+hPkLhZLjfzwb0O3E9ic=": {
     "type": "github",
     "name": "one",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "description": "一言 鸡汤 心灵鸡汤",
     "classification": [
       "插件"
@@ -863,7 +929,7 @@
     "name": "statisticsplugins",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.0",
+    "version": "0.1.2",
     "description": "统计插件的相关下载信息",
     "classification": [
       "插件"
