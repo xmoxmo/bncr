@@ -44,12 +44,34 @@
     "id": "ZwSz4Mu/X368yCa+Qu1i5tPDQj0=",
     "isChatPlugin": false
   },
+  "WuV1kHhl4UdP77Eq7F6okIKEgCg=": {
+    "type": "github",
+    "name": "email",
+    "author": "min-k",
+    "team": "min-k",
+    "version": "1.0.0",
+    "description": "Email平台适配器，支持配置多个邮箱，通过标签路由消息到不同邮箱发送",
+    "classification": [
+      "自定义适配器"
+    ],
+    "filename": "email.js",
+    "fileDir": "/Adapter/email.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": true,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "WuV1kHhl4UdP77Eq7F6okIKEgCg=",
+    "isChatPlugin": false
+  },
   "1UZf91dTYEmgyLyZWuspW2vUUGY=": {
     "type": "github",
     "name": "larkTalk",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.9",
+    "version": "0.2.1",
     "description": "飞书企业机器人适配器",
     "classification": [
       "适配器"
@@ -93,7 +115,7 @@
     "name": "qq",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.3.0",
+    "version": "1.3.4",
     "description": "外置qq机器人适配器",
     "classification": [
       "官方适配器"
@@ -108,6 +130,28 @@
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "kS9x/tzoqy0zzdFs6EeBmzMzVZg=",
+    "isChatPlugin": false
+  },
+  "KaVHV327CVfVonLyfP/H6Y3KR64=": {
+    "type": "github",
+    "name": "qqBot",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.1.0",
+    "description": "qqBot适配器",
+    "classification": [
+      "适配器"
+    ],
+    "filename": "qqBot.js",
+    "fileDir": "/Adapter/qqBot.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": true,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "KaVHV327CVfVonLyfP/H6Y3KR64=",
     "isChatPlugin": false
   },
   "6fj1b4q6KgAH0WfaZh/GBPHEQT4=": {
@@ -137,7 +181,7 @@
     "name": "tgBot",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.2.1",
+    "version": "1.4.7",
     "description": "tgBot适配器",
     "classification": [
       "官方适配器"
@@ -218,6 +262,28 @@
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "UBmb79VeQsHHoczXQjeltbGq4LM=",
+    "isChatPlugin": false
+  },
+  "E5jtDrpj0YJ9k0jhZ0u4NarjKKM=": {
+    "type": "github",
+    "name": "wxBot",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.6",
+    "description": "@tencent-weixin/openclaw-weixin 协议的微信适配器",
+    "classification": [
+      "适配器"
+    ],
+    "filename": "wxBot.js",
+    "fileDir": "/Adapter/wxBot.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": true,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "E5jtDrpj0YJ9k0jhZ0u4NarjKKM=",
     "isChatPlugin": false
   },
   "IYO8WLonUdJqHd982wGcDsPIRMg=": {
@@ -379,7 +445,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "4.1.9",
+    "version": "4.2.7",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
@@ -401,7 +467,7 @@
     "name": "chatgpt",
     "author": "Merrick",
     "team": "xmo",
-    "version": "1.2.8",
+    "version": "1.2.9",
     "description": "ChatGpt聊天，适配无界3.0",
     "classification": [
       "插件"
@@ -511,7 +577,7 @@
     "name": "deepseek",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "DeepSeek聊天",
     "classification": [
       "插件"
@@ -570,6 +636,29 @@
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "vWtgXt/brP5ywNfYyHb4KNS72dA=",
+    "isChatPlugin": true
+  },
+  "IUzSLe/hxKuWPtwSvIQ+tDXVwio=": {
+    "type": "github",
+    "name": "groupai",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.1",
+    "description": "群聊AI助手：像群友一样参与聊天（不做总结/摘要）",
+    "classification": [
+      "群聊",
+      "AI"
+    ],
+    "filename": "groupai.js",
+    "fileDir": "/plugins/xmo/groupai.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "IUzSLe/hxKuWPtwSvIQ+tDXVwio=",
     "isChatPlugin": true
   },
   "IuFBpG491/yysi+pK9jCKl2KcmU=": {
@@ -687,7 +776,7 @@
     "name": "musicplay",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.2.5",
+    "version": "0.2.8",
     "description": "听歌",
     "classification": [
       "插件"
@@ -709,7 +798,7 @@
     "name": "newgpt",
     "author": "xmo",
     "team": "xmo",
-    "version": "1.3.3",
+    "version": "1.3.4",
     "description": "适配NewAPi，支持自定义模型",
     "classification": [
       "插件"
@@ -836,6 +925,28 @@
     "id": "Cu3ElR4+hPkLhZLjfzwb0O3E9ic=",
     "isChatPlugin": true
   },
+  "2atRC0Daas0DZE7uf/G3wKi5Pck=": {
+    "type": "github",
+    "name": "openclawclient",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.2.7",
+    "description": "OpenClaw 网关 WS 客户端，支持发送消息和接收主动推送。",
+    "classification": [
+      "openclaw"
+    ],
+    "filename": "openclawclient.js",
+    "fileDir": "/plugins/xmo/openclawclient.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "2atRC0Daas0DZE7uf/G3wKi5Pck=",
+    "isChatPlugin": true
+  },
   "lmTP/s+TMZm1ooycsE2t73cmA0c=": {
     "type": "github",
     "name": "pixiv",
@@ -929,7 +1040,7 @@
     "name": "statisticsplugins",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "统计插件的相关下载信息",
     "classification": [
       "插件"
@@ -968,6 +1079,28 @@
     "id": "22eDISZECbDAUVAzq4ubKKM4FYA=",
     "isChatPlugin": true
   },
+  "pxA3BOlUPYw7+tPhimb6AIsmYI8=": {
+    "type": "github",
+    "name": "tgBot",
+    "author": "Aming",
+    "team": "xmo",
+    "version": "1.4.3",
+    "description": "tgBot适配器",
+    "classification": [
+      "官方适配器"
+    ],
+    "filename": "tgBot.js",
+    "fileDir": "/plugins/xmo/tgBot.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": true,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "pxA3BOlUPYw7+tPhimb6AIsmYI8=",
+    "isChatPlugin": false
+  },
   "gUJuGCJmg+BT0vQWwjtMHq3zVrg=": {
     "type": "github",
     "name": "wnl",
@@ -988,6 +1121,28 @@
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "gUJuGCJmg+BT0vQWwjtMHq3zVrg=",
+    "isChatPlugin": true
+  },
+  "Lo+Wrl/wOHPE7bmKhJTlA0qfiOU=": {
+    "type": "github",
+    "name": "wxbotlogin",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.2",
+    "description": "wxBot 登录",
+    "classification": [
+      "插件"
+    ],
+    "filename": "wxbotlogin.js",
+    "fileDir": "/plugins/xmo/wxbotlogin.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "Lo+Wrl/wOHPE7bmKhJTlA0qfiOU=",
     "isChatPlugin": true
   }
 }
