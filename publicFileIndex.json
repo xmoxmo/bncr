@@ -5,7 +5,7 @@
     "name": "GewechatPlus",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.5.6",
+    "version": "0.6.4",
     "description": "Gewechat适配器",
     "classification": [
       "适配器"
@@ -27,7 +27,7 @@
     "name": "GolemPlus",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.7",
+    "version": "0.5.7",
     "description": "GolemPlus适配器",
     "classification": [
       "适配器"
@@ -49,7 +49,7 @@
     "name": "HumanTG",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.3.7",
+    "version": "1.4.1",
     "description": "Telegarm人行适配器",
     "classification": [
       "官方适配器"
@@ -93,7 +93,7 @@
     "name": "larkTalk",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.2.3",
+    "version": "0.2.7",
     "description": "飞书企业机器人适配器",
     "classification": [
       "适配器"
@@ -115,7 +115,7 @@
     "name": "pgm",
     "author": "YuanKK",
     "team": "空空如也",
-    "version": "2.0.1",
+    "version": "2.0.4",
     "description": "pgm适配器",
     "classification": [
       "PGM适配器"
@@ -137,7 +137,7 @@
     "name": "qq",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.3.8",
+    "version": "1.4.2",
     "description": "外置qq机器人适配器",
     "classification": [
       "官方适配器"
@@ -159,7 +159,7 @@
     "name": "qqBot",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.3",
+    "version": "0.1.9",
     "description": "qqBot适配器",
     "classification": [
       "适配器"
@@ -203,7 +203,7 @@
     "name": "tgBot",
     "author": "Aming",
     "team": "xmo",
-    "version": "1.5.6",
+    "version": "1.6.8",
     "description": "tgBot适配器",
     "classification": [
       "官方适配器"
@@ -291,7 +291,7 @@
     "name": "wxBot",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.9",
+    "version": "0.1.3",
     "description": "@tencent-weixin/openclaw-weixin 协议的微信适配器",
     "classification": [
       "适配器"
@@ -467,7 +467,7 @@
     "name": "botreply",
     "author": "xmo",
     "team": "xmo",
-    "version": "4.2.8",
+    "version": "4.3.6",
     "description": "自动回复插件，可调用聊天插件如ChatGPT等回复，仅支持文本。",
     "classification": [
       "botreply"
@@ -555,8 +555,8 @@
     "name": "cronjobplus",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.1.8",
-    "description": "定时任务Plus，修改配置后自动生效",
+    "version": "0.2.0",
+    "description": "定时任务Plus，配置保存后自动重载",
     "classification": [
       "cronjobplus"
     ],
@@ -638,6 +638,28 @@
     "id": "l/znp9hXhwOXBEIqMAWTKCmNeGQ=",
     "isChatPlugin": true
   },
+  "6tK+MRZhRiL/MpIRf7PomyaCvbw=": {
+    "type": "github",
+    "name": "emojibridge",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "1.0.0",
+    "description": "表情桥：把本地/URL 表情经 GolemPlus 入库，返回可给 Gewe 系发送的 md5",
+    "classification": [
+      "插件"
+    ],
+    "filename": "emojibridge.js",
+    "fileDir": "/plugins/xmo/emojibridge.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "6tK+MRZhRiL/MpIRf7PomyaCvbw=",
+    "isChatPlugin": true
+  },
   "vWtgXt/brP5ywNfYyHb4KNS72dA=": {
     "type": "github",
     "name": "gemini",
@@ -710,7 +732,7 @@
     "name": "historyday",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "历史上的今天",
     "classification": [
       "插件"
@@ -798,7 +820,7 @@
     "name": "musicplay",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "description": "听歌",
     "classification": [
       "插件"
@@ -835,6 +857,28 @@
     "isAuthentication": false,
     "isEncPlugin": true,
     "id": "P7fCv1HCLpCobbowHl9gr0uRLPk=",
+    "isChatPlugin": true
+  },
+  "B+NgtLDjxuScrXSOhdNq5WU/F/o=": {
+    "type": "github",
+    "name": "nexus",
+    "author": "xmo",
+    "team": "xmo",
+    "version": "0.0.6",
+    "description": "应用宝扫码联合登录",
+    "classification": [
+      "插件"
+    ],
+    "filename": "nexus.js",
+    "fileDir": "/plugins/xmo/nexus.js",
+    "systemVersionRange": "",
+    "isCron": false,
+    "isAdapter": false,
+    "isMod": false,
+    "isService": false,
+    "isAuthentication": false,
+    "isEncPlugin": true,
+    "id": "B+NgtLDjxuScrXSOhdNq5WU/F/o=",
     "isChatPlugin": true
   },
   "F3hC2eML98j/jBTSZDus0SVBx20=": {
@@ -952,7 +996,7 @@
     "name": "openclawclient",
     "author": "xmo",
     "team": "xmo",
-    "version": "0.3.4",
+    "version": "0.4.2",
     "description": "OpenClaw 网关 WS 客户端，支持发送消息和接收主动推送。",
     "classification": [
       "openclaw"
@@ -1100,28 +1144,6 @@
     "isEncPlugin": true,
     "id": "22eDISZECbDAUVAzq4ubKKM4FYA=",
     "isChatPlugin": true
-  },
-  "pxA3BOlUPYw7+tPhimb6AIsmYI8=": {
-    "type": "github",
-    "name": "tgBot",
-    "author": "Aming",
-    "team": "xmo",
-    "version": "1.4.3",
-    "description": "tgBot适配器",
-    "classification": [
-      "官方适配器"
-    ],
-    "filename": "tgBot.js",
-    "fileDir": "/plugins/xmo/tgBot.js",
-    "systemVersionRange": "",
-    "isCron": false,
-    "isAdapter": true,
-    "isMod": false,
-    "isService": false,
-    "isAuthentication": false,
-    "isEncPlugin": true,
-    "id": "pxA3BOlUPYw7+tPhimb6AIsmYI8=",
-    "isChatPlugin": false
   },
   "gUJuGCJmg+BT0vQWwjtMHq3zVrg=": {
     "type": "github",
